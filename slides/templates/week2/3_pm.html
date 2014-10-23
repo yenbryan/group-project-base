@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Django Models
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Model Field Types</h2>
+        <p>Let's quickly browse over some common built-in Django <a href="https://docs.djangoproject.com/en/1.5/ref/models/fields/#field-types">field types</a>.</p>
+        <div class="col-8">
+            <p style="clear:both;">Notice that most of these fields have a logical, direct mapping to the column types we saw in PostgreSQL</p>
+            <p>There are several more fields not on this list that you can read up on at the documentation link above.</p>
+        </div>
+        <div class="col-3 col-offset-1">
+            <pre><code class="python">
+AutoField
+BooleanField
+CharField
+DateField
+DateTimeField
+DecimalField
+EmailField
+FileField
+ImageField
+IntegerField
+TextField
+            </code></pre>
+        </div>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>One to Many</h2>
+        <div>Let's create our post table.</div>
+        <div>
+            <pre><code class="python">
+class Post(models.Model):
+    title = models.CharField(max_length=120)
+    body = models.TextField()
+    author = models.ForeignKey(Author)
+
+    def __unicode__(self):
+        return u"{}".format(self.title)
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Our post table has a title field with a set length and a body field which we will make a <code>TextField()</code> because it will be in indeterminate large string.</li>
+            <li>Our post table has a <code>ForeignKey</code> to author. The common practice is to name this field the name of the table it relates to and we need to pass a reference of the related model to the <code>ForeignKey</code> field.</li>
+            <li>We can now run <code>python manage.py makemigrations</code> to find our new model, then run <code>python manage.py migrate</code> to actually create the table.</li>
+            <li>Let's go to our database, <code>psql writers</code> and let's checkout our new post table <code>\d blog_post</code>. We can see it made the appropriate columns and foreign keys for us.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>One to Many Add Data</h2>
+        <div>Let's add some data to our post table.</div>
+        <div>
+            <pre><code class="python">
+from blog.models import Post
+
+Post.objects.create(title='First!', body='My blog post.', author_id=1)
+Post.objects.create(title='Second!', body='My second blog post.', author_id=1)
+
+author = Author.objects.get(pk=2)
+Post.objects.create(title='Best Blog POst', body='The best post.', author=author)
+
+Post.objects.create(title='Will not work', body='Nice try.', author_id=100)
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>As we've seen before, we can create new Post objects in the database passing in the appropriate fields.</li>
+            <li>Note that there are two ways we can relate author to our blog post. Both do the same thing.
+                <ol>
+                    <li>Pass in the id to the author_id field.</li>
+                    <li>Use an author object and pass that to the author field.</li>
+                </ol>
+            </li>
+            <li>Also, if we go to create a blog post that is linked to an author that does not exist, Django will yell at us.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>One to Many Query</h2>
+        <div>Let's see how to query across tables for information.</div>
+        <div>
+            <pre><code class="python">from blog.models import Post
+
+# Get the author for the post with pk 1
+post = Post.objects.get(pk=1)
+author = post.author
+author_id = post.author_id
+
+# Get all posts by the author with the name 'Dr. Seuss'
+posts = Post.objects.filter(author__name='Dr. Seuss')
+
+# Print out the author for all posts
+for post in Post.objects.all():
+    print post.author</code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Above we have several ways to start making join queries across our tables.</li>
+            <li>With Django, it handles making the joins for us. All we have to do is access the author variable and the information is already there!</li>
+            <li>Notice the syntax for filtering across another table, it's [table_name]__[column_name]. This will be true for all of our queries.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>One to Many Query (Cont.)</h2>
+        <div>We can also go the reverse way from Author to Post.</div>
+        <div>
+            <pre><code class="python">from blog.models import Author
+
+# Get the author with pk 1
+author = Author.objects.get(pk=1)
+
+# Get all of their posts
+author.post_set.all()
+
+# Get authors who wrote posts with the title 'First!'
+author = Author.objects.filter(post__title='First!')
+
+# For each author print out their name, then print out all of their posts' titles
+for author in Author.objects.all():
+    print author.name
+    for post in author.post_set.all():
+        print post.title</code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Most of these are mirroring the queries we just saw from Post to Author.</li>
+            <li>Notice that to get posts for an author, we need to use <code>author.post_set</code>.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Backwards One to Many Query</h2>
+        <div>Let's make one adjustment to make our queries better.</div>
+        <div>
+            <pre><code class="python">
+class Post(models.Model):
+    title = models.CharField(max_length=120)
+    body = models.TextField()
+    author = models.ForeignKey(Author, related_name='posts')
+
+    def __unicode__(self):
+        return u"{}".format(self.title)
+
+author = Author.objects.get(pk=1)
+author.posts.all()
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>If we specify a <code>related_name</code> on our <code>ForeignKey()</code> field, we can now use that to reference Author back to Post.</li>
+            <li>We no longer have to write the [name of the table]_set to magically get the related list.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <div>Let's try some out.</div>
+        <ul>
+            <li>Write a function that takes a post id and returns a dictionary with the keys 'post_title' and 'author_name'. It will put the post's title in 'post_title' and the post's author's name in 'author_name'.</li>
+            <li>Write a function that takes an author id and returns a list of all of the blog post titles for that specific author.</li>
+            <li>Write a function that returns a dictionary where the keys are every author's twitter handle and the value is how many blog posts that author has written. Hint: There's a django queryset method called <a href="https://docs.djangoproject.com/en/dev/ref/models/querysets/#count"><code>count()</code></a></li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Many to Many</h2>
+        <div>Let's create our tag table.</div>
+        <div>
+            <pre><code class="python">
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
+    posts = models.ManyToManyField(Post)
+
+    def __unicode__(self):
+        return u"{}".format(self.name)
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Our tag table just has a name field with a set length.</li>
+            <li>Our tag table has a many to many relationship with post, so we use Django's <code>ManyToManyField</code> and pass it Post as an argument.</li>
+            <li>We can now run <code>python manage.py makemigrations</code> to find our new model, then run <code>python manage.py migrate</code> to actually create the table.</li>
+            <li>Let's go to our database, <code>psql writers</code> and let's checkout our new tag table <code>\d blog_tag</code>. We can see that it has the appropriate new foreign keys to the blog_tag_post through table, which Django automatically created for us.</li>
+            <li>When using Django, we do not have to worry about managing the through table for many to many relationships.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Many to Many Add Data</h2>
+        <div>First, let's add some data to our tag table.</div>
+        <div>
+            <pre><code class="python">
+from blog.models import Tag
+
+Tag.objects.create(name='food')
+Tag.objects.create(name='literature')
+Tag.objects.create(name='poetry')
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Again, this is familiar for us to just create new objects in the tag database.</li>
+            <li>How do we go about relating Tags to Posts if we never defined the model for the through table?</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Many to Many Add Related Data</h2>
+        <div>Now let's tie some of our tags to our blog posts.</div>
+        <div>
+            <pre><code class="python">
+from blog.models import Tag
+
+food_tag = Tag.objects.get(pk=1)
+food_tag.posts.add(2, 4)
+
+poetry_tag = Tag.objects.get(pk=3)
+post = Post.objects.get(pk=2)
+poetry_tag.posts.add(post)
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Since our Tag table has a field called posts, we are able to <code>add</code> the posts that use that tag right to the field.</li>
+            <li>Django takes care of saving the appropriate records to the through table for us.</li>
+            <li>Note, there's two different ways to add many to many objects. You can pass just the id(s) or you can pass full post objects.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Many to Many Query</h2>
+        <div>We can also go the reverse way from Author to Post.</div>
+        <div>
+            <pre><code class="python">
+from blog.models import Tag
+
+# Get the tag with pk 1
+tag = Tag.objects.get(pk=1)
+
+# Get all of the posts with this tag
+tag.posts.all()
+
+# Get all tags on posts written by author id 1
+tags = Tag.objects.filter(posts__author_id=1)
+
+# For each tag print out all of their posts names
+for tag in Tag.objects.all():
+    print tag.name
+    for post in tag.posts.all():
+        print post.title</code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Again, this should look similar to the queries we've already made previously. We can get a list of posts from a tag via <code>tag.posts.all()</code></li>
+            <li>We can filter our tags by author_id through the post table.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Many to Many Related Name</h2>
+        <div>Let's also give our many to many a related_name.</div>
+        <div>
+            <pre><code class="python">
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
+    posts = models.ManyToManyField(Post, related_name='tags')
+
+    def __unicode__(self):
+        return u"{}".format(self.name)
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Again, we want to give our <code>ManyToManyField</code> a <code>related_name</code> so that it is to make the reverse query.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Reverse Many to Many Query</h2>
+        <div>We can also go the reverse way from Post to Tag.</div>
+        <div>
+            <pre><code class="python">
+from blog.models import Post
+
+# Get the post with pk 1
+post = Post.objects.get(pk=1)
+
+# Get all of the tags with this post
+post.tags.all()
+
+# Get all posts with tag named 'food'
+posts = Post.objects.filter(tags__name='food')
+            </code></pre>
+        </div>
+        <ul style="clear:both;">
+            <li>Again, this should look similar to the queries we've already made previously. We can get a list of posts from a tag via <code>tag.posts.all()</code></li>
+            <li>We can filter our tags by author_id through the post table.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's practice navigating all of our relationships.</p>
+        <ul>
+            <li>Write a function which returns all posts that have the tag with an id of 1.</li>
+            <li>Write a function which takes in a post id and returns all tags that are tagged to that post.</li>
+            <li>Write a function which returns all tag names that are on more than one blog post.</li>
+            <li>Write a function which returns a dictionary where the keys are author twitter handles and the values are how many distinct tags have been used on their blog posts.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h2>Homework! Advancing Our Blog.</h2>
+    <div>Let's take our blog application and add some new functionality to it.</div>
+    <ul>
+        <li>First, we want to allow Users to sign up and view our blog posts. A User will have a name, email, and username.</li>
+        <li>Let's allow our users to comment on our blog posts. We'll need to make a Comment table which has the text of the comment and relates to a blog post as well as the user who wrote it.</li>
+        <li>Lastly, let's allow our users to "thumbs up" our posts as a rating system. We only want to allow a user to vote on a blog post once. We'll need a Vote (intermediary) table, which is tied to the user and tied to the blog post.</li>
+    </ul>
+    <div>Next, let's write some queries using Django's ORM. You should first populate your User, Comment, and Vote tables with some data first for testing.</div>
+    <ul>
+        <li>Write a function, which takes a blog post id and returns all of the comments for that blog post.</li>
+        <li>Write a function, which takes a blog post id and returns the amount of votes for that blog post.</li>
+        <li>Write a function, which takes a user id and gets all comments by that user.</li>
+        <li>Write a function, which returns all tags for blog posts that have been voted on by the user with a pk of 1.</li>
+        <li>Write a function, which returns all users that have commented on a blog post written by the author with the name 'Dr. Seuss'.</li>
+    </ul>
+</section>
+
+{% endblock %}

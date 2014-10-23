@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Python Programs
+{% endblock %}
+{% block presentation_title %}
+    Python Programs
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Introduction to Python</h2>
+    <p>
+        Python is an open-source, free to use, programming language that runs on a variety of operating systems, including Linux/Unix, Mac OS X and Windows. It was created by Guido Van Rossum, and ﬁrst released in 1991. Python gets its name from the UK TV series “Monty Python’s Flying Circus”, which Van Rossum was a great fan of. It is an <a target="_blank" href="http://javascript.about.com/od/hintsandtips/a/Interpreted-Or-Compiled.htm">interpreted</a>, object-oriented language that combines a very clear syntax with very powerful capabilities.
+    </p>
+    <p>
+        Python is a server-side programming language, and therefore has no direct control over the browser or front-end applications. In web development, server-side languages are typically used to process data, generate output in the form of HTML, and send it back to the client via a web-server application - such as Apache or Python’s own web-server. Python and other server-side languages, such as PHP and Perl, can also be used for general purpose programming on a server. The initial Python modules in this course will look at the use of Python as a general purpose language. Its use in a web development environment will be covered in later modules on Django etc.
+    </p>
+    <p>Python is widely used outside of web development, including in scientific communities and for <a target="_blank" href="http://www.raspberrypi.org/">ROBOTS</a>. It also has a <a target="_blank" href="https://us.pycon.org/">great</a><a target="_blank" href="http://www.meetup.com/sfpython/"> community</a>.</p>
+</section>
+
+<section>
+    <h2>Writing Python programs</h2>
+    <p>
+        Yesterday you worked on a bunch of practice problems to level-set your knowledge of Python. The variables, conditionals, loops, and functions you created are the building blocks of Python programs. Today we're going to start writing programs that actually do things and allow users to interact with them, instead of just stand-alone functions. By the end of today, you'll have made
+    </p>
+    <ul>
+        <li><a href="#/3">A temperature converter</a></li>
+        <li><a href="#/4">A guessing game</a></li>
+        <li><a href="#/5">A calculator</a></li>
+        <li><a href="#/9">A math test</a></li>
+    </ul>
+</section>
+<section>
+    <h2>Demo: Temperature converter</h2>
+    <div class="col-4">
+        <p>
+            We'll be working on <a target="_blank" href="http://openbookproject.net/pybiblio/practice/wilson/tempfinder.php">this problem</a>.
+        </p>
+        <br>
+        <p class="fragment">Use <code>.lower()</code> so that users can input uppercase or lowercase answers</p>
+        <p class="fragment">Change formula to use floats instead of integers or else you will get wonky numbers</p>
+        <p class="fragment">Guard against user error with final <code>else</code> statement</p>
+    </div>
+    <div class="col-7 col-offset-1 fragment" data-fragment-index="0">
+        <h4>temperature_converter.py</h4>
+        <pre><code>
+def temperature_converter():
+"""
+Converts temperatures between Fahrenheit and Celsius based on user input.
+
+Temperature conversion formulae:
+Tc=(5/9)*(Tf-32)
+Tf=(9/5)*Tc+32
+"""
+temperature = raw_input(
+    "Please input the temperature you are starting with: "
+    )
+temperature = float(temperature)
+conversion = raw_input(
+    "Would you like to convert this to (F)ahrenheit or (C)elsius? "
+    ).lower()
+
+if conversion == "f":
+    temperature_verbose = "{} C".format(temperature)
+    answer = (9.0/5.0) * temperature + 32
+    answer_verbose = "{} F".format(answer)
+elif conversion == "c":
+    temperature_verbose = "{} F".format(temperature)
+    answer = (5.0/9.0) * (temperature - 32)
+    answer_verbose = "{} C".format(answer)
+else:
+    print "Please follow the prompts and input either 'f' or 'c' for \
+    temperature conversion."
+    temperature_converter()
+
+print "{} = {}".format(temperature_verbose, answer_verbose)
+
+temperature_converter()
+        </code></pre>
+    </div>
+</section>
+<section>
+    <h2>Do it yourself</h2>
+    <p>Try solving <a target="_blank" href="http://openbookproject.net/pybiblio/practice/wilson/leapyear.php">this leap year problem</a> by writing a stand-alone Python program.</p>
+    <p>Already done? Tackle this <a target="_blank" href="http://openbookproject.net/pybiblio/practice/wilson/guessinggame.php">guessing game</a></p>
+</section>
+<section>
+    <h2>Demo: Basic calculator (a solution)</h2>
+    <div class="col-4">
+        <p>Let's try writing a basic calculator program that does addition and subtraction with two numbers.</p>
+        <p class="fragment">Remember that user input comes in as a string. You must convert to float or integer to perform math operations.</p>
+        <p class="fragment">Keep the program alive by calling <code>calculator()</code> again.</p>
+        <p class="fragment">Allow users to exit the program, and handle user error.</p>
+    </div>
+    <div class="col-7 col-offset-1 fragment" data-fragment-index="0">
+        <h4>calculator_1.py</h4>
+        <pre><code>
+def calculator():
+response = raw_input(
+    "What operation would you like to perform? (type add or subtract) "
+)
+
+if response == "add":
+    number_1 = raw_input("First number? ")
+    number_2 = raw_input("Second number? ")
+    answer = float(number_1) + float(number_2)
+    print answer
+    calculator()
+elif response == "subtract":
+    number_1 = raw_input("First number? ")
+    number_2 = raw_input("Second number? ")
+    answer = float(number_1) - float(number_2)
+    print answer
+    calculator()
+elif response == "q":
+    print "Thanks for using the calculator!"
+else:
+    print "Sorry, didn't understand your response. Try again."
+    calculator()
+
+calculator()
+        </code></pre>
+    </div>
+</section>
+<section>
+    <h2>Demo: Basic calculator (another solution)</h2>
+    <div class="col-4">
+        <p>Here's another way to structure your basic calculator app (or other simple programs like this). Instead of calling our main function multiple times, we can place all the functionality in a <code>while</code> loop.</p>
+        <p class="fragment">Now the looping is handled by the <code>while</code> statement instead of <code>calculator()</code></p>
+        <p class="fragment">Instead of asking users to input numbers separately, the program can handle splitting the numbers apart</p>
+    </div>
+    <div class="col-7 col-offset-1 fragment" data-fragment-index="0">
+        <h4>calculator_2.py</h4>
+        <pre><code>
+response = raw_input(
+"What operation would you like to perform? (please type add or subtract) "
+)
+
+while response != "q":
+if response == "add":
+    numbers = raw_input(
+        "What numbers would you like to add? (separate with a space) "
+    )
+    numbers = numbers.split(" ")
+    answer = float(numbers[0]) + float(numbers[1])
+    print answer
+    response = raw_input(
+        "What operation would you like to perform? (type add or subtract) "
+    )
+elif response == "subtract":
+    numbers = raw_input(
+        "What numbers would you like to subtract? (separate with a space) "
+    )
+    numbers = numbers.split(" ")
+    answer = float(numbers[0]) - float(numbers[1])
+    print answer
+    response = raw_input(
+        "What operation would you like to perform? (type add or subtract) "
+    )
+else:
+    print "Sorry, didn't understand your response. Try again."
+    response = raw_input(
+        "What operation would you like to perform? (type add or subtract) "
+    )
+
+print "Thanks for using the calculator!"
+        </code></pre>
+    </div>
+</section>
+<section>
+    <h2>Basic calculator: one problem, multiple solutions</h2>
+    <p>I'm showing you two solutions because:</p>
+    <ol>
+        <li>You should be familiar with different programming patterns. These patterns make up your toolkit, and the more tools you have the more different ways you'll be able to think of to tackle new problems.</li>
+        <li>In programming, there are often many ways to solve the same problem. We'll review homework in class and instructors may provide solutions, but you should be comfortable with the idea that there is no one solution that will just be given to you.</li>
+    </ol>
+</section>
+
+<section>
+    <h2>Do it yourself: Advanced Calculator</h2>
+    <p>Turn the basic calculator we made together into an advanced calculator.</p>
+    <ol>
+        <li>Add multiplication and division as options.</li>
+        <li>Refactor: ask the user if they want to use a basic or an advanced calculator. Addition, subtraction, multiplication, and division are basic operations. Finding remainders, performing exponential functions, and taking square roots are advanced functions.</li>
+    </ol>
+</section>
+<section>
+    <h2>Do it yourself</h2>
+    <p>Build <a target="_blank" href="http://openbookproject.net/pybiblio/practice/elkner/mathquiz.php">this math quiz program</a>. You might be able to reuse some of your code from the calculator, you might not. For point #5 in the instructions, 'mixed' means the user will get a random assortment of question types.</p>
+    <p>Build <a target="_blank" href="http://openbookproject.net/pybiblio/practice/wilson/rockpaperscissors.php">Rock, Paper, Scissors</a>.</p>
+    <p>Bonus: Try out both the strategies we covered today (or see if you can come up with another strategy).</p>
+    <h4>Shirt Shuffle</h4>
+    <p>You have a bunch of shirts. Each day, you pick a shirt to wear randomly. Once you've worn the shirt, you can't wear it again until you've worn all your other shirts and done your laundry. Create a function to help you pick which shirt you should wear.</p>
+    <p>Bonus: if you don't like the shirt that is picked, you should be able to 'send it back' and get another clean shirt. The unworn shirt goes back with the other clean shirts. You can do this as many times as you want.</p>
+</section>
+{% endblock %}

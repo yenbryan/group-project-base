@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+
+{% block running_title %}
+    Object-Oriented Python II
+{% endblock %}
+{% block presentation_title %}
+    Object-Oriented Python II: Methods
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Review: What is <code>self</code>? Instance methods</h2>
+    <div class="col-5">
+        <ul>
+            <li class="fragment">Let's take our <code>Vehicle</code> class again.</li>
+            <li class="fragment">Notice every method's first argument is <code>self</code>.</li>
+            <li class="fragment">Also notice that when calling these methods, you never have to pass in anything for <code>self</code>.</li>
+            <li class="fragment"><code>self</code> always refers to the instance of the object you're running the function on. This is why they're called <b>instance methods</b>.</li>
+            <li class="fragment">All of these functions deal with modifying the instance of the object in some way.</li>
+        </ul>
+    </div>
+    <div class="col-6 col-offset-1">
+            <pre><code>
+class Vehicle(object):
+    def __init__(self, color):
+        self.speed = 0
+        self.direction = 0
+        self.color = color
+
+    def accelerate(self):
+        self.speed += max(0,1)
+
+    def brake(self):
+        self.speed -= max(0,1)
+
+    def turn(self, direction=90):
+        self.direction += direction
+
+vehicle = Vehicle("black")
+vehicle.accelerate()
+vehicle.turn()  # Turn right
+vehicle.turn(-90)  # Turn left
+            </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Static methods</h2>
+    <div class="col-5">
+        <ul>
+            <li class="fragment">What if we want to write a function that doesn't necessarily need the instance of the object but is still related to that object?</li>
+            <li class="fragment">We can write a static method, notice the <code>@staticmethod</code> and the lack of <code>self</code>.</li>
+            <li class="fragment">Our example staticmethod <code>random_car_color</code> gives us a random color for a car, but does not need an actual car instance to do this.</li>
+            <li class="fragment">This function logically belongs with the <code>Vehicle</code> class, so this allows us to keep our code organized.</li>
+            <li class="fragment">To use it we just need to specify the class <code>Vehicle</code> instead of a <code>Vehicle()</code> instance.</li>
+        </ul>
+    </div>
+    <div class="col-6 col-offset-1">
+<pre><code>import random
+
+class Vehicle(object):
+    def __init__(self, color):
+        self.speed = 0
+        self.direction = 0
+        self.color = color
+
+    @staticmethod
+    def random_car_color():
+        colors = ['red', 'silver', 'yellow']
+        return random.choice(colors)
+
+    ...
+
+color = Vehicle.random_car_color()
+print color</code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Class methods</h2>
+    <div class="col-5">
+        <ul>
+            <li class="fragment">What if we want to write a function that doesn't necessarily need the instance of the object but is related to the specific class?</li>
+            <li class="fragment">We can write a class method, notice the <code>@classmethod</code> and the use of <code>cls</code>.</li>
+            <li class="fragment">Our example classmethod <code>get_max_speed</code> gives us the max speed of the specific class, but does not need an actual car instance to do this.</li>
+            <li class="fragment">Notice, that this <code>max_speed</code> is different on our <code>Boat</code> class than it is on our <code>Vehicle</code> class</li>
+            <li class="fragment">To use it we just need to specify which class we'd like to find the max speed of, and <code>cls</code> in the method will refer appropriately to <code>Vehicle</code> or to <code>Boat</code></li>
+        </ul>
+    </div>
+    <div class="col-6 col-offset-1">
+<pre><code>
+class Vehicle(object):
+    # General max speed for our vehicles
+    max_speed = 100
+
+    def __init__(self, color):
+        self.speed = 0
+        self.direction = 0
+        self.color = color
+
+    @classmethod
+    def get_max_speed(cls):
+        return cls.max_speed
+
+class Boat(AutoTrans):
+    # Our boats are much slower
+    max_speed = 60
+
+print Vehicle.get_max_speed()  # Returns 120
+print Boat.get_max_speed()  # Returns 60
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Do it Yourself</h2>
+    <p>Let's continue using our vehicle application and add to it.</p>
+    <ul>
+        <li>Add a static method on <code>Vehicle</code> which randomly chooses a direction (-180 to 180)</li>
+        <li>Add a class method, which returns a new instance of that class, with a random color.</li>
+        <li>Add a class method, which takes in another vehicle as an argument, and creates a new instance of the current class, with the passed in vehicle's speed, color, and direction. For example, if I called this method on a RaceCar, and passed it a Boat, it would create a new RaceCar with the Boat's speed, color, and direction</li>
+        <li>Have your application now use these new methods to create and "drive" your different types of vehicles.</li>
+    </ul>
+    <p>Need more?</p>
+    <ul>
+        <li>Read through <a href="http://stackoverflow.com/questions/12179271/python-classmethod-and-staticmethod-for-beginner">Classmethods and Staticmethods for Beginners</a></li>
+        <li>Take a look at <a href="https://julien.danjou.info/blog/2013/guide-python-static-class-abstract-methods">Python Guide to Static, Class, and Abstract methods</a></li>
+    </ul>
+</section>
+
+<section>
+    <h2>Homework: Tic Tac Toe</h2>
+    <p>Let's create a Tic Tac Toe game. You should apply what you learned about classes in the past few days, inheritance, and different kinds of methods</p>
+    <ul>
+        <li>Create objects and objects to represent different parts of the game: Players, Game Board, X's and O's, the Game itself.</li>
+        <li>Prompt 2 players back and forth to pick where they want to put their X's and O's.</li>
+        <li>Every time a player makes a move, you'll need to check if one of the players has gotten 3 in a row.</li>
+    </ul>
+    <p>Some nice to have's:</p>
+    <div class="col-8">
+        <ul>
+            <li>The Game Board has a method to display itself on the terminal after every move</li>
+            <li>Running tally of which player has won more games and ties</li>
+            <li><b>Bonus:</b> Choose to play against a computer player (easiest is have it pick a random space, more complicated would be to have it try to block 3 in a row)</li>
+        </ul>
+    </div>
+    <div class="col-3 col-offset-1">
+            <pre>
+               |   |
+             O |   | O
+               |   |
+            -----------
+               |   |
+             X |   |
+               |   |
+            -----------
+               |   |
+             O |   | X
+               |   |
+            </pre>
+    </div>
+</section>
+
+{% endblock %}

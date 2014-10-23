@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Users: Customizing and Relationships
+{% endblock %}
+
+{% block presentation_title %}
+    Users: Customizing and Relationships
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Reset Password</h2>
+        <p>Often, user's forget their password and need to retrieve it from your site. Now that we're saving emails for our users. Let's see how we can hook up this functionality.</p>
+        <p>Per the running theme, Django also provides this out of the box for us. The forgot your password workflow is a bit more involved, so let's go through it piece by piece.</p>
+        <p>First, let's set up the following urls:</p>
+        <pre><code class="python">{% verbatim %}
+url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password_reset'),
+url(r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done', name='password_reset_done'),
+url(r'^reset/(?P&lt;uidb64>[0-9A-Za-z_\-]+)/(?P&lt;token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    'django.contrib.auth.views.password_reset_confirm',
+    name='password_reset_confirm'),
+url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
+        {% endverbatim %}</code></pre>
+    </section>
+
+    <section>
+        <h2>Reset Your Password (Cont.)</h2>
+        <p>Resetting your password has 4 main steps (represented by each of the views).</p>
+        <ol>
+            <li>A user enters their email address for the account they want to be reset. This view then sends them an email.</li>
+            <li>The user is redirected to an "email sent" page.</li>
+            <li>From the email, the user gets a unique link to click, which brings them to a "Set Your New Password" page on the website. This let's them change the password for their account.</li>
+            <li>The user is redirect to a "your password has successfully been changed" page afterwards.</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Reset Your Password (Cont.)</h2>
+        <div class="col-8">
+            <h4>registration/password_reset_form.html</h4>
+            <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}
+            {% endverbatim %}</code></pre>
+
+            <h4>registration/password_reset_done.html</h4>
+            <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <p>Email with password reset instructions has been sent."</p>
+{% endblock %}
+            {% endverbatim %}</code></pre>
+
+        </div>
+        <div class="col-3 col-offset-1">
+            <p>All we need to do is set up the appropriate templates, Django has us covered with its views that we already added.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Reset Your Password (Cont.)</h2>
+        <h4>registration/password_reset_confirm.html</h4>
+        <pre style="margin-bottom: 20px;"><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    {% if validlink %}
+        <form method="post" action=".">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <input type="submit" value="Submit" />
+        </form>
+    {% else %}
+        <p>Password reset failed</p>
+    {% endif %}
+{% endblock %}
+{% endverbatim %}</code></pre>
+
+        <h4>registration/password_reset_complete.html</h4>
+        <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <p>Password reset successfully</p>
+    <p><a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}
+        {% endverbatim %}</code></pre>
+    </section>
+
+    <section>
+        <h2>Setting up Email</h2>
+        <p>We're almost ready to try out our reset password workflow. The last bit is actually setting up our Django app to send emails.</p>
+        <p>For the point of development and sometimes even small applications you can just use a gmail email address for sending out emails.</p>
+        <p>At scale, you'd want to use a service, such as Mailgun or Mandrill.</p>
+        <p>Put the follow settings in your <code>settings.py</code> replacing the appropriate information with your gmail account.</p>
+        <pre><code class="python">EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'your_email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your_password'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'your_email@gmail.com'</code></pre>
+        <p>Now try it out! If you fill out the password reset form, you should get an email.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Emailing Users</h2>
+        <p>Sending out emails to users once you have emails working is trivial. There's a few different ways to send emails but let's take a quick look at how to send an email to the logged in user.</p>
+        <p>Let's say after a user first registers, we want to send them a welcome email. We could do the following:</p>
+        <pre><code class="python">user = form.save()
+user.email_user("Welcome!", "Thank you for signing up for our website.")</code></pre>
+        <p>Try registering with an email address you own and see the email you get.</p>
+    </section>
+
+    <section>
+        <h2>Emailing Users (Cont.)</h2>
+        <p>What if we want to actually send a much more detailed email that has some HTML styling.</p>
+        <p>We can actually use HTML and input variables into our message.</p>
+        <pre><code class="python">text_content = 'Thank you for signing up for our website, {}'.format(user.username)
+html_content = '<h2>Thanks {} for signing up!</h2> <div>I hope you enjoy using our site</div>'.format(user.username)
+msg = EmailMultiAlternatives("Welcome!", text_content, settings.DEFAULT_FROM_EMAIL, [user.email])
+msg.attach_alternative(html_content, "text/html")
+msg.send()</code></pre>
+        <p>Note above that we give it a text and a html version.</p>
+        <p>Try registering again with an email address you own and see the new and improved email you get.</p>
+        <p>If you've run out of email addresses, there's a trick you can use. Sign up with your_email+1@gmail.com. Gmail will know to forward the email to your regular address. Continue to keep increase the number as you need to for testing.</p>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p></p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Edit our register welcome email to actually use their first and last name instead of username.</li>
+            <li>Have the register welcome email have the datetime of when they exactly joined.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>On our blackjack page, send the user an email every time they're dealt an Ace. It should use their username or name in the email and say they got an Ace and also what the suit of that Ace was.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Custom Users</h2>
+        <p>What happens if we want to add a field to the user model? We can create our own User model, which inherits from Django's.</p>
+        <p>Let's say we want to store our user's phone number. In our cards application, let's put in the following model:</p>
+        <pre><code class="python">class Player(AbstractUser):
+    phone = models.CharField(max_length=12, help_text="Format should be: 650-111-2222")</code></pre>
+        <p>Then in our <code>settings.py</code> we need to put the following: <code>AUTH_USER_MODEL = 'cards.Player'</code>. This setting must be specified. As we discussed earlier, there can only be one User model and Django must know what that model is for password reset, admin, etc. to function correctly.</p>
+        <p>We now can create a <code>makemigrations</code> and run it to create our new user model. It will have all of the fields it did before, plus a phone field.</p>
+        <p>We've told Django that Player is our user model, so <code>request.user</code> will now refer to an instance of a Player.</p>
+    </section>
+
+    <section>
+        <h2>Custom Users (Cont.)</h2>
+        <p>Now, we just tell our <code>EmailUserCreationForm</code> it should be using our new <code>Player</code> class.</p>
+        <p>You'll notice we had to override the <code>clean_username</code> method. This is because Django's built-in form makes the assumption that you're using it's built-in model.</p>
+            <pre><code class="python">
+class EmailUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = Player
+        fields = ("username", "email", "password1", "password2")
+
+    def clean_username(self):
+        # Since User.username is unique, this check is redundant,
+        # but it sets a nicer error message than the ORM. See #13147.
+        username = self.cleaned_data["username"]
+        try:
+            Player.objects.get(username=username)
+        except Player.DoesNotExist:
+            return username
+        raise forms.ValidationError(
+            self.error_messages['duplicate_username'],
+            code='duplicate_username',
+        )
+            </code></pre>
+        <div class="col-2 col-offset-1">
+            <p></p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Now that we have our new user model set up, implement the following.</p>
+        <ol>
+            <li>Have our <code>EmailUserCreationForm</code> allow the user to save a phone number.</li>
+            <li>Show that phone number on their profile page.</li>
+        </ol>
+    </section>
+</section>
+
+<section>
+    <h2>FYI - Django Registration</h2>
+    <p>For the sake of not reinventing the wheel, some of what we've seen today is common user functionality that many Django developers have implemented over and over again.</p>
+    <p>There is a django library, called django registration, which has code and functionality for some of what we've done today as well as several other common tasks around user authentication. It's fairly popular in the Django community, but not required.</p>
+    <p>Here's the <a href="http://django-registration.readthedocs.org/en/latest/">documentation</a></p>
+</section>
+
+<section>
+    <section>
+        <h2>Relating a User</h2>
+        <p>We have Players! Now we can actually tie data in our database to our Player model.</p>
+        <p>Our Player model, is just like any other Django model meaning we can relate another model to it using a ForeignKey or ManytoMany.</p>
+        <p>Let's make a really simple modified version of the card game war, to see how we can keep track of wins, loses, and ties.</p>
+    </section>
+
+    <section>
+        <h2>WarGame Model</h2>
+        <p>First we'll need to create our model that's going to keep track of the matches. It will need to be related to our user model as well as have a field for the outcome of the match.</p>
+        <p>Let's add the following model to our <code>models.py</code> and migrate our database.</p>
+        <pre><code class="python">class WarGame(models.Model):
+    LOSS = -1
+    TIE = 0
+    WIN = 1
+    RESULTS = (
+        (LOSS, "loss"),
+        (TIE, "tie"),
+        (WIN, "win")
+    )
+
+    result = models.IntegerField(choices=RESULTS)
+    player = models.ForeignKey(Player)</code></pre>
+        <p>Notice we're using a choice field for the result and have a ForeignKey to our Player model.</p>
+    </section>
+
+    <section>
+        <h2>WAR!</h2>
+        <p>The rules for our game of war are going to be very, very simple.</p>
+        <ul>
+            <li>Every round of WAR, we're going to pick one random card for the computer and one random card for the player.</li>
+            <li>If the player's card is a higher rank than the computer's, they win. If it's the same, they tie. If it's lower the player loses.</li>
+            <li>Aces are considered the highest in our game.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>WAR! (Cont.)</h2>
+        <p>Let's see how we'd set up this page in our game.</p>
+        <ol>
+            <li>Set up our url <pre><code class="python">url(r'^war/$', 'cards.views.war', name='war'),</code></pre></li>
+            <li>Set up our view. We get 2 random cards and compare the cards to get the result. With the result we create a new WarGame record for the user currently logged in.
+                <pre><code class="python">@login_required()
+def war(request):
+    random_cards = Card.objects.order_by('?')
+    user_card = random_cards[0]
+    dealer_card = random_cards[1]
+
+    result = user_card.get_war_result(dealer_card)
+    WarGame.objects.create(result=result, player=request.user)
+
+    return render(request, 'war.html', {
+        'user_cards': [user_card],
+        'dealer_cards': [dealer_card],
+        'result': result
+    })</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>WAR! (Cont.)</h2>
+        <p>We now need to create the method on our Card model, which compares itself with another card.</p>
+        <div class="col-7">
+        <pre><code class="python">def get_ranking(self):
+    rankings = {
+        'two': 2,
+        'three': 3,
+        'four': 4,
+        'five': 5,
+        'six': 6,
+        'seven': 7,
+        'eight': 8,
+        'nine': 9,
+        'ten': 10,
+        'jack': 11,
+        'queen': 12,
+        'king': 13,
+        'ace': 14
+    }
+    return rankings[self.rank]
+
+def get_war_result(self, card_to_check):
+    my_ranking = self.get_ranking()
+    card_to_check_ranking = card_to_check.get_ranking()
+
+    if my_ranking > card_to_check_ranking:
+        return 1
+    elif my_ranking == card_to_check_ranking:
+        return 0
+    else:
+        return -1</code></pre>
+        </div>
+        <div class="col-4 col-offset-1">
+            <p>We've created one function, which converts each of our cards into an integer for quick comparison.</p>
+            <p>And we've created another function which compares those integers and returns us -1, 0, or 1 to represent our result.</p>
+            <p>Try it out in your Django shell!</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <h4>Play War</h4>
+        <ul>
+            <li>Add a <code>war.html</code> template. Use our <code>includes/hand.html</code> snippet to display the user card and the dealer card. Check the Django docs for how to pass variables to the <code>include</code> tag.</li>
+            <li>In the template, let the user know if they've won, lost, or tied.</li>
+        </ul>
+        <h4>See the results in your profile</h4>
+        <ul>
+            <li>Have your profile view pass in the list of WarGame records for the current user: <code>WarGame.objects.filter(player=request.user)</code></li>
+            <li>Loop over that list of game records in <code>profile.html</code> and show the <code>game.get_result_display</code> of each. You should see a list of "tie", "loss", "win" down your profile page.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Homework! Games</h2>
+            <h4>Beginner</h4>
+            <ul>
+                <li>After a user has played 10 games, send them an email saying thanks for playing!</li>
+                <li>On the user's profile page, show their current win-loss-tie record and how many times they've played.</li>
+            </ul>
+            <h4>Intermediate</h4>
+            <ul>
+                <li>Create a leaderboard that shows the top 5 players with the highest win/loss record. You'll need to create a few more players and play a few games to test this out.</li>
+                <li>Show their "score" by adding up their wins, losses and ties. If a user has 5 wins, 3 losses, and 2 ties their score will be 2. Hint: Use django's <code>Count</code> method in your Queryset.</li>
+            </ul>
+    </section>
+    <section>
+        <h2>Homework (cont'd.)</h2>
+        <h4>Advanced</h4>
+        <ul>
+            <li>Have the user model save a "balance". When a user plays WAR they bet a certain amount of money and either win or lose that amount. They get a default balance when they first sign up.</li>
+            <li>Create a form that allows people to add money to their balance. This can just let someone arbitrarily pick what they want to add to their balance.</li>
+            <li>Look at the documentation for django-registration and set up the two-factor email verification for a user on your website.</li>
+            <li>Read the docs and integrate Django's permissioning. Up to you how. Some ideas: maybe everyone can play War, but only some users can play other games.</li>
+        </ul>
+    </section>
+</section>
+{% endblock %}

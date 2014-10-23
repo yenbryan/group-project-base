@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Django Templating: Inheritance & Static Files
+{% endblock %}
+
+{% block presentation_title %}
+    Django Templating: Inheritance & Static Files
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>DRY Templates</h2>
+        <p>As we've heard many times, we want to keep our python code organized, clean, and DRY.</p>
+        <p>Our templates and HTML should be held up to the same standard.</p>
+        <p>Django's templating language gives us a few different mechanisms to implement this.</p>
+        <p>First let's take a look at our templates inheriting from another template.</p>
+    </section>
+
+    <section>
+        <h2>Inheritance</h2>
+        <p>We've written python classes that inherit from others in order to reuse code.</p>
+        <p>Our templates can implement the same concept.</p>
+        <p>Let's create a new template called <code>base_template.html</code> with the following code:</p>
+        <pre><code>{% verbatim %}&lt;!DOCTYPE html>
+&lt;html>
+    &lt;body>
+        <h1>Welcome to our Card Game!</h1>
+        {% block content %}{% endblock content %}
+    &lt;/body>
+&lt;/html>{% endverbatim %}</code></pre>
+        <ul>
+            <li>First, notice this base template includes the basics of our page, like the doctype and html tags.</li>
+            <li>Next we see these new django template tags, block tags, we'll get back to this in a minute.</li>
+            <li>Generally, most django applications will have a base template that has all of the common elements you would see on every page such as the header and footer.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Inheritance (Cont.)</h2>
+        <p>Next let's set up a new page for our user's profile of this card game we've been working on.</p>
+        <p>In our new template let's insert the following code.</p>
+        <pre><code>{% verbatim %}{% extends 'base_template.html' %}
+
+{% block content %}
+    <p>Hi Player 1, you have 0 wins and 0 loses.</p>
+{% endblock content %}{% endverbatim %}</code></pre>
+        <ul>
+            <li>First, we tell Django that this template wants to inherit from our base template by using the <code>extends</code> django template tag. This has to be the first line in our template.</li>
+            <li>Secondly, we see <code>block</code> tags again. This is saying, take our base template and whenever we see a block, insert content found in the same named block from our sub templates.</li>
+            <li>This means our text from our profile page, will be inserted into the <code>block</code> in our base template.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Inheritance - Another Example</h2>
+        <p>Let's set up a new page for a FAQ about our web game.</p>
+        <p>In our new template let's insert the following code.</p>
+        <pre><code>{% verbatim %}{% extends 'base_template.html' %}
+
+{% block content %}
+    <p>Q: Can I win real money on this website?</p>
+    <p>A: Nope, this is not real, sorry.</p>
+{% endblock content %}{% endverbatim %}</code></pre>
+        <div>Again, we can see that it shares the same base template and code, with this content block overridden with our page specific html.</div>
+        <p>Let's also make this addition to the base template, which will take affect on our FAQ and Profile page.</p>
+        <pre><code>{% verbatim %}&lt;!DOCTYPE html>
+&lt;html>
+    &lt;body>
+        <div><a href="{% url 'profile' %}">Profile</a> |  <a href="{% url 'faq' %}">FAQ</a></div>
+        <h1>Welcome to our Card Game!</h1>
+        {% block content %}{% endblock content %}
+    &lt;/body>
+&lt;/html>{% endverbatim %}</code></pre>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's mess around with template inheritance.</p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Create a new page that deals 5 cards. Have this page inherit from our base template.</li>
+            <li>Add a footer below the block content, which says "copyright [your name] 2014"</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>Create a <code>&lt;head></code> section in your base template, which has a <code>&lt;title></code> tag to display the title of the page.</li>
+            <li>Have the contents of your title be a new <code>block</code>, which each page can overwrite to put a proper title. For example, your web browser's tab on the profile page should say "Profile".</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Include</h2>
+        <p>We've seen how to make our templates DRYer by having them extend our other templates. We can also reuse template snippets as well, instead of duplicating our HTML across pages.</p>
+        <p>So far we've used the same loop to print out our cards multiple time. Let's make it reusable.</p>
+        <ol>
+            <li>Create a folder inside your <code>templates</code> folder called <code>includes</code>. Note, this is a Django common practice for organizing templates meant to be included, but not absolutely necessary.</li>
+            <li>Create a template file called <code>hand.html</code> with the following html, which we've used several times:
+            <pre><code>{% verbatim %}{% for card in cards %}
+    <p>Suit: {{ card.get_suit_display }}, Rank: {{ card.rank }}</p>
+{% endfor %}{% endverbatim %}</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Include (Cont.)</h2>
+        <p>Now let's set up a new page that will deal a blackjack hand and use our new template.</p>
+        <ol>
+            <li>Create a new url and a view with the following code, which will limit our deck to only 2 random cards. Ordering by <code>'?'</code> creates a random deck.
+            <pre><code class="python">def blackjack(request):
+    data = {
+        'cards': Card.objects.order_by('?')[:2]
+    }
+
+    return render(request, 'blackjack.html', data)</code></pre>
+            </li>
+            <li>Create a template, <code>blackjack.html</code> with the following code. The new <code>include</code> tag, is what we use to put our <code>hand.html</code> template html in this template.
+            <pre><code>{% verbatim %}{% extends 'base_template.html' %}
+
+{% block content %}
+    <h2>Blackjack!</h2>
+    <p>Here's your hand...</p>
+    {% include 'includes/hand.html' %}
+{% endblock content %}{% endverbatim %}</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Poker Hand</h2>
+        <p>Now let's say we want to create a page, which gives us a poker hand. We can now reuse our template snippet and not duplicate our code. This way if we want to change how the cards look in the future we only need to change one template instead of many. Let's create that poker hand page.</p>
+        <ol>
+            <li>Create a new url and a view with the following code, which will limit our deck to 5 random cards.
+            <pre><code class="python">def poker(request):
+    data = {'cards': Card.objects.order_by('?')[:5]}
+
+    return render(request, 'poker.html', data)</code></pre>
+            </li>
+            <li>Create a template, <code>poker.html</code> with the following code. Again we use the <code>include</code> tag, to reuse our template snippet, which displays our cards.
+            <pre><code>{% verbatim %}{% extends 'base_template.html' %}
+
+{% block content %}
+    <h2>Poker!</h2>
+    <p>Here's your hand...</p>
+    {% include 'includes/hand.html' %}
+{% endblock content %}{% endverbatim %}</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Django Debug Toolbar</h2>
+        <p>Let's check out DjDT, a tool that every Django developer should be using. It is great for seeing which templates are being included and inherited from on a page as well as what variables they have available</p>
+        <p>It also has many other uses, the most popular being seeing the speed of your SQL queries. Let's set it up!</p>
+        <ol>
+            <li><code>pip install django-debug-toolbar</code></li>
+            <li>Put <code>debug_toolbar</code> in your <code>INSTALLED_APPS</code>.</li>
+            <li>Put <code>INTERNAL_IPS = ("127.0.0.1", "10.0.2.2")</code> in your <code>local_settings.py</code></li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Django Debug Toolbar (Cont.)</h2>
+        <p>Now that we have DjDT set up, reload your poker hand page, there should be a tab on the right called DjDT. Click on it!</p>
+        <ul>
+            <li>First, let's quickly look at the SQL tab. We can see that it gives us information on all of the SQL queries this page ran. We can see how long it took for us to get 5 random cards from our database.</li>
+            <li>Secondly, let's checkout the templates section. We can see 3 templates listed, <code>poker.html</code> which are view is pointed to, <code>base_template.html</code> which are template extends and <code>includes/hand.html</code> which is the template we included on our page.</li>
+            <li>If you click "Toggle context" it will show you what variables each template has access to.</li>
+            <li>If you click the template itself, it will show you the Django template markup.</li>
+        </ul>
+        <p>This may not be obvious now, but it is extremely handy for debugging!</p>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's check out</p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>In our base template, let's put links to our poker and blackjack pages.</li>
+            <li>Create 2 new pages, one that shows all Hearts and one that shows all cards that are not face cards. Reuse our template via <code>include</code>.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>For our blackjack page, let's also show the dealer's hand. We'll need our view to give 2 more random cards for the dealer and use our <code>hand.html</code> snippet. Hint, check the Django documentation on how you can specificy variables with the <code>include</code> tag.</li>
+            <li>Show what the current score is for the player and dealer.</li>
+            <li>Show a message if the dealer or player has a "blackjack" (Cards add up to 21).</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Static Files</h2>
+        <p>When building an application you often need to include external files, such as images, javascript and css. Django has some built-in functionality for templates to help make including this as easy as possible. Let's follow these steps to make sure we're ready to include static files:</p>
+        <ul>
+            <li>Create a folder in your cards application called <code>static</code>. Each of your django applications can have their own static folder with assets related to that application.</li>
+            <li>Let's create 3 folders inside of our static folder, <code>img</code>, <code>js</code>, and <code>css</code>.</li>
+            <li><code>pip install pillow</code> <- this will let our python code work with images.</li>
+            <li>In <code>urls.py</code> add the following at the bottom of the file:
+                <pre><code class="python">if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)</code></pre>
+            </li>
+            <li>In <code>settings.py</code> add the following before the line that imports your local_settings file:
+                <pre><code class="python">PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, "static", *MEDIA_URL.strip("/").split("/"))</code></pre>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Images</h2>
+        <p>First, let's see how we would just add an image of a playing card into our application.</p>
+        <p>In our base template, let's do two things:</p>
+        <ol>
+            <li>Add <code>{% verbatim %}{% load staticfiles %}{% endverbatim %}</code> to the top of the template.</li>
+            <li>Put the following in our header div, before our Profile link: <pre><code>{% verbatim %}<img id="joker" width="40px" src='{% static "img/red_joker.jpg" %}'>{% endverbatim %}</code></pre></li>
+        </ol>
+        <p>Also, download this <a href="{% static 'img/red_joker.jpg' %}">image</a> and place it in the <code>static/img</code> folder we just created.</p>
+        <p>If you reload any of your pages, we now have a playing card showing up in our header.</p>
+        <p><code>static</code> is a template tag we can use to specify with a string what static file we'd like to use. To use it, we just load the <code>staticfiles</code> template tag library at the top of the file.</p>
+    </section>
+
+    <section>
+        <h2>Javascript & CSS</h2>
+        <p>The same static tag is how we also include javascript or css files into our application.</p>
+        <p>First, download this <a href="{% static "js/cards.js" %}">javascript file</a> and <a href="{% static "css/cards.css" %}">css file</a> then put them into their proper static folders, js and css respectively.</p>
+        <p>Next, include the following in the head section of your base template so that they're loaded on every single page.</p>
+        <pre><code>{% verbatim %}&lt;head>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="{% static 'js/cards.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cards.css' %}">
+&lt;/head>{% endverbatim %}</code></pre>
+        <p>Reload your page, now that we've included some javascript and css, our playing card rotates every couple of seconds.</p>
+    </section>
+
+    <section>
+        <h2>Media</h2>
+        <p>We've now seen how to include other files into our application, but what if we want to associate an image or file with one of our models?</p>
+        <p>Let's have our <code>Card</code> model actually save the image of the card it's associated with so we can use that to display it.</p>
+        <p>First, let's add the following image field to our model, create a migration, then migrate.</p>
+        <pre><code class="python">image = models.ImageField(upload_to='card_images', blank=True, null=True)</code></pre>
+        <p>Our image field has a <code>upload_to</code> attribute, which defines what folder images for this field are saved to in our project.</p>
+    </section>
+
+    <section>
+        <h2>Media (Cont.)</h2>
+        <p>We don't want to upload every single card's image one by one, so let's use a modification of our function in <code>utils.py</code> to do it for us.</p>
+        <ol>
+            <li>Download this <a href="{% static "assets/week4/Playing Cards.zip" %}">folder</a> of playing card images.</li>
+            <li>Create a new static folder in our root directory. The same directory that has all of our application folders and <code>manage.py</code> file.</li>
+            <li>Create a folder inside of the static folder called <code>media</code> and a folder inside of that named <code>card_images</code>.</li>
+            <li>Put the playing card images inside of this new, <code>card_images</code> folder. Normally if we uploaded images, Django would do this for us.</li>
+            <li>Edit <code>utils.py</code> with the code found in this <a href="{% static "assets/week4/utils.py" %}">file</a>, which adds our images in appropriately for each card.</li>
+            <li>Open up the django shell <code>python manage.py shell</code> and run the follow commands:
+                <pre><code class="python">>>> from cards.models import Card
+>>> Card.objects.all().delete()
+>>> from cards.utils import create_deck
+>>> create_deck()</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Media - All Together Now</h2>
+        <p>Now all of our playing cards in our database should have an image tied to them appropriately.</p>
+        <p>Let's edit our <code>hand.html</code> snippet and make sure of the new images:</p>
+        <pre><code>{% verbatim %}
+{% for card in cards %}
+    <img width="100px" src="{{ card.image.url }}">
+{% endfor %}
+        {% endverbatim %}</code></pre>
+        <p>If we go to our blackjack and poker pages, we now have actual playing card images!</p>
+        <p>In a template, to get the full url to media that we have uploaded, you use the <code>url</code> property of that field.</p>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p></p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>There should be a black joker card in the library of playing card images. Add that to your project's image static folder and put that on the other side of your header.</li>
+            <li>Register our <code>Card</code> model with the admin, then go upload new photos for the playing cards, to see how they're changed. Specifically the library of playing card images should have alternate ones for face cards you can use.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>Create a second image field on our Card model for alternate images of cards. After running your migrations, add some alternate photos for your cards.</li>
+            <li>In your template, if the card has an alternate photo, show that one, else show the original photo.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h2>Homework! Portfolio Site</h2>
+    <p>For the homework, let's turn our portfolio sites into Django-powered sites.</p>
+    <div class="col-7">
+        <h4>Beginner</h4>
+        <ul>
+            <li>Create a base template, which contains your header, top navigation bar with links, and footer.</li>
+            <li>Create 2 pages, a home page and about me, which extend the base template and display relevant content about yourself.</li>
+            <li>Use a picture of yourself and your CSS using Django's static files.</li>
+        </ul>
+        <h4>Intermediate</h4>
+        <ul>
+            <li>Create a new "projects" page and a Project model in your database. Have this page show a list of your projects.</li>
+            <li>Have your home page show one, random project. Use Django filters and template tags to get the random project. Use the <code>include</code> template tag to reuse display a project between your home page and project list page.</li>
+        </ul>
+    </div>
+    <div class="col-4 col-offset-1">
+        <h4>Advanced</h4>
+        <ul>
+            <li>Create another model called ProjectImages, which relates to your Project model. You can use this model to store multiple images about your Project.</li>
+            <li>On your project page, and the random project on your home page, display all of the images for each project.</li>
+            <li>Create a "Contact Me" page, with a form for someone to send you an email.</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

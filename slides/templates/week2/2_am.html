@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Intro to DBs
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Database Landscape</h2>
+    <p>There are multiple ways to store data in modern development. For the purpose of this bootcamp we'll be focusing on PostgreSQL and relational databases.</p>
+    <ul>
+        <li>Why PostgreSQL? The three major relational databases used are MySQL, PostgreSQL, and Oracle.</li>
+        <li>PostgreSQL has built in replication, a large number of data types, many extensions, and rapid development.</li>
+        <li>A relational database is one that has relations from data in one table to another. For example, we'd store categories for our blog and we'd relate our blog posts to those categories.</li>
+        <li>NoSQL databases are meant to store more unstructured data in vasts amount with less consistency. NoSQL databases are known to be easier for scaling.</li>
+        <li>Some examples of NoSQL databases are Mongo, Couch, and Hadoop.</li>
+        <li>Ultimately the Relational vs NoSQL debate comes down to using the right tool for the job. Both have their place in development.</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h2>Creating a Database</h2>
+        <p>First, let's create a database locally that we can use.</p>
+        <ul>
+            <li class="fragment">Type <code>psql</code> in your terminal.</li>
+            <li class="fragment">If you get an error message that you couldn't connect to the server then we need to start PostgreSQL, run <code>postgres -D /usr/local/var/postgres</code></li>
+            <li class="fragment">Type <code>psql</code> again, you should get an error that a database doesn't exist.</li>
+            <li class="fragment">Let's create our test database for today, typically you'll create different databases for different applications and projects.</li>
+            <li class="fragment">Run <code>psql postgres</code>, this will take us inside of PostgreSQL's shell. <code>postgres</code> is a database installed on every setup of PostgreSQL</li>
+            <li class="fragment">Now that we're inside the shell, let's create our new database. Run <code>create database blog;</code></li>
+            <li class="fragment">Then let's switch to our new database. Run <code>\connect blog</code>. If we were just on our command line we could use <code>psql blog</code></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Tables and Columns</h2>
+        <ul>
+            <li class="fragment">A database is made up of a collection of tables where we store data.</li>
+            <li class="fragment">Tables are made up of columns, where we store individual pieces of data (numbers, strings, dates, etc). Every new record we store in the table can be visualized as a row. Database tables, can very much be thought of visually like a spreadsheet.</li>
+            <li class="fragment">In the following examples, we're going to try to create database tables that you may have in a blog application.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Column Types</h2>
+        <p>PostgreSQL has a wide variety of different column types, much more than other relational databases. For starters, let's stick to a list of the basics.</p>
+        <ul>
+            <li>boolean - true or false values</li>
+            <li>varchar(x) - a string of varying length up to x characters long</li>
+            <li>integer - an integer value</li>
+            <li>date - a specific calendar date (year, month, day)</li>
+            <li>timestamp - a date and time</li>
+            <li>text - a variable length, usually larger, string</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Creating a Table</h2>
+        <p>Let's see how we can create a table for our authors. We're going to only worry about saving their name and twitter handle for right now.</p>
+        <div class="col-6">
+            <ul>
+                <li class="fragment" data-fragment-index="2">We've created our name field as a varchar with up to 120 characters. We've created our twitter field up to 40 characters.</li>
+                <li class="fragment" data-fragment-index="3">Note, we said that our name field is <code>NOT NULL</code> meaning it has to have a value, while the twitter field we're saying can be empty.</li>
+                <li class="fragment" data-fragment-index="4">Also note that we created an id field, which we set to be <code>PRIMARY KEY</code>. Every table has to have a <code>PRIMARY KEY</code> field, which is unique for every record.</li>
+                <li class="fragment" data-fragment-index="5">Often times this unique field will just be an id with the type <code>serial</code>. This means for every new record in the database, the id field will auto-increment by 1, meaning you do not have to explicitly give it a value.</li>
+            </ul>
+        </div>
+        <div class="col-5 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code>
+CREATE TABLE author (
+  id       serial PRIMARY KEY,
+  name     varchar(120) NOT NULL,
+  twitter  varchar(40)
+);
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Inserting Data</h2>
+        <p>Now that we have an author's table, let's insert a few authors into it.</p>
+        <div class="col-12">
+            <pre><code>
+INSERT INTO author (name, twitter) VALUES ('Dr. Seuss', '@TheDoctor');
+INSERT INTO author (name, twitter) VALUES ('George R. Martin', '@YourFavoriteCharactersDead');
+INSERT INTO author (name, twitter) VALUES ('Edgar Allan Poe', '@Poestories');
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>Notice the syntax, we specify the name of the table and the name of the columns we're INSERTING data INTO first.</li>
+                <li>Then we specify the VALUES we're placing in those columns for that row. Note the ordering of values has to match the ordering of column names.</li>
+                <li>You can see that we did not have to specify the <code>id</code> of each row. It automatically made these id 1, 2, and 3 for us.</li>
+                <li>To check that our entries are now in the database, run <code>select * from author;</code>. We'll cover reading data more shortly.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Updating Data</h2>
+        <p>Once we have data in the database, we can also edit and update it. Let's take our Edgar Allan Poe author and update his twitter handle to '@PoeKnows'.</p>
+        <div class="col-12">
+            <pre><code>
+UPDATE author SET twitter = '@PoeKnows' WHERE id=3;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>There is 3 parts to this update SQL statement.</li>
+                <li>1. We specify the table we're UPDATING.</li>
+                <li>2. We SET the field equal to the new value that we're changing</li>
+                <li>3. We specify WHERE the id is equal to 3, which we know is Edgar Allan Poe.</li>
+                <li>Run the select command again in your psql shell to see that we did indeed change his twitter handle.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Deleting Data</h2>
+        <p>We can also delete records from the database in a similar fashion to updating.</p>
+        <div class="col-12">
+            <pre><code>
+DELETE FROM author WHERE id=3;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>Notice, we specify the table we're DELETING FROM and WHERE the record's id is 3.</li>
+                <li>If you try this out and check with our SELECT statement, you'll notice Edgar Allan Poe is no longer in our table.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+        <h3>Installation</h3>
+        <ul>
+            <li>First, let's create a database for our world data. Run <code>create database world;</code></li>
+            <li>Let's load up the database, first download the data from <a href="http://pgfoundry.org/frs/download.php/527/world-1.0.tar.gz">here</a>.</li>
+            <li>Next we need to load our new world database with the data, exit out of the psql shell then run <code>psql world < ~/Downloads/dbsamples-0.1/world/world.sql</code></li>
+            <li>Please note, your Download path to the file may be different than specified above. Just change it so that it points to where your world.sql file was downloaded to.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database (Cont.)</h2>
+
+        <h3>Create Exercises</h3>
+        <p>For the rest of the following exercises, make sure you save the queries you are running in a file for reference.</p>
+        <ul>
+            <li>First, make sure to run <code>\d</code> and <code>\dt</code> to inspect the available tables. Notice we have tables for city, country, and countrylanguages.</li>
+            <li>Add a record to the country table: code: 'LIL', name: 'Lilliput', continent: 'Europe', population: 150. There will be other columns you need to make up data for. <code>SELECT * FROM country WHERE code='LIL';</code> should return the record.</li>
+            <li>Update our 'Lilliput' record to fill in some of the various columns with made up data that are currently empty, such as life expectancy, indep year, capital, head of state, etc.</li>
+            <li>Add a countrylanguage record for this new country. The language is 'Lilliputian', and should have the same Country Code as the Lilliput record. It should also be the official language and 99.5% of people speak it. Again, check your work with a <code>SELECT</code> statement.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Querying Data</h2>
+        <p>As we saw in the previous examples, we are able to read data from the database using <code>SELECT</code></p>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM author;
+SELECT name, twitter FROM author;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>When we use <code>*</code> our <code>SELECT</code> statement will return all of the columns of the table.</li>
+                <li>Instead of using <code>*</code> we can instead specify the exact columns we'd like to get.</li>
+                <li>This is often good practice for performance if we're trying to pull data from a table with many columns and many rows.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Querying with Parameters</h2>
+        <p>Instead of getting all of the records in table, we can create <code>WHERE</code> clauses that have logic to limit our results.</p>
+        <div class="col-12">
+            <pre><code>
+INSERT INTO author (name, twitter) VALUES ('Edgar Allan Poe', '@Poestories');
+INSERT INTO author (name) VALUES ('Mark Twain');
+
+SELECT * FROM author WHERE id > 1;
+SELECT * FROM author WHERE name = 'Mark Twain';
+SELECT name FROM author WHERE twitter IS NOT NULL;
+SELECT name, twitter FROM author WHERE LENGTH(name) < 11;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>First let's add back Edgar Allan Poe as well as Mark Twain so we can practice more queries.</li>
+                <li>Notice, we don't pass in a twitter handle for Mark Twain, he's not into social media.</li>
+                <li>Our queries can use common logic operations >, <, =.</li>
+                <li>We can also check if a field is NULL or not. NULL is PostgreSQL's version of Python's None.</li>
+                <li>We can also use some builtin functions in PostgreSQL, like LENGTH, to get authors where their name is less than 11 characters long.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+
+        <h3>Select Exercises</h3>
+        <p>Create queries to get the following sets of information. Make sure you save the queries you are running in a file for reference.</p>
+        <ul>
+            <li>The code, name, and surface area for all countries in Oceania.</li>
+            <li>The capital id and population of every country with a population greater than 10 million.</li>
+            <li>The name, district and population of every city in Italy.</li>
+            <li>The name of each language, together with the country code, where the percentage is less than 25%.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Limiting Queries</h2>
+        <p>When we have tables in our database with many rows, we may want to limit back how many we get a time.</p>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM author LIMIT 1;
+SELECT twitter FROM author WHERE twitter IS NOT NULL LIMIT 2;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>Using the <code>LIMIT</code> statement in PostgreSQL we're able to specify how many records we want at a time.</li>
+                <li>We can say to the database, only give us one row back.</li>
+                <li>We can also combine the <code>LIMIT</code> statement with other PostgreSQL SQL statements as well, such as <code>WHERE</code>.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Sorting Queries</h2>
+        <p>Often times we'd like to sort our results back from the database based on one or more columns. It's usually more efficient to do this with our SQL query, rather than with python.</p>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM author;
+SELECT * FROM author ORDER BY name;
+SELECT * FROM author ORDER BY name ASC;
+SELECT * FROM author ORDER BY name DESC;
+SELECT id FROM author ORDER BY id DESC;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>By default if no <code>ORDER BY</code> is set the database usually returns the records to us by the order they were created. However this is not always guaranteed.</li>
+                <li>Ascending order, <code>ASC</code>, means in alphabetical order when dealing with strings or from lowest to highest if applied to integers. Descending, <code>DESC</code>, means the opposite.</li>
+                <li>If you use <code>ORDER BY</code>, but don't specify <code>ASC</code> or <code>DESC</code> it will assume an ascending order.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+
+        <h3>Ordering Exercises</h3>
+        <p>Create queries to get the following sets of information from the previous exercise, now sorted. Make sure you save the queries you are running in a file for reference.</p>
+        <ul>
+            <li>The code, name, and surface area for all countries in Oceania - sorted by surface area in descending order.</li>
+            <li>The capital city and population of every country with a population greater than 10 million - sorted by population in ascending order.</li>
+            <li>The name, district and population of every city in Italy - sorted first by district in ascending order and then population in descending order.</li>
+            <li>The name of each language, together with the country code, where the percentage is less than 25% - sorted by language in ascending order, country code in ascending order and percentage in descending order.</li>
+        </ul>
+    </section>
+</section>
+
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Django Migrations
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Changing DB tables with migrations</h2>
+    <p>Working on your homework, it was very likely that you made a mistake. You ran <code>makemigrations</code>, and afterward realized you wanted to change something about the way you defined your model. If you make changes in your models file but don't update your DB, your DB won't reflect the changes.</p>
+    <p>Our <code>makemigrations</code> and <code>migrate</code> commands work for not only creating new tables, but also when we need to change our existing models and underlying database tables.</p>
+
+    <p>This functionality "Migrations" is a way of tracking changes in your app and applying them to your database. They serve a lot of great purposes:</p>
+    <ul>
+        <li>Making DB changes</li>
+        <li>Allowing you to work on a team</li>
+        <li>Helping you revert DB changes</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Migration History</h2>
+    <p>Before Django 1.7, migrations were not part of the core Django library. Django users had to use a 3rd party library, South, if they wanted this functionality. South was developed many years ago and has largely gone unchanged in the past few years.</p>
+    <p>Most members of the Django community knew about and used South, but new Django developers often did hear about it until they were far into their first project or started hitting some road blocks with changing their existing models.</p>
+    <p>The developer who first created South, started a Kickstarter to fund development work to integrate South into core Django. This work happened and finally landed in Django 1.7.</p>
+    <p>It wasn't just a copy and paste effort to merge South into core Django though. The migration framework now found in Django is completely redesigned and rewritten from scratch with all of the learned pros and cons from the South library.</p>
+</section>
+
+<section>
+    <section>
+        <h2>Inspecting the Migration</h2>
+        <div>
+            <div class="col-5">
+                <p>So what happened when we ran <code>python manage.py makemigrations</code> and <code>python manage.py migrate</code>? If we look in our app directory, we should see a migration folder. This folder holds the record of all migrations for models in this application.</p>
+            </div>
+            <div class="col-6 col-offset-1">
+                <pre><code class="bash">
+/your_project
+    /your_app
+        /migrations
+            0001_initial.py
+            0002_blog.py
+            __init__.py
+                </code></pre>
+            </div>
+        </div>
+        <div class="clear">
+            <p>The migrations are numbered to it easier for us to see what order they were ran in. This means you could be working on this project with another person, and they would be able to run your code and it would create the necessary database tables for them.</p>
+            <p>Running <code>python manage.py makemigrations</code> is the command that actually makes this new migration file in our folder</p>
+            <p>Running <code>python manage.py migrate</code> is the command that has Django actually make the changes in the migration to our database.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Understanding migration files</h2>
+        <p>If you look at your initial migration file, you should see something, maybe a little scary, that looks like this.</p>
+        <pre><code class="python">
+class Migration(migrations.Migration):
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Author',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False,
+                                        auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=120)),
+                ('twitter', models.CharField(max_length=40, null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]
+            </code></pre>
+    </section>
+    <section>
+        <h2>Understanding migration files (Cont.)</h2>
+        <p>Don't freak out. This file can be broken up into a few simple parts:</p>
+        <p>The <code>dependencies</code> are other migrations that need to be ran before this migration can be run. Since this migration was the first for our application there are none.</p>
+        <p>The <code>operations</code> are all of the Create, Alter, or Delete related SQL commands we need to run to change the database to be in sync with our models.</p>
+        <div class="col-5">
+            <pre><code class="python">
+class Migration(migrations.Migration):
+
+    dependencies = [
+    ]
+
+    operations = [
+    ]
+            </code></pre>
+        </div>
+    </section>
+</section>
+
+<section>
+    <h2>Order of operations</h2>
+    <ol>
+        <li>You make a change to one of your models</li>
+        <li>You run <code>python manage.py makemigrations app_name</code> -- this creates your migration files. That is all it does. It creates the file in the migrations directory. To actually apply the migration to your database, you run...</li>
+        <li><code>python manage.py migrate app_name</code></li>
+    </ol>
+    <p>Note: Here we've actually specified the app_name. If you don't specify the app_name you make migrations or run migrations for every application in your project. Best practice is to be explicit.</p>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <p>We've already ran migrations yesterday. Let's try a few more and look at the files that are being made to see again what's happening.</p>
+    <ol>
+        <li>Add a publish_date field to your Post model. Create and run migrations. Check out the migration file created. Inspect the table in your psql shell and notice the new column was added.</li>
+        <li>Revert your migration for publish_date. Search for and read the django documentation on how to revert your migration. It should just be one command you have to run.</li>
+        <li>Add a "blurb" field to your Post model. Create and run migrations for it.</li>
+        <li>Create a datamigration, which will fill in our blurb field with the first 100 characters of the body of the post, plus a elipsis. Data migrations are used to prepopulate values in our database tables, especially when we're adding a new field. Read the <a href="https://docs.djangoproject.com/en/dev/topics/migrations/#data-migrations">docs</a>!</li>
+    </ol>
+</section>
+
+<section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Let's practice database design, creating models, and using those models to save data as well as query to get that data back.</p>
+
+        <p>Build a World Cup project. Start a new Django project following the instructions <a href="{% url "week2_day3_am" %}"> from earlier</a>. Your application will need to keep track of all of the teams in the tournament.</p>
+        <p>Here's the requirements for your application. It will be up to you to do the database design and create the models needed:</p>
+        <ul>
+            <li>It will need to keep track of all teams in the tournament as well as the players on those teams.</li>
+            <li>It should keep track of the different groups each team is assigned to.</li>
+            <li>It should be able to store win and loss records for different match ups during the tournament.</li>
+            <li>Bonus: Have your application work for multiple World Cup tournaments</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Do it yourself (cont.)</h2>
+        <p>Insert information into the database for your different models. Also register your models in the admin so you can see, visually, the data you're creating.</p>
+        <p>Using the Django ORM, craft some querysets to get interesting information out of your database. Here are some example ideas:</p>
+        <ol>
+            <li>Get all players on teams that have no losses.</li>
+            <li>Get all players on teams in a specific group.</li>
+            <li>Get the "winner" of each group.</li>
+            <li>Get the win/loss ratio for all teams.</li>
+            <li>Get the team with the most wins.</li>
+        </ol>
+    </section>
+</section>
+
+<section>
+    <h2>Homework</h2>
+    <p>If you've finished the World Cup project, take the Building Manager and/or Movie exercises and create real Django models out of them.</p>
+    <p>You know the drill. Do some database design, create the models, create and run your migrations, insert real data, then create some interesting queries.</p>
+    <p>It is EXTREMELY important you have a solid grasp on databases, relationships, and the Django ORM to build upon.</p>
+</section>
+{% endblock %}

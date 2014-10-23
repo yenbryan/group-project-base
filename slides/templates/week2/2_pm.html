@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Intro to DBs
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Functions</h2>
+        <p>PostgreSQL comes with a whole slew of functions that you can run in queries in the database.</p>
+        <p>Often it is much faster to run these functions in the database, rather than getting the data and then running them in python.</p>
+        <div class="col-12">
+            <pre><code>
+SELECT 2 + 2 AS addition;
+SELECT 4 / 2 AS division;
+
+SELECT upper(name) FROM author;
+SELECT length(twitter) AS twitter_length, name, twitter from author ORDER BY twitter_length;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>We can run, for example, basic math in our SQL queries.</li>
+                <li>We can also manipulate strings, just as we would in python. This third query will return us all of our authors' names, uppercased.</li>
+                <li>Using <code>AS</code> we can rename what we'd like our columns to be called when returned, which can be especially useful for when using functions.</li>
+                <li>We can then also use that new value to ORDER our query's results.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Functions (Cont.)</h2>
+        <p>Let's try out a few more advanced cases of functions.</p>
+        <div class="col-12">
+            <pre><code>
+SELECT AVG(length(name)) from author;
+SELECT MAX(length(twitter)) from author;
+
+SELECT 'Name: ' || name AS display_name from author;
+SELECT CONCAT(name, ' - ', twitter) from author;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>We can chain our calls and use the built in AVG and MAX functions to figure out the average author name length and the length of the longest twitter handle.</li>
+                <li>We can also append arbitrary strings together using <code>||</code></li>
+                <li>If your values may be <code>NULL</code> it is often a good idea to use <code>CONCAT</code> instead, which can handle different situations better.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+        <h3>Functions</h3>
+        <ul>
+            <li>Write a query that will return the average population of all countries as well as the average life expectancy.</li>
+            <li>Write a query that will return the city with the largest name. Hint: You will need to use an ORDER BY and a Limit 1 clause in your query.</li>
+            <li>Write a query that will return the country code for the country that has the highest percentage of it's population speaking Spanish. Hint: Use the countrylanguage table and a WHERE clause.</li>
+            <li>Create a query that will return values from the Name, GNP and GNPOld columns for all records where the GNP value is greater than zero. The results should include an output column named ‘delta_percent’ that displays the difference between the GNP and GNPOld values as a percentage of the GNPOld value.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Group By</h2>
+        <p>Often times we'll want to logically group our records into different categories. This makes it easy to run our aggregate methods, like AVG and MAX on specific groups, not just for every record.</p>
+        <div class="col-12">
+            <pre><code>
+SELECT continent, AVG(population) AS avg_pop FROM country GROUP BY continent;
+SELECT continent, AVG(population) AS avg_pop FROM country GROUP BY continent HAVING AVG(population) > 0;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>This first query will return us the average population of every continent. The database will <code>GROUP</code> every record together, based on the value of its continent column, then do the math to find the average.</li>
+                <li>Our second query uses the <code>HAVING</code> clause to specify that we only want results where the average population is greater than 0. <code>HAVING</code> is only used when we're using <code>GROUP BY</code></li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+        <h3>Group By</h3>
+        <ul>
+            <li>Create and execute an SQL statement that will return the average percentage that each language is used in countries in which it is spoken.</li>
+            <li>Next, make it so that the results should only show languages that are spoken on average by more than 20% of the population and should be sorted in descending order of average percentage.</li>
+            <li>Finally, round all of the average percentages to only 2 decimal places.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Relationships</h2>
+        <p>Now that we've got the fundamentals of PostgreSQL and SQL syntax, let's learn about the real reason we're using a relational database.</p>
+        <ul>
+            <li>Let's say we want to make a blog post table in our blog database.</li>
+            <li>We'd like that blog post table to store the author for every blog post.</li>
+            <li>Our first instinct may be to store the author's name in a column and their twitter handle in another column on the table for every blog post. This way, when we have a blog post we now have access to that author.</li>
+            <li>But what would happen if Dr. Seuss changed his twitter handle? We'd have to update his twitter handle on every single blog post where he's the author. Also, thinking back to our python principles, this is not very dry.</li>
+            <li>What we need to do is keep our author table and be able to relate our blog post table to our author table. This way, there is only one single record for an author that contains the proper and up to date information.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Relationships (Cont.)</h2>
+        <p>How do we relate a blog post record in our blog post table to a record in the author table?</p>
+        <ul>
+            <li>Well we know every table is supposed to have a <code>PRIMARY KEY</code>. This key is supposed to be unique for every single record we have in the table.</li>
+            <li>Primary keys are never supposed to change once they're created. This is a contract we have with our database.</li>
+            <li>This means we can safely store this key with our blog post, to always have a reference to the author, even though the author's data in its own table may change over time.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>One to Many</h2>
+        <div>Let's create the new post table.</div>
+        <div class="col-12">
+            <pre><code>
+CREATE TABLE post (
+    id          serial PRIMARY KEY,
+    title       varchar(120) NOT NULL,
+    body        text,
+    author_id   integer references author
+);
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>First, we've given our post table an id that's a primary key, a title, and a body.</li>
+                <li>Next, we've added an author_id integer column where we'll store the blog author's primary key.</li>
+                <li>Now, we need to tell PostgreSQL that this author_id actually <code>references</code> our author table. We do this by just specifying it on our author_id field.</li>
+                <li>This constraint tells PostgreSQL that we want to create a concrete relationship from this author_id field to our author table. PostgreSQL knows that the primary key field of the author table is id and links them together appropriately.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>One to Many (Cont.)</h2>
+        <div>Let's save some blog posts in our new table.</div>
+        <div class="col-12">
+            <pre><code>
+INSERT INTO post (title, body, author_id) VALUES ('First!', 'My blog post.', 1);
+INSERT INTO post (title, body, author_id) VALUES ('Second!', 'My second blog post.', 1);
+INSERT INTO post (title, body, author_id) VALUES ('Best Blog Post', 'The best post.', 2);
+
+INSERT INTO post (title, body, author_id) VALUES ('Will not work', 'Nice try.', 100);
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>Put in the first 3 blog posts into your new table. We'll create two blog posts for author with the id 1, Dr. Seuss, and one for George R. Martin.</li>
+                <li>Feel free to <code>SELECT * FROM author;</code> again to jog your memory.</li>
+                <li>Now try to run this last statement. Notice PostgreSQL gives us an error, because it knows there is no author with the id 100. We made a contract with PostgreSQL by adding our <code>FOREIGN KEY CONSTRAINT</code> which it will not let us break.</li>
+                <li>This is great! It means that if we have a blog post, we should always have an author we can go reference and PostgreSQL will error on us if we try to do something wrong.</li>
+            </ul>
+        </div>
+    </section>
+
+   <section>
+        <h2>One to Many Explained</h2>
+        <p>In this example, we created a <b>One to Many</b> relationship, which is important to understand the difference, since we'll be talking about another one shortly.</p>
+        <p>Here's how you should think about:</p>
+        <ol>
+            <li>A blog post has one author.</li>
+            <li>An author can have many blog posts.</li>
+        </ol>
+       <p>From this explanation we can see that we have one author to many blog posts. Let's revisit this in a bit.</p>
+   </section>
+
+    <section>
+        <h2>Queries with Joins</h2>
+        <div>Let's see how we can query across our two blog tables.</div>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM post, author WHERE post.author_id = author.id;
+SELECT * FROM post INNER JOIN author ON (post.author_id = author.id);
+
+SELECT post.title, author.name as author_name, author.twitter as author_twitter
+    FROM post, author
+    WHERE post.author_id = author.id;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>These two queries above, both get the same results.</li>
+                <li>Basically, we're saying get us every post, and also get us the author info for each post as well.</li>
+                <li>We can specify, which fields we actually want from each table as we see in the 3rd query. This is usually good practice as well as renaming the variable so our output is more explicit.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+
+        <h3>Joins</h3>
+        <p>Write a query that will return the following for all cities in Asia.</p>
+        <ul>
+            <li>The name of the city</li>
+            <li>The district that it is in</li>
+            <li>The name of the country that it is in</li>
+            <li>The population of the city as a value</li>
+            <li>The population of the city as a percentage of the population of the country to 1 decimal place</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Queries with Outer Joins</h2>
+        <div>Let's see how we can query across our two blog tables.</div>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM author LEFT OUTER JOIN post ON (author.id = post.author_id);
+SELECT author.name as author_name, author.twitter, post.body as post_body
+    FROM author
+    LEFT OUTER JOIN post
+    ON (author.id = post.author_id);
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>We can also use an <code>OUTER JOIN</code>, where the main table we're using, author, in this example may not necessarily have a corresponding row in the joined table.</li>
+                <li>If you notice in our results, some of our author's have NULL values in the columns for post.</li>
+                <li>Again, we can rewrite this so we take only the columns we want and rename them so that it is more readable.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself - World Database</h2>
+
+        <h3>Outer Joins</h3>
+        <p>Write a query that will return values for the language names and country name for any countries in Antarctica.</p>
+        <p>Make sure that there is at least one output record per country.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Many to Many</h2>
+        <p>Let's add tags to our posts.</p>
+        <div class="col-12">
+            <pre><code>
+CREATE TABLE tag(
+    id serial PRIMARY KEY,
+    name varchar(20) NOT NULL
+);
+INSERT INTO tag (name) VALUES ('food');
+INSERT INTO tag (name) VALUES ('literature');
+INSERT INTO tag (name) VALUES ('poetry');
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>First we need to make a table called tag, which will store all of the different tags for our blog posts.</li>
+                <li>Secondly, let's populate it with some data to work with.</li>
+                <li>How do we go about relating our tags to our blog posts? A blog post can have many tags and a tag can have many blog posts so we can't store an ID on either table like we did for post -> author.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Many to Many (Cont.)</h2>
+        <div>We can create another table, which will store our relationships between posts and tags.</div>
+        <div class="col-12">
+            <pre><code>
+CREATE TABLE post_tag(
+    post_id integer references post,
+    tag_id integer references tag,
+    PRIMARY KEY (post_id, tag_id)
+);
+INSERT INTO post_tag (post_id, tag_id) VALUES (1, 3);
+INSERT INTO post_tag (post_id, tag_id) VALUES (1, 2);
+INSERT INTO post_tag (post_id, tag_id) VALUES (3, 2);
+
+INSERT INTO post_tag (post_id, tag_id) VALUES (3, 10);
+INSERT INTO post_tag (post_id, tag_id) VALUES (15, 1);
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>We created a table which stores a foreign key to both the post table and to the tag table. Our table, post_tag is an intermediary table, which helps us store many to many relationships.</li>
+                <li>We can insert values into this table by passing the ids of our other two tables.</li>
+                <li>Our last two statements refer to tag ids or post ids that do not exist. PostgreSQL does not let us put this information in our database, just like we saw with the other example.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Queries with Joins</h2>
+        <p></p>
+        <div class="col-12">
+            <pre><code>
+SELECT * FROM tag INNER JOIN post_tag ON (tag.id = post_tag.tag_id) WHERE post_tag.post_id = 1;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>First, let's write a query that will get us all of our tags for our post with id 1.</li>
+                <li>We use an inner join on our post_tag many to many table, and specify <code>WHERE</code> post_id = 1</li>
+                <li>We should get 2 tags back, which we tied to this post in our post_tag table on the last slide.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Queries with Joins (Cont.)</h2>
+        <div>Let's get all of the tags for any blog post written by Dr. Seuss, whose author id is 1.</div>
+        <div class="col-12">
+            <pre><code>
+SELECT tag.id as tag_id, tag.name as tag_name, post.title as post_title
+    FROM tag
+    INNER JOIN post_tag
+    ON (tag.id = post_tag.tag_id)
+    INNER JOIN post
+    ON (post_tag.post_id = post.id)
+    WHERE post.author_id = 1;
+            </code></pre>
+        </div>
+        <div style="clear:both;">
+            <ul>
+                <li>This is as complicated as we'll take it for now, but we can actually <code>JOIN</code> across many tables.</li>
+                <li>We can verbalize this as: let's get all tags, where the tag's id matches our post_tag's tag_id field, where post_tag's post_id matches the post's id on our post table, where our post table's author id is 1.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>We'll use our blog database to try to find these results.</p>
+        <ul>
+            <li>Write a query that gets all tags for posts whose title is 'First!'.</li>
+            <li>Write a query that gets all posts that have the tag with the id 2.</li>
+            <li>Write a query that gets all posts that have the tag 'poetry'.</li>
+            <li>Hardest: Write a query that returns all tags for blog posts written by an author whose twitter handle's length is less than 15.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <h2>Homework! Movies.</h2>
+    <p><b>Let's create a database of movies.</b></p>
+    <ul>
+        <li>We'll need a genre table, which stores the names of different genres.</li>
+        <li>We should have an actor's table, which stores their first and last names.</li>
+        <li>We should also have a director's table, which stores their first and last names.</li>
+        <li>And we'll need a movie table, which stores the name of the movie, how long it is, the date it came out (try using a PostgreSQL date field), and how much its budget was.</li>
+        <li>A movie will have one director. It will have many actors and it will have many genres.</li>
+    </ul>
+
+    <p>Once you've created your database with your tables and relationships populate it with data from random movies from imdb.com. Try to get at least 10 movies in there.</p>
+    <p><b>Next try to construct the SQL queries below</b></p>
+    <ul>
+        <li>Get all movies that happened in the past 5 years.</li>
+        <li>Get all movies who has the 'Action' genre (or a similar genre you put in your database)</li>
+        <li>Get a list of all of the directors and the average budget for their movies.</li>
+        <li>Get a list of actors for the oldest movie in your database.</li>
+        <li>Get creative and try to play around with some of your own questions / queries.</li>
+    </ul>
+</section>
+
+{% endblock %}

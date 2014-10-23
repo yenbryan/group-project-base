@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Digging Into Forms
+{% endblock %}
+
+{% block presentation_title %}
+    Digging Into Forms
+{% endblock %}
+
+{% block slides %}
+
+<section>
+    <h2>Do it yourself</h2>
+    <p>Make a new Django project! You should have models BlogPost, Author, Comment, and Tag. We'll be using this project for our examples this afternoon.</p>
+</section>
+
+<section>
+    <h2>Django forms API</h2>
+    <p>Django forms can be thought of in different sections:</p>
+    <ul>
+        <li><em>Widgets:</em> A class responsible for what HTML is actually outputting to the page.</li>
+        <li><em>Fields:</em> A class responsible for rendering and validating an input.</li>
+        <li><em>Forms:</em> A collection of Fields</li>
+        <li><em>Form assets:</em> The CSS and JS required to correctly render the form</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Form objects</h2>
+    <div class="col-4">
+        <p>So far, we have only looked at ModelForm objects. But Django allows you to create non-model forms as well using the base Form class.</p>
+        <p>Django form definitions look a lot like our model definitions, but instead of adding model fields, we are adding form fields.</p>
+    </div>
+    <div class="col-7 col-offset-1">
+        <h4>forms.py</h4>
+        <pre><code>
+from django import forms
+from blog.models import Author
+
+class CommentForm(forms.Form):
+    author = forms.ModelChoiceField(queryset=Author.objects.all())
+    comment_body = forms.CharField()
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Displaying our forms</h2>
+    <h4>views.py</h4>
+    <pre><code>
+from blog.forms import CommentForm
+
+def my_form_view(request):
+    data = { "comment_form": CommentForm() }
+    return render(request, "my_form.html", data)
+    </code></pre>
+    <h4>my_form.html</h4>
+    <pre><code>
+&lt;form method="POST">
+    &#123;% csrf_token %}
+    &#123;{ comment_form }}
+    &lt;input type="submit" value="Submit comment" />
+&lt;/form>
+    </code></pre>
+</section>
+
+<section>
+    <h2>Customizing form layout</h2>
+    <p>Forms have no special layout by default (have a look at the html on your page). Instead you can use some helper functions to format your forms. Try each of the following on your comment form.</p>
+    <ul>
+        <li><code>&#123;{ my_form.as_p }}</code></li>
+        <li><code>&#123;{ my_form.as_ul }}</code></li>
+        <li><code>&#123;{ my_form.as_table }}</code></li>
+    </ul>
+    <p>You can also loop over a form's fields individually to print them out.</p>
+    <pre><code>
+&lt;ol>
+    &#123;% for field in form %}
+        &lt;li>
+            &#123;{ field.label_tag }}
+            &#123;{ field }}
+        &lt;li>
+    &#123;% endfor %}
+&lt;/ol>
+    </code></pre>
+</section>
+
+<section>
+    <section>
+        <h2>Saving non-model forms</h2>
+        <p>When we were working with model forms, all we had to do to create or update an object was call <code>form.save()</code>. But what about with non-model forms?</p>
+        <p class="fragment">Custom forms aren't related to a model, so they have no concept of saving a model object.</p>
+        <div class="fragment">
+            <div class="col-3">
+                <p>But, we still have access to the form (with the form data)</p>
+            </div>
+            <div class="col-8 col-offset-1">
+                <div class="boxedText">Form with form data</div>
+            </div>
+        </div>
+        <div class="fragment">
+            <div class="col-3">
+                <p>And we still know how to create Comment objects</p>
+            </div>
+            <div class="col-8 col-offset-1">
+                <p><code>Comment.objects.create(body="SOME TEXT", author=SOME_AUTHOR)</code></p>
+            </div>
+        </div>
+        <p class="fragment">So let's just fill in our <code>create</code> call with data from the form.</p>
+    </section>
+    <section>
+        <h2>Extracting form data</h2>
+        <div class="col-4">
+            <p>If you inspect your form variable, you will see that once forms are validated, they have access to an attribute <code>cleaned_data</code></p>
+            <p><code>form.cleaned_data</code> is just a dictionary. The keys are the field names you defined in your form class. The values are the data being submitted.</p>
+            <p>So instead of calling <code>form.save()</code> we can extract each of the form fields and use them as we wish. In this case, to create a comment.</p>
+        </div>
+        <div class="col-7 col-offset-1">
+            <pre><code>
+def my_form_view(request):
+    data = { "comment_form": CommentForm() }
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            author = form.cleaned_data['author']
+            body = form.cleaned_data['comment_body']
+            Comment.objects.create(author=author, body=body)
+    else:
+        return render(request, "my_form.html", data)
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <ul>
+            <li>Read <a target="_blank" href="https://docs.djangoproject.com/en/dev/ref/forms/fields/#built-in-field-classes">here</a> about the built-in form fields that Django makes available, then make forms with the appropriate form fields for each model in your blog app.</li>
+            <li>Build out the create action for each of your models (route, view, template). Instead of using a ModelForm, roll your own.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Validating input</h2>
+        <p>Depending on the exact Field object chosen some validation is automatic. For example, <code>EmailField</code> and <code>URLField</code> will ensure the input matches the required format for those types of data.
+        <p>More common validation is provided through arguments to the Field constructor.</p>
+        <ul>
+            <li>All fields take a <code>required</code> argument (e.g., <code>forms.CharField(required=False)</code>). Fields are required by default!</li>
+            <li>CharFields take <code>max_length</code> and <code>min_length</code> arguments</li>
+        </ul>
+        <p>Check the documentation when using a field to see if it provides validation functions for your specific needs.</p>
+    </section>
+    <section>
+        <h2>Displaying errors</h2>
+        <div class="col-4">
+            <p>By default, Django outputs the errors for each Field between the label and input of the Field. The errors are in an unordered list with a class of <code>errorlist</code>.</p>
+            <p>To change the error layout we need to do a custom form layout.</p>
+        </div>
+        <div class="col-7 col-offset-1">
+            <pre><code>
+&lt;form method="POST">
+    &#123;% csrf_token %}
+    &lt;ul>
+        &#123;% for field in form %}
+            &lt;li>
+                &#123;{ field.errors }}
+                &#123;{ field.label_tag}} &#123;{ field }}
+            &lt;/li>
+        &#123;% endfor %}
+    &lt;/ul>
+&lt;/form>
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p><a target="_blank" href="https://docs.djangoproject.com/en/dev/ref/forms/fields/#core-field-arguments">Read more</a> about the arguments you can pass to your form fields. Based on your model's defined fields, add some of these field arguments as appropriate. E.g., if a field on your model is not required, or has a min or max length, your form fields should specify this.</p>
+    </section>
+    <section>
+        <h2>Custom validators</h2>
+        <div class="col-4">
+            <p>Sometimes, the provided validation functions aren’t enough.</p>
+            <p>Every Field accepts a <code>validators</code> argument. It’s a list of functions to call with the provided input.</p>
+            <p>Custom validators take a single argument, the user’s input.</p>
+            <p>They should either run silently, with no <code>return</code> statement, or raise a <code>ValidationError</code> if input is bad</p>
+        </div>
+        <div class="col-7 col-offset-1">
+            <h4>forms.py</h4>
+            <pre><code>
+def no_politics_validator(value):
+    if re.match("democrat|republican|obama|congress", value) is not None:
+        raise ValidationError("You can’t talk about politics on this blog")
+
+class CommentForm(forms.Form):
+    author = forms.ModelChoiceField(Author)
+    comment_body = forms.CharField(validators=[no_politics_validator])
+            </code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Write a custom validator for your blog. Add error display to your forms. Make some errors and see what happens.</p>
+        <p><a target="_blank" href="https://docs.djangoproject.com/en/dev/ref/validators/">Read more</a> about custom validators.</p>
+    </section>
+</section>
+
+<section>
+    <h2>Subclassing forms</h2>
+    <div class="col-4">
+        <p>Sometimes you have forms that are very similar, one just has a few more fields. For example, think of a login form and a signup form on a website. They probably look very similar, except the signup form has an extra "confirm password" field.</p>
+        <p>Try this on your own forms: subclass a form and use it for multiple models.</p>
+    </div>
+    <div class="col-7 col-offset-1">
+        <pre><code class="python">
+class MyBaseForm(forms.Form):
+    field1 = forms.ModelChoiceField(YourModel)
+    field2 = forms.CharField()
+
+class MyOtherForm(MyBaseForm)
+    # gets field1 and field2 from MyBaseForm
+    # can have additional fields of its own
+    another_field = forms.BooleanField()
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <section>
+        <h2>Do it yourself: Learn more</h2>
+        <h4>Basic</h4>
+        <p>Do the <a target="_blank" href="https://docs.djangoproject.com/en/1.6/intro/tutorial01/">Django Tutorial</a>, parts 1-4 if you have not yet. It is similar to what we've done in class, but goes into more detail on some subjects than we have and explains things slightly differently.</p>
+        <p>Learn more about <a target="_blank" href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a>. There are more options that we haven't covered, and a lot more detail on what's possible.</p>
+        <p>Become a query expert:</p>
+        <ul>
+            <li><a target="_blank" href="https://docs.djangoproject.com/en/dev/topics/db/queries/">Querying basics</a>: mostly a review of what we've covered in class</li>
+            <li>See the full <a target="_blank" href="https://docs.djangoproject.com/en/dev/ref/models/querysets/">QuerySet API reference</a>. This covers more than what we've done in class, but will give you more powerful ways to query your models.</li>
+        </ul>
+        <h4>More Difficult</h4>
+        <p>Read about (and apply) formsets and form widgets. Also try loading multiple forms on the same page and submitting them.</p>
+    </section>
+    <section>
+        <h2>Do it yourself: Practice more</h2>
+        <h4>Basic</h4>
+        <p>If you are still wrapping your head around what we've talked about Friday and today with basic Django apps, take our blog from today and flesh it out with the full index, create, detail, edit, and delete functionality for each model.</p>
+        <p>Still want more practice? Make an online bookselling application called Zambezi. As a book retailer, you will need to keep track of your books and key information about them. Your models should include (but are not limited to): Book, Genre, Author. You will also have a Customer model. As the application manager, you should be able to add books to a customer's recommended book list. You will be using both many to many and many to one relationships.</p>
+        <h4>More Difficult</h4>
+        <p>If you don't think you need to practice that anymore, try making a non-CRUD / resourceful app (e.g., one that doesn't just use index, create, detail, edit, and delete views). Try turning one of your games from before (Pokemon, RPG, etc.) into a Django app. Think about how users will make decisions in your game--will they be presented with different links for different options? will you use non-model forms for user input? How will you abstract your functionality to make your views and templates flexible and reusable?</p>
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Create a contact form that includes a field for users to input their email addresses. When users submit the form, they should get an email confirmation.</p>
+        <p>Sending mail from Django is straightforward using the built-in <code>send_mail</code> function:</p>
+        <pre><code>
+    from django.core.mail import send_mail
+
+    send_mail("Subject",
+            "Message",
+            "from@example.com",
+            ["to@example.com"]
+    )
+        </code></pre>
+        <p>It's up to you to figure out where / how to use this function (there is more than one answer).</p>
+    </section>
+</section>
+{% endblock %}

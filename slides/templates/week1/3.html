@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Object-Oriented Python I
+{% endblock %}
+{% block presentation_title %}
+    OO Python I
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Object-oriented vs. functional programming</h2>
+    <div class="col-9">
+        <p>So far, all the programming you have done is functional. You've been writing functions to solve very specific problems. In functional programming, your code is organized around actions and the logic to handle them. In OO programming, you organize your code around types of objects, including their state and available behavior.
+    </p>
+    <p>Python is an object-oriented language. Other examples of OO programming languages include: Java, Perl, Ruby, PHP, Objective-C, etc. The differences between OO and functional programming probably won't be immediately obvious to you, but will start to make sense after you have been programming for awhile.</p>
+    </div>
+
+</section>
+<section>
+    <h2>What are objects?</h2>
+    <p>To discuss OO programming, we should explain some of the key terminology.</p>
+    <p>Objects are representations of ‘things’.</p>
+    <p><a target="_blank" href="http://docs.oracle.com/javase/tutorial/java/concepts/index.html">A class</a> is a blueprint or prototype from which objects are created</p>
+    <p>In the real world, you'll often find many individual objects all of the same kind. For example, there may be thousands of bicycles in existence, all of the same make and model. Each bicycle was built from the same set of blueprints and therefore contains the same components. In object-oriented terms, we say that your bicycle is an <em>instance</em> of the <em>class of objects</em> known as bicycles. A class is the blueprint from which individual objects are created.</p>
+</section>
+
+<section>
+    <h2>Let's check out an example in Python</h2>
+    <div class="col-6">
+        <p class="fragment" data-fragment-index="0">We have a class Car</p>
+        <p class="fragment">Class names are capitalized, and singular (e.g., we don't have a class Cars)</p>
+        <p class="fragment">Classes inherit from <code>object</code> because any new class you write will be a type of object.</p>
+        <p class="fragment">We give our class some <em>attributes</em>, e.g., <code>speed</code>, <code>direction</code>, <code>color</code>. Every new car we make will start off with speed 0, direction 0 and color red.</p>
+        <p class="fragment">You <em>instantiate</em> a new instance of class Car by calling <code>Car()</code>, which you can assign to a variable.</p>
+        <p class="fragment"><code>c</code> is now a Car object stored in a location in your computer's memory (the string of ugly letters and numbers)</p>
+    </div>
+    <div class="col-6 fragment" data-fragment-index="0">
+        <h4>bash</h4>
+        <pre><code>
+>>> class Car(object):
+...     speed = 0
+...     direction = 0 # degrees from N
+...     color = "red"
+...
+>>> c = Car()
+>>> c
+<__main__.Car object at 0x1091bdbd0>
+>>>
+   </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Using __init__</h2>
+    <div class="col-6">
+        <p>Many classes use an <code>__init__()</code> method to instantiate class instances. This allows you to define the attributes of the object when it is created (e.g., color), while still providing the option to have defaults (e.g., speed and direction).</p>
+        <p><code>self</code> refers to the specific object being created. You do not pass <code>self</code> when actually using methods, only when defining them.</p>
+    </div>
+    <div class="col-6">
+        <pre><code>
+>>> class Car(object):
+...     def __init__(self, color="red"):
+...         self.speed = 0
+...         self.direction = 0
+...         self.color = color
+...
+>>> c = Car()
+>>> c
+<__main__.Car object at 0x10bac4c90>
+>>> c.color
+'red'
+>>> c.speed
+0
+>>> second_car = Car("blue")
+>>> second_car.color
+'blue'
+>>> second_car.direction
+0
+>>> third_car = Car(15, "green")
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: __init__() takes at most 2 arguments (3 given)
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>State and behaviors</h2>
+    <div class="col-6">
+        <p>Objects have <em>states</em> (attribute values) and <em>behaviors</em> (methods). For example <code>accelerate()</code> is a behavior that will change the state of the car. It changes the car's speed.</p>
+        <p class="fragment" data-fragment-index="0">Also, I'm getting tired of redefining this Car class each time. Let's take advantage of imports.</p>
+        <ol>
+            <li class="fragment">Transfer your code for the Car class to its own car.py file</li>
+            <li class="fragment">When you open the Python interpreter in your shell, you can now import the class <code>Car</code> from the module <code>car</code></li>
+        </ol>
+    </div>
+    <div class="col-6">
+        <h4>car.py</h4>
+        <pre><code>
+class Car(object):
+    ...
+
+    def accelerate(self):
+        self.speed += max(0,1)
+
+    def brake(self):
+        self.speed -= max(0,1)
+
+    def turn_left(self):
+        self.direction -= 90
+        </code></pre>
+    <div class="fragment" data-fragment-index="1">
+        <h4>bash</h4>
+        <pre><code>
+>>> from car import Car
+>>> c = Car()
+>>> c
+&lt;car.Car object at 0x1053eebd0&gt;
+        </code></pre>
+    </div>
+    </div>
+    <!-- To see speaker notes, hit 's' on your keyboard -->
+    <aside class="notes">
+        As you go work through the examples for today, be sure to spend some time demonstrating debugging strategies. Specifically, print statements and PyCharm breakpoints as mentioned in <a href="#/12">Debugging Cheatsheet</a> slide.
+    </aside>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <p>Make a class Bicycle.</p>
+    <ul>
+        <li>Give your bicycles some attributes. Use the <code>__init__</code> method.</li>
+        <li>Give your bicycles some accessories. What data structure(s) will allow you to include some accessories with your bicycles? You should be able to add and remove bicycle accessories.</li>
+        <li>Go on a bike ride!</li>
+    </ul>
+    <p>Already done? Want to dig a little deeper?</p>
+    <ul>
+        <li>Check out Codecademy's Intro to Classes: <a target="_blank" href="http://www.codecademy.com/courses/python-intermediate-en-WL8e4/0/1">Class Basics</a> & <a target="_blank" href="http://www.codecademy.com/courses/python-intermediate-en-WL8e4/1/1">Member Variables and Functions</a></li>
+        <li>Take a look at <a target="_blank" href="http://learnpythonthehardway.org/book/">Learn Python the Hard Way</a>, exercises 40-42</li>
+    </ul>
+</section>
+<section>
+    <h2>Multiple classes: Set up</h2>
+    <div class="col-5">
+        <p>In real life, you'll have objects from lots of classes interacting with each other. Let's take a look at a simple example: a blog.</p>
+        <p class="fragment">
+            We break our code into three files <code>main.py</code> will hold our main blog program, <code>blog_post.py</code> will hold our <code>BlogPost</code> class, and <code>author.py</code> will hold our <code>Author</code> class.
+        </p>
+        <p class="fragment">
+            In Python <code>pass</code> doesn't add functionality, but is a nice placeholder for when you're thinking.
+        </p>
+    </div>
+    <div class="col-6 col-offset-1">
+        <div class="fragment" data-fragment-index="0">
+            <h4>blog/main.py</h4>
+            <pre><code>
+from author import Author
+from blog_post import BlogPost
+            </code></pre>
+        </div>
+        <div class="fragment" data-fragment-index="0">
+            <h4>blog/blog_post.py</h4>
+            <pre><code>
+class BlogPost(object):
+    pass
+            </code></pre>
+        </div>
+    <div class="fragment" data-fragment-index="0">
+            <h4>blog/author.py</h4>
+            <pre><code>
+class Author(object):
+    pass
+            </code></pre>
+        </div>
+    </div>
+</section>
+<section>
+    <h2>Multiple classes: Defining our classes</h2>
+    <div class="col-6">
+        <p>Let's flesh out our BlogPost and Author classes.</p>
+        <p class="fragment">
+            We can assign an Author to each BlogPost, and we can add blog posts to an author's list of blog posts.
+        </p>
+        <p class="fragment">
+            We add the <code>__repr__</code> method so that our objects have a pretty representation, rather than the memory location
+        </p>
+    </div>
+    <div class="col-6">
+        <div class="fragment" data-fragment-index="0">
+            <h4>blog/blog_post.py</h4>
+            <pre><code>
+class BlogPost(object):
+    def __init__(self, title, published_date, author=None):
+        self.title = title
+        self.content = ""
+        self.published_date = published_date
+        self.author = author
+
+    def __repr__(self):
+        return self.title
+            </code></pre>
+        </div>
+    <div class="fragment" data-fragment-index="0">
+            <h4>blog/author.py</h4>
+            <pre><code>
+class Author(object):
+    def __init__(self, name):
+        self.name = name
+        self.blog_posts = []
+
+    def __repr__(self):
+        return self.name
+            </code></pre>
+        </div>
+    </div>
+</section>
+<section>
+    <h2>Multiple classes: Adding interaction</h2>
+    <div class="col-6">
+        <p>Let's give some functionality to our BlogPost and Author classes.</p>
+        <div class="fragment">
+            <p>
+                Now we have methods to help us add and remove blog posts by authors. The advantages of these methods are:
+            </p>
+            <ol>
+                <li>They're quicker and easier than what we were doing manually before</li>
+                <li>They reduce the chance for human error--e.g., if we had said an Author was associated with a blog post, but not vice versa.</li>
+            </ol>
+        </div>
+        <p class="fragment">
+            Remember that <code>self</code> is the object on which you are performing the function.
+        </p>
+    </div>
+    <div class="col-6">
+        <div class="fragment" data-fragment-index="0">
+            <h4>blog/blog_post.py</h4>
+            <pre><code>
+class BlogPost(object):
+    ...
+
+    def change_author(self, old_author, new_author):
+        self.author = new_author
+        old_author.blog_posts.remove(self)
+        new_author.blog_posts.append(self)
+            </code></pre>
+        </div>
+    <div class="fragment" data-fragment-index="0">
+            <h4>blog/author.py</h4>
+            <pre><code>
+from blog_post import BlogPost
+
+
+class Author(object):
+    ...
+
+    def write_blog_post(self, title, published_date):
+        b = BlogPost(title, published_date, self)
+        self.blog_posts.append(b)
+        return b
+            </code></pre>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Multiple classes: Writing a program (1)</h2>
+    <div class="col-6">
+        <p>We'll write a program to actually write some blog posts and create authors</p>
+        <p class="fragment">
+            <code>sys</code> is a built-in Python module that gives us access to information that the Python interpreter uses. <code>sys.argv</code> is a list of command line arguments passed to a Python script. So, <code>argv[0]</code> is the name of the script you are running, <code>argv[1]</code> is the first word after that, etc.
+        </p>
+        <p class="fragment">We make an Author object for ourselves based on the name we pass to the script.</p>
+    </div>
+    <div class="col-6">
+        <div class="fragment" data-fragment-index="0">
+            <h4>blog/blog_post.py</h4>
+            <pre><code>
+import sys
+from author import Author
+
+def blog_manager(user, blog_posts, authors):
+    pass
+
+print "Hey! Welcome to the blog {}!".format(sys.argv[1])
+user = Author(sys.argv[1])
+blog_posts = []
+authors = [user]
+blog_manager(user, blog_posts, authors)
+            </code></pre>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Multiple classes: Writing a program (2)</h2>
+    <div class="col-4">
+        <p>We combine the classes and methods we just wrote with the Python scripting we've been doing to create a basic blog management application.</p>
+    </div>
+    <div class="col-7 col-offset-1">
+        <h4>blog/blog_post.py</h4>
+        <pre><code>
+import sys
+from author import Author
+
+def blog_manager(user, blog_posts, authors):
+    action = raw_input("Would you like to (A)dd a blog post or (S)ee existing posts? ").lower()
+
+    if action == "a":
+        is_author = raw_input("Are you the author of this post? (Y/N) ").lower()
+        if is_author == "y":
+            author = user
+        else:
+            author_name = raw_input("What's the author's name? ")
+            author = Author(author_name)
+            authors.append(author)
+        title = raw_input("What's the title? ")
+        published_date = raw_input("When was this published? ")
+        b = author.write_blog_post(title, published_date)
+        blog_posts.append(b)
+        print "Congratulations! You added a post {} for {}".format(b, author)
+        blog_manager(user, blog_posts, authors)
+    elif action == "s":
+        print blog_posts
+        blog_manager(user, blog_posts, authors)
+    elif action == "q":
+        print "Thanks for using the blog!"
+    else:
+        print "Sorry, I don't understand what you want"
+        blog_manager(user, blog_posts, authors)
+
+print "Hey! Welcome to the blog {}!".format(sys.argv[1])
+user = Author(sys.argv[1])
+blog_posts = []
+authors = [user]
+blog_manager(user, blog_posts, authors)
+blog_manager(user, blog_posts, authors)
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Debugging cheatsheet</h2>
+    <p>You've seen me use a couple different debugging techniques throughout the day. First and foremost, the best way to help yourself debug is to not 'cowboy code'--you should be trying out your code at regular intervals, rather than writing 100 lines and not being sure where your code is broken.</p>
+    <ul>
+        <li><code>print</code> statements: very quick and easy, but can be messy</li>
+        <li>
+            PyCharm debugging. Other IDEs will also let you set breakpoints, and there are <a target="_blank" href="https://pypi.python.org/pypi/ipdb">Python modules</a> that will help you do the same. To set breakpoints in PyCharm, you must run your code through PyCharm and not in your normal terminal window.
+            <ul>
+                <li>Go to Run / Debug and Edit Configuration</li>
+                <li>Click on the + sign in the upper-left corner to add a new script you want to run</li>
+                <li>Fill in the name, select the source file, and hit OK</li>
+                <li>Click on the left of your code in PyCharm to set breakpoints</li>
+                <li>Run your code in debug mode to step through breakpoints</li>
+            </ul>
+        </li>
+        <li>Python also has <a target="_blank" href="https://docs.python.org/2/library/logging.html">logging</a> built in, which allows you to catch errors, but also warnings and other more granular information</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <h4>Building Manager</h4>
+    <p>Create a program for a building manager. The building manager needs to be able to add new buildings, apartment units, and renters. All apartment units must be in an associated building. Buildings should have some basic information associated, like their address, if they have a doorman, the number of floors, etc. Apartments should have a unit number, rent, square footage, number of bedrooms, etc. You should also have basic information about your renters.</p>
+    <p>You should also have a way of identifying if the apartment is occupied. If it is, you shouldn't be able to add a new renter to the unit.</p>
+    <p>Bonus: When talking about apartments in a building, you should be able to refer to them and get their attributes using the specific apartment name. Hint: what data structure will allow this?</p>
+</section>
+
+<section>
+    <h2>More useful links</h2>
+    <ul>
+        <li><a target="_blank" href="http://www.jesshamrick.com/2011/05/18/an-introduction-to-classes-and-inheritance-in-python/">An Introduction to Classes and Inheritance (in Python)</a></li>
+        <li><a target="_blank" href="http://www.tutorialspoint.com/python/python_classes_objects.htm">Tutorials Point</a></li>
+    </ul>
+</section>
+
+{% endblock %}

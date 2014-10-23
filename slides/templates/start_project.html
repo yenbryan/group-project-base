@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Start Project Cheatsheet
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>New Django Project - Project Folder</h2>
+    <p>Let's create a directory on our computer where we're going to save all of our Django projects.</p>
+    <ul>
+        <li>Personally I use a directory simply named <code>projects</code> in my root folder</li>
+        <li>I can always get there by running <code>cd ~/projects</code></li>
+        <li>Make this folder, whatever you'd like to call it, and make sure your terminal is now in that directory.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>New Django Project - Virtualenv?</h2>
+    <p>What is this virtual environment thing?</p>
+    <ul>
+        <li>Virtual environments help us organize the python packages we're using in our project.</li>
+        <li>Imagine you start a new project and you start using the latest version of Django.</li>
+        <li>Your work then has you start working on an older project that is using an earlier version of Django.</li>
+        <li>If you have the latest version of Django installed, then you can't work on the older project and vice versa.</li>
+        <li>This is where virtualenvs help!</li>
+        <li>It creates a 'virtual' python environment for each of our projects.</li>
+        <li>This means we can install different python packages in each of our virtualenvs and no longer have to worry about conflicts.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>New Django Project - Create Virtualenv</h2>
+    <p>Let's create our first virtualenv</p>
+    <ul>
+        <li>During the installfest we already installed virtualenv and virtualenvwrapper.</li>
+        <li>Virtualenvwrapper gives us some handy tools on our command line to create and activate our virtual environments.</li>
+        <li>First, let's make our new virtualenv, which we'll call 'project_name' (fill in your own project name).</li>
+        <li>Run <code>mkvirtualenv project_name</code></li>
+        <li>If this does not work edit your <code>~/.bash_profile</code> and put this line in it <code>source "/usr/local/bin/virtualenvwrapper.sh"</code> then open up a new tab in your terminal.</li>
+        <li>Now we're inside of a virtualenv! Your command line should say <code>(project_name)</code> to show you're inside of it.</li>
+        <li>Run <code>deactivate</code>, this will take you outside of your virtualenv.</li>
+        <li>Now run <code>workon project_name</code> to get back inside of it.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>New Django Project - Start Django</h2>
+    <p>Let's get the Django project created.</p>
+    <ul>
+        <li>Run <code>pip install django</code>, this will install the latest version of django in your virtualenv.</li>
+        <li>Run <code>pip install psycopg2</code>, this will install the python package which helps python talk to PostgreSQL.</li>
+        <li>Run <code>django-admin.py startproject project_name</code>, this will create our new django project files.</li>
+        <li>We need to create the database we'll use for this project
+            <ul>
+                <li>If your database isn't running yet, run <code>pg_ctl start -D /usr/local/var/postgres/</code></li>
+                <li>Run <code>psql postgres</code> then <code>create database project_name;</code> to create the database for our project.</li>
+            </ul>
+        </li>
+        <li>Now let's open this new project, project_name, in an entirely new window in PyCharm.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>New Django Project - Local Settings</h2>
+    <p>Let's hook up our database to Django.</p>
+    <ul>
+        <li>Under the main folder, on the same level as <code>manage.py</code>, create a new file called <code>local_settings.py</code>.</li>
+        <li>Copy and past the below code into this file. This is telling our Django project to use the <code>project_name</code> database we just created.</li>
+    </ul>
+    <div>
+        <pre><code class="python">
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'project_name',
+    }
+}
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>New Django Project - Local Settings 2</h2>
+    <ul>
+        <li>Open your <code>settings.py</code> and copy and paste the below code in at the bottom of the file. This code tells our settings file to read from our local_settings file.</li>
+        <div>
+            <pre><code class="python">
+try:
+    from local_settings import *
+except ImportError:
+    pass
+            </code></pre>
+        </div>
+        <li>We use a local settings file, because when we have a project on our computers for development, we want to use different settings than if it was in production. For example, we may have more secure names and passwords for our database in production.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>New Django Project - PyCharm</h2>
+    <p>We're almost there! We need to tell PyCharm about the virtualenv we created that has our python package we'll be using for this project.</p>
+    <ol>
+        <li>Click on PyCharm -> Preferences</li>
+        <li>Click on Project Interpreter</li>
+        <li>Click on the gear icon in the upper right corner and select 'Add Local'</li>
+        <li>Go to your home directory. For Mac users, your home directory is the home of your logged in user account. It is the same place that you go to when you <code>cd</code>, which is usually <code>/Users/your_name</code>. In Finder, this is often Macintosh HD > Users > YourName</li>
+        <li>From your home directory, go to -> .virtualenvs -> project_name -> bin, then choose the file that's just called <code>python</code></li>
+    </ol>
+    <p>Now PyCharm knows about where our virtualenv is. That folder we just found is literally where virtualenv installs our python packages when we do <code>pip install</code></p>
+</section>
+
+<section>
+    <h2>New Django Project - PyCharm</h2>
+    <p>Make sure PyCharm knows that you're running a Django project</p>
+    <ol>
+        <li>Click on PyCharm -> Preferences</li>
+        <li>Click on Django</li>
+        <li>Select 'Enable Django Support'</li>
+        <li>For your Django project root, select the folder which contains <code>manage.py</code>. Your settings should be <code>settings.py</code> (not local_settings), and your manage script should be <code>manage.py</code>. Select Okay.</li>
+        <li>Outside of your preferences, select the dropdown right next to the green play button and click 'Edit Configurations' if you do not have a green 'dj' Django logo next to your project name.</li>
+        <li>Click the '+' icon in the upper left and select 'Django server'.</li>
+        <li>Name your server your project's name and accept the other settings.</li>
+    </ol>
+</section>
+
+<section>
+    <h2>New Django Project - Test</h2>
+    <p>We should be all set to try it out!</p>
+    <ol>
+        <li>Click the green play button in the top right corner of PyCharm. This runs our local Django development web server.</li>
+        <li>Your console should show a link to <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a>, click on it.</li>
+        <li>We should get the defacto your Django website is up page!</li>
+    </ol>
+</section>
+
+<section>
+    <h2>Run Built-in Django Migrations</h2>
+    <h4>Installation (always do this)</h4>
+    <ol>
+        <li><code>python manage.py migrate</code> in order to create tables for Django's built in migrations</li>
+    </ol>
+</section>
+
+<section>
+    <h2>Django App</h2>
+    <p>Create an app inside your project.</p>
+    <ul>
+        <li>At your project root, on the same level as manage.py, run <code>python manage.py startapp app_name</code>. This is the built in command to create a new Django app.</li>
+        <li>Django projects are made up of multiple Django applications. Each app is supposed to focus on a small set of functionality. This helps us write modular code.</li>
+        <li>Often times it can be a pain to try to name our project differently than our first app, but choose your names wisely cause you're usually stuck with them once a project has started!</li>
+        <li>Next, we need to register our new app with our Django project, open <code>settings.py</code> and in <code>INSTALLED_APPS</code> add <code>'app_name'</code> to the end of the list.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Make migrations</h2>
+    <ol>
+        <li>After making changes to your models.py, you make migrations and then migrate
+            <ul>
+                <li><code>python manage.py makemigrations app_name</code></li>
+                <li><code>python manage.py migrate app_name</code></li>
+            </ul>
+        </li>
+    </ol>
+</section>
+
+<section>
+    <h2>Freeze requirements</h2>
+    <p>You've been working in a virtual environment so that your project's requirements are kept separate from those of other projects. But how do you track these requirements and make sure your teammates can set theirs up with the exact same versions of the same libraries?</p>
+    <p>You can make a list of all your required libraries by running <code>pip freeze > requirements.txt</code> (you should be in the same directory that has <code>manage.py</code>). This will create a new file requirements.txt (or overwrite an existing file with the same name) that has a list of all your required libraries. Any time you <code>pip install</code> a new library in your virtualenv, you should run <code>pip freeze > requirements.txt</code> again to keep this list up to date.</p>
+    <p>Then, when you share code with someone, they can run a simple command (<code>pip install -r requirements.txt</code>) and have all the necessary libraries. This will also help you ensure your production environment matches your development environment when you start deploying projects.</p>
+</section>
+{% endblock %}

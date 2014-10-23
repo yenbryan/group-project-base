@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Introduction to Django
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>What is Django?</h2>
+    <p>The last few days, you have been using the Django ORM to build model relationships and better understand the connection between Python classes and database tables. The ORM is one of the most powerful features of Django, but it is only one piece.</p>
+    <p>Django is an open source web framework based on the MVC pattern and it includes a web server, a templating system, caching, form serialization and validation, the admin, user authentication, and built-in security features, among other features.</p>
+    <img src="{% static "img/djangopony.png" %}">
+</section>
+
+<section>
+    <h2>What's a web framework?</h2>
+    <p>If you visit the Wikipedia pages for Django or Rails (or Laravel, Flask, Spring, or pretty much any other web framework), it will say somewhere in the first sentence that it is an "(open source) web application framework written in XYZ language"--but what exactly does that mean?</p>
+    <p>A web framework isn't its own programming language, it is a collection of features, libraries, or applications written in a programming language. E.g., Django is all written in Python. These libraries help speed up the process of web development.</p>
+    <p>So, a web framework consists of:</p>
+    <ul>
+        <li>Programming language</li>
+        <li>Features, libraries, or applications</li>
+        <li>Governing body (e.g., Django Software Foundation)</li>
+        <li>Community, documentation, and support</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Why do we use web frameworks?</h2>
+    <ul>
+        <li><em>No need to reinvent the wheel.</em> It would be extremely tedious to recreate everything included in Django. Think of the loops, conditionals, and classes you've been writing in Python--would you know how to utilize that knowledge to create a web framework with database management, an HTTP server, url routing, templates, and all the other features of Django?</li>
+        <li><em>Open source.</em> If you made a web framework for yourself, you'd be the only one maintaining and testing it. Django is maintained by a team of core developers and contributed to by thousands more.</li>
+        <li><em>Development speed.</em> Django allows you to spin up rich web applications in a very short amount of time.</li>
+        <li><em>Guidelines and structure.</em> There are certain best practice web development standards, and using a web framework helps enforce them. Additionally, by having a predefined structure, it becomes much easier to read and reuse other people's code.</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h2>Web framework and CMS landscape</h2>
+        <p>These are just a few of the web frameworks currently used</p>
+        <img src="{% static "img/framework_landscape.png" %}">
+        <p>Image courtesy of <a target="_blank" href="http://ivansotof.com/2013/02/framework-or-cms-choosing-the-right-tool/">ivansotof.com</a></p>
+    </section>
+    <section>
+        <h2>Web framework landscape</h2>
+        <h4>Not so hot</h4>
+        <ul>
+            <li>ASP .NET</li>
+            <li>
+                PHP
+                <ul>
+                    <li>CakePHP, Zend</li>
+                    <li>CodeIgniter, Phalcon, Laravel</li>
+                </ul>
+            </li>
+            <li>
+                Java
+                <ul>
+                    <li>Grails, Struts, GWT, Spring</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>Web framework landscape</h2>
+        <h4>Popular</h4>
+        <ul>
+            <li>
+                Ruby
+                <ul>
+                    <li>Rails</li>
+                    <li>Sinatra</li>
+                </ul>
+            </li>
+            <li>
+                JavaScript
+                <ul>
+                    <li>Node.js / Express</li>
+                </ul>
+            </li>
+            <li>
+                Python
+                <ul>
+                    <li>Django!</li>
+                    <li>Flask, Pyramid, Tornado</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Not all web frameworks are created equal</h2>
+        <p>Different frameworks offer more or less features. Within the Python space:</p>
+        <img src="{% static "img/framework_spectrum.png" %}">
+        <p>You can read more about Python web applications and frameworks <a target="_blank" href="http://docs.python-guide.org/en/latest/scenarios/web/">here</a>.</p>
+    </section>
+    <section>
+        <h2>Django comes batteries included</h2>
+        <ul>
+            <li>There’s a lot of boilerplate in building a website.</li>
+            <li>Frameworks targeted for specific areas aim to:
+                <ul>
+                    <li>Reduce setup time.</li>
+                    <li>Increase speed of development.</li>
+                </ul>
+            </li>
+            <li>What kinds of things are included?
+                <ul>
+                    <li>WYSIWYG Text editors.</li>
+                    <li>Scaffolding - database wrappers for quick content editing.</li>
+                    <li>Entire Admin sites.</li>
+                    <li>Templating</li>
+                </ul>
+            </li>
+            <li>Why not always use a “batteries included” framework?
+                <ul>
+                    <li>The more that’s built in, that harder it can be to customize later.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Who uses Django?</h2>
+        <img class="col-10 col-offset-1 no-background" src="{% static "img/presentations/djangoco.jpg" %}">
+    </section>
+    <section>
+        <h2>Who uses Django?</h2>
+        <div class="col-6">
+            <h4>Social</h4>
+            <ul>
+                <li>Instagram</li>
+                <li>Pinterest</li>
+                <li>Eventbrite</li>
+                <li>Disqus</li>
+                <li>Rdio</li>
+                <li>Reddit Gifts</li>
+            </ul>
+            <h4>News</h4>
+            <ul>
+                <li>The Washington Times</li>
+                <li>The Onion</li>
+                <li>PBS*</li>
+                <li>NASA*</li>
+            </ul>
+        </div>
+        <div class="col-5 col-offset1">
+            <h4>Other</h4>
+            <ul>
+                <li>Mozilla</li>
+                <li>Bitbucket</li>
+                <li>National Geographic</li>
+                <li>23andMe</li>
+                <li>Symantec</li>
+                <li>Politifact</li>
+            </ul>
+        </div>
+        <div class="clear">
+            <p class="pull-right">* Not every website</p>
+        </div>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Django follows the MVC pattern (MTV)</h2>
+        <p>MVC, or model-view-controller, is a common software architectural pattern for implementing user interfaces and is used all over the web by Django, Rails, and other frameworks.</p>
+        <p>The premise is to separate code into three logical, connected parts:</p>
+        <ul>
+            <li><em>Model.</em> Your actual application data and basic rules around its behavior. These are your Django models and the methods you write for them.</li>
+            <li><em>View.</em> The output (usually visual) of your application, e.g., your HTML files.</li>
+            <li><em>Controller.</em> The connecting layer between your models and your views. Controllers specify what data a view will show, and how to handle user responses. For example, your Facebook newsfeed and your friends' timelines contain data from the same model (Post), but they are shown in two different views. The controllers contain logic to say "show interesting new Posts in my newsfeed", but "show Posts about a single user in that person's timeline"</li>
+        </ul>
+        <p>Note that in Django these pieces aren't named model, view, and controller, but actually model, template, view. Don't worry about the naming conventions for now.</p>
+    </section>
+    <section>
+        <h2>Model view controller</h2>
+        <p>Your models represent the actual data and how it behaves, your controllers specify how to interact with data in views, and your views actually display the data. Your models do not directly interact with your views.</p>
+        <img src="{% static "img/mvc_diagram.png" %}">
+    </section>
+</section>
+
+<section>
+    <h2>Questions?</h2>
+</section>
+
+<section class="titleSlide" data-background="#168eae">
+    <h1>Introduction to Django</h1>
+    <h2>Starting a Django Project</h2>
+</section>
+
+<section>
+    <h2>Starting a new Django project</h2>
+    <p>Follow the instructions in the <a href="{% url "start_project" %}">start project cheatsheet</a> to make a new Django project.</p>
+    <p>Let's create a project we'll use to make a portfolio site.</p>
+</section>
+
+<section>
+    <h2>Exploring Django project structure</h2>
+    <p>Django projects can have a slightly flexible structure, but the default is what the <code>startproject</code> and <code>startapp</code> commands provide. Your Django project should now look like the below:</p>
+    <pre><code class="bash">
+/your_project
+    /manage.py
+    /your_app
+        /__init__.py
+        /admin.py
+        /models.py
+        /tests.py
+        /views.py
+    /your_project
+        /__init__.py
+        /settings.py
+        /urls.py
+        /wsgi.py
+    </code></pre>
+</section>
+
+<section>
+    <h2>Relating to MVC</h2>
+    <div class="col-6">
+        <p>Earlier we discussed the model-view-controller pattern. Let's look at how this applies to our actual Django project</p>
+        <p>Your models will be located in <code>your_app.models</code></p>
+        <p>Your controllers are in <code>your_app.views</code></p>
+        <p>In Django, TEMPLATES are the view files that visually present your data, and VIEWS are the connecting logic between your models and your templates.</p>
+        <p>We'll talk more about adding templates later.</p>
+    </div>
+    <div class="col-5 col-offset-1">
+        <pre><code class="bash">
+/your_project
+    /manage.py
+    /your_app
+        /__init__.py
+        /admin.py
+        /models.py
+        /tests.py
+        /views.py
+    /your_project
+        /__init__.py
+        /settings.py
+        /urls.py
+        /wsgi.py
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <section>
+        <h2>Basic URL routing</h2>
+        <p>There is one other major piece of this puzzle: URL routing. URL routing is the piece that processes what a user should see based on the URL they requested. For example, facebook.com will show you your newsfeed, but if you went to facebook.com/username, it would know to show you that user's timeline. If you tried to go to a url that Facebook doesn't recognize (e.g., facebook.com/BAD_URL), you will get a 404 page not found error. Similarly, you must specify in your Django app how to handle users requesting different urls.</p>
+    </section>
+    <section>
+        <h2>URL routing</h2>
+        <p>Django is designed so that when you go to a URL, it routes you to the correct matching view. So, let's update our MVC diagram from earlier: </p>
+        <div class="col-6 fragment" data-fragment-index="0">
+            <div><p>This</p></div>
+            <img src="{% static "img/mvc_diagram.png" %}">
+        </div>
+        <div class="col-6 fragment" data-fragment-index="1">
+            <div class="fragment" data-fragment-index="1"><p>becomes this:</p></div>
+            <img src="{% static "img/mvc_with_routes.png" %}">
+            <div class="fragment">
+                <h4>Django</h4>
+                <ul>
+                    <li>URLs (routing)</li>
+                    <li>Models (data)</li>
+                    <li>Views (logic)</li>
+                    <li>Templates (HTML / output)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Adding route handling</h2>
+        <div class="col-5">
+            <p>Let's add a new route to our urls</p>
+            <p class="fragment" data-fragment-index="0">When you look at your urls, you should see something like this</p>
+            <p class="fragment" data-fragment-index="0">Django is already supplying you with <code>urlpatterns</code>, which it knows how to handle. All you have to do is fill in individual routes</p>
+            <p class="fragment" data-fragment-index="1">The line <code>url(r'^hello/', 'your_app.views.home'),</code> represents a single route we are adding</p>
+        </div>
+        <div class="col-6 col-offset-1">
+            <h4 class="fragment" data-fragment-index="0">your_project/your_project/urls.py</h4>
+            <pre class="fragment" data-fragment-index="0"><code class="python">
+urlpatterns = patterns('',
+    #
+    #
+)
+            </code></pre>
+            <br>
+            <h4 class="fragment" data-fragment-index="1">your_project/your_project/urls.py</h4>
+            <pre class="fragment" data-fragment-index="1"><code>
+urlpatterns = patterns('',
+    url(r'^hello/$', 'your_app.views.hello'),
+)
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Route handling</h2>
+        <h4>your_project/your_project/urls.py</h4>
+        <pre><code>
+urlpatterns = patterns('',
+    url(r'^hello/$', 'your_app.views.hello'),
+)
+        </code></pre>
+        <p>The first part of this route should look familiar: it is a Python regular expression. This will match the string "hello" or "hello/". So, this is a route for the url yourdomain.com/hello. In your development environment, this will look like 127.0.0.1:8000/hello.</p>
+        <p>The second part of this route specifies which view this route should point to.</p>
+    </section>
+    <section>
+        <h2>Adding a view</h2>
+        <div class="col-6">
+            <p>Now let's add the matching view</p>
+            <p>Each view you write is a function. It takes (at minimum) a <code>request</code> as a parameter. We are returning an HTTP response, which for now is just a string.</p>
+            <p>Navigate to 127.0.0.1:8000/hello in your browser and see the result!</p>
+        </div>
+        <div class="col-6">
+            <h4>your_project/your_app/views.py</h4>
+            <pre><code>
+from django.http import HttpResponse
+
+def hello(request):
+    return HttpResponse("This is my homepage")
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>URL routing</h2>
+        <img src="{% static "img/app_flow1.png" %}">
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Add a new route and view that return a different static string to the user.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Capturing variables in URL routes</h2>
+        <div>
+            <div class="col-4">
+                <p>To make our application more dynamic, we can also capture variables in our URLs</p>
+            </div>
+            <div class="col-8">
+                <h4>urls.py</h4>
+                <pre><code>
+urlpatterns = patterns('',
+    # Variables are captured in the part of the url in parentheses
+    # The '?P&ltvariable_name&gt' syntax lets you name the variable
+    # The regex after the variable's name indicates what is allowed
+    url(r'^hello/(?P&ltname&gt\w+)$', 'your_app.views.hello'),
+)
+                </code></pre>
+            </div>
+        </div>
+        <div class="fragment">
+            <div class="col-4">
+                <p>Our view can then take this extra named variable parameter and use it in the view function.</p>
+            </div>
+            <div class="col-8">
+                <h4>views.py</h4>
+                <pre><code>
+def hello(request, name):
+    return HttpResponse("Hello, {}".format(name))
+                </code></pre>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Create a route that takes a variable and print out that variable in the response.</p>
+        <p>Create a route that takes two variables. Print 'fizz' if the first is a multiple of 3, and print 'buzz' if the second is a multiple of 5.</p>
+        <p>Already done? Learn more about Django's URL routing <a target="_blank" href="https://docs.djangoproject.com/en/dev/topics/http/urls/">here</a>.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Adding templates</h2>
+        <div class="col-4">
+            <p>Of course, most web sites have more than just simple strings as output. We can also return an HTML response.</p>
+            <p>Your browser knows how to format this string of HTML.</p>
+            <p>But you can imagine that this would very quickly become unwieldy if we tried to put a full page worth of HTML here. So, how do we separate this code and add more structure?</p>
+        </div>
+        <div class="col-8">
+            <h4>views.py</h4>
+            <pre><code>
+def hello(request, name):
+    return HttpResponse("&lth1&gtHello!&lt/h1&gt"
+                        "&ltp&gtYour name is {}&lt/p&gt".format(name))
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Adding templates</h2>
+        <div class="col-6">
+            <p>We can use Django's templating system to render HTML when we hit certain views.</p>
+            <ol>
+                <li>Add a new directory in your app called 'templates'</li>
+                <li>Add a new HTML file 'hello.html' inside this directory</li>
+            </ol>
+            <p>If you are getting an error page that says "TemplateDoesNotExist", try adding the following to your settings: <code>TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'your_app/templates')]</code>. Django will attempt to find your template files by default, but if it is having trouble you can explicitly specify their location with this setting.</p>
+        </div>
+        <div class="col-6">
+            <h4>views.py</h4>
+            <pre><code>
+from django.shortcuts import render_to_response
+
+def hello(request, name):
+    return render_to_response("hello.html")
+            </code></pre>
+            <h4>your_app/templates/hello.html</h4>
+            <pre><code>
+&lt!DOCTYPE html>
+&lthtml>
+&lthead lang="en">
+    &ltmeta charset="UTF-8">
+    &lttitle>&lt/title>
+&lt/head>
+&ltbody style="background-color: blue;">
+&lth1>Howdy Djangonauts!&lt/h1>
+&lt/body>
+&lt/html>
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Passing variables to templates</h2>
+        <div class="col-5">
+            <p>Django's views and templates can also be dynamic. To use the <code>name</code> variable we captured earlier, pass it in a dictionary in the view's response.</p>
+            <p>The key is name of the variable that will be used in the template. The value is the actual data you want to pass to the template.</p>
+            <p>Django templates will render variables with the <code>&#123;&#123; variable_name }}</code> syntax</p>
+        </div>
+        <div class="col-6 col-offset-1">
+            <h4>views.py</h4>
+            <pre><code>
+from django.shortcuts import render_to_response
+
+def hello(request, name):
+    return render_to_response(
+        "hello.html",
+        {'name': name}
+    )
+            </code></pre>
+            <h4>your_app/templates/hello.html</h4>
+            <pre><code>
+&ltbody style="background-color: blue;">
+&lth1>Howdy Djangonaut &#123;&#123; name }}!&lt/h1>
+&lt/body>
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Template rendering</h2>
+        <img src="{% static "img/app_flow2.png" %}">
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Make a page that takes two url parameters: name and color. Welcome the user by name and make the page background the specified color.</p>
+    </section>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <p>Let's build out our personal portfolio site. Add the url routes that you want. Make at least one page take a variable input. Don't worry about CSS for now, just build the HTML templates.</p>
+</section>
+
+
+{% endblock %}

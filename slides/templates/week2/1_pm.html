@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Regex & CSV
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Regular Expressions</h2>
+        <p>Regular expressions are a handy way to check a string for matching patterns.</p>
+        <p>For example, let's say we have a bibliography in a string, "James, Henry. The Ambassadors. Rockville: Serenity, 2009. Print."</p>
+        <p>We know it's in a certain format, no matter what the bibliography entry is and there will always be a year.</p>
+        <p>Let's say we want to programmatically pick out the year of the book. This is a job for a regular expression!</p>
+        <div class="col-4">
+            <ul>
+                <li class="fragment" data-fragment-index="0">First, python's regular expression library is called <code>re</code> so we need to import it.</li>
+                <li class="fragment" data-fragment-index="2">We then pass the string to <code>re.findall</code> and we specify <code>r'\d+'</code></li>
+                <li class="fragment" data-fragment-index="3"><code>r'\d+'</code> means lets look for all digits.</li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code>
+import re
+
+bibliography = "James, Henry. The Ambassadors. Rockville: Serenity, 2009. Print."
+re.findall(r'\d+', bibliography)
+# returns ['2009']
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Regular Expressions (Cont.)</h2>
+        <p>But what if the title of our book had a number it?</p>
+        <p>"Morem, Susan. 101 Tips for Graduates. New York: Ferguson, 2005. Infobase"</p>
+        <div class="col-4">
+            <ul>
+                <li class="fragment" data-fragment-index="0">If we run this new bibliography we get two results, which no longer helps in establishing the year.</li>
+                <li class="fragment" data-fragment-index="2">We need to supply more constraints, the year needs to be 4 digits <br><br><br></li>
+                <li class="fragment" data-fragment-index="4">Now instead of specifying any amount of digits using <code>\d+</code> we're now specifying the exact amount with <code>\d{4}</code></li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code>
+import re
+
+bibliography = "Morem, Susan. 101 Tips for Graduates. New York: Ferguson, 2005. Infobase"
+re.findall(r'\d+', bibliography)
+# returns ['101', '2009']
+                </code></pre>
+            </div>
+            <br><br>
+            <div class="fragment" data-fragment-index="3">
+                <pre><code>
+import re
+
+bibliography = "Morem, Susan. 101 Tips for Graduates. New York: Ferguson, 2005. Infobase"
+re.findall(r'\d{4}', bibliography)
+# returns ['2009']
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>More Regular Expressions</h2>
+        <p>There are many special characters to learn when using regular expressions. Here's a <a href="https://cloud.github.com/downloads/tartley/python-regex-cheatsheet/cheatsheet.pdf">Cheatsheet</a></p>
+        <p>Let's walk through a couple more examples.</p>
+        <div class="col-4">
+            <ul>
+                <li class="fragment" data-fragment-index="0">We have a string that is a date, we want to find the month in the string.</li>
+                <li class="fragment" data-fragment-index="2">This time we use <code>match</code> to only get one match, <code>^</code> which makes the beginning of the string and <code>\w</code> which matches 'word' characters only.</li>
+                <li class="fragment" data-fragment-index="3">We want to capture a website address in a string. We know that the website address will end with .com</li>
+                <li class="fragment" data-fragment-index="5">We look for <code>\w+.com</code> to match any number of word characters as well as it ending in .com</li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code>
+import re
+
+date = "September 18th, 2014"
+match = re.search(r'^\w+', date)
+match.group()
+# returns 'September'
+                </code></pre>
+            </div>
+            <br><br>
+            <div class="fragment" data-fragment-index="4">
+                <pre><code>
+import re
+
+website = "You should check out stackoverflow.com"
+re.findall(r'\w+.com', website)
+# returns ['stackoverflow.com']
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's try to make a bunch of regular expressions to find what we need.</p>
+        <div class="col-4">
+            <ul>
+                <li>Write a regex to find the user's email address.</li>
+                <li>Write a regex to find the user's name.</li>
+                <li>Write a regex to find the user's phone number.</li>
+                <br><br><br>
+                <li>Write a regex that will check if the following email addresses are valid.</li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div>
+                <pre><code class="python">
+signup_info = "Jenny: jenny@gmail.com, 867-5309
+                </code></pre>
+            </div>
+            <br><br><br><br><br>
+            <div>
+                <pre><code class="python">
+correct_email = "r.mutter@gmail.com"
+wrong_email = "r.mutter@yahoo,com"
+another_wrong_email = "r.mutteratgmail.com"
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>More Do it Yourself</h2>
+        <p>Let's combine regular expressions with our newly found file skills. HTML scraping is a common task in web development.</p>
+        <p>We have the following file. Have your python program read in the file, find any text that is within paragraph tags <code>&lt;p&gt;&lt;/p&gt;</code> and create a new file with the text on a new line from each paragraph tag</p>
+        <div>
+        <pre><code class="html"><div>
+    <p id="title">Blog Post #1</p>
+    <br><br>
+    <div>
+        <p class="small-text">This is a blog post about something awesome!</p>
+        <img src="/img/blogpost.png">
+        <p>Here's some more information about the blog post.</p>
+    </div>
+</div></code></pre>
+        </div>
+        <p>Should become the following. Beware ids and classes on the elements.</p>
+        <div>
+        <pre><code class="html">
+Blog Post #1
+This is a blog post about something awesome!
+Here's some more information about the blog post.
+        </code></pre>
+        </div>
+
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>CSVs</h2>
+        <p>CSVs are a simplified format of what you may be used to with an excel spreadsheet.</p>
+        <p>CSV stands for comma separated values. The file is literally rows of comma separated values.</p>
+        <p>Popular programs like Excel and LibreOffice know how to display them in tables like you're used to seeing.</p>
+        <p>Python has a built in library called <code>csv</code> which we can use to read and write spreadsheets.</p>
+    </section>
+
+    <section>
+        <h2>Read a CSV</h2>
+        <p>First let's learn how to read a .csv file. Copy the following into a file called seuss.csv</p>
+        <div class="col-3"><pre>
+
+one fish, two fish
+red fish, blue fish
+        </pre><br></div>
+        <div style="clear:both;" class="col-4">
+            <ul>
+                <li class="fragment" data-fragment-index="0">We open the .csv file the same as our other file, except we specify the mode as <code>'rb'</code></li>
+                <li class="fragment" data-fragment-index="2">We then use <code>csv.reader</code> to get the csv module to start parsing the file for us.</li>
+                <li class="fragment" data-fragment-index="3">Now we're able to loop over each row and get an array of the comma delimited values.</li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code class="python">
+import csv
+with open('seuss.csv', 'rb') as file:
+    for row in csv.reader(file):
+        print row
+
+# ['one fish', 'two fish']
+# ['red fish', 'blue fish']
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's make a quiz. We have a file, <a href="{% static "assets/week2/3/quiz.csv" %}">quiz.csv</a>, which has a list of quiz questions. The format of the spreadsheet is question, topic, difficulty, answer.</p>
+        <p>Write a function, which takes a difficulty and a topic. The function will read the CSV file and choose randomly up to 5 questions that match the topic given and are not higher than the difficulty specified.</p>
+        <p>Your function should write these questions out to a file called quiz.txt.</p>
+    </section>
+
+    <section>
+        <h2>Create a CSV</h2>
+        <p>Let's programmatically create the seuss csv file and add a header row to it.</p>
+        <div class="col-4">
+            <ul>
+                <li class="fragment" data-fragment-index="0">As we've seen before, we <code>open</code> the .csv file <code>'wb'</code> so that we can write to it.</li>
+                <li class="fragment" data-fragment-index="2">We tell the <code>csv</code> module we should prepare this file to be a csv.</li>
+                <li class="fragment" data-fragment-index="3">We then tell it to write the rows out in our list to the file.</li>
+            </ul>
+        </div>
+        <div class="col-7 col-offset-1">
+            <div class="fragment" data-fragment-index="1">
+                <pre><code class="python">
+import csv
+lines = [
+    ['first column', 'second column'],
+    ['one fish', 'two fish'],
+    ['red fish', 'blue fish']
+]
+with open('seuss.csv', 'wb') as file:
+    csv_writer = csv.writer(file)
+    csv_writer.writerows(lines)
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's create a csv file that is an exponents table for the numbers 1, 2, 3 up to the 5th power.</p>
+        <ul>
+            <li>You should also create a header row which labels the power of each column (1st, 2nd, 3rd, 4th, 5th)</li>
+            <li>You should end up with 4 rows, header row, exponents of the number 1, exponents of the number 2, etc.</li>
+            <li>You should dynamically create the exponents, do not make a hardcoded array of all of the values.</li>
+        </ul>
+        <div class="col-4">
+            <pre>
+
+1st, 2nd, 3rd, 4th, 5th
+1, 1, 1, 1, 1
+2, 4, 8, 16, 32
+3, 9, 27, 81, 243
+            </pre>
+        </div>
+    </section>
+</section>
+
+<section>
+    <h2>Homework! Files, CSVs, Regex</h2>
+    <p>We have a file, <a href="{% static "assets/week2/3/html.csv" %}">html.csv</a>, which contains rows of html element information. The goal is to parse the CSV file and generate a html file that should open in your browser.</p>
+    <ul>
+        <li>The format of the csv file is id, type, parent element, text</li>
+        <li>There are multiple types: div, h2, h3, p, span</li>
+        <li>You should use classes to create and represent the different elements that you parse from the CSV file. You could have a base class called <code>Element</code> and subclasses for each such as <code>class Div(Element):</code></li>
+        <li>An element does not have to have text, for example divs.</li>
+        <li>Parent element refers to which html element it should appear inside of.</li>
+        <li>If you find in the text square brackets with a url inside, you should make the previous word a link to that url. Hint: Use regexs.</li>
+        <li>Bonus: Once you get it working, add another column to your csv that adds styles to be added onto your elements. For example you could have color:red; to set the text color of an element.</li>
+    </ul>
+</section>
+
+{% endblock %}

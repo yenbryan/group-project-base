@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Object-Oriented Python II
+{% endblock %}
+{% block presentation_title %}
+    Object-Oriented Python II: Inheritance
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Zen of Python</h2>
+        <p>We've now gotten a bit familiar with Python. Open up your python interpreter and run:</p>
+        <ul>
+            <li><pre><code>import this</code></pre></li>
+        </ul>
+    </section>
+    <section>
+        <h2>Zen of Python (Cont.)</h2>
+<pre><code>The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!</code></pre>
+    </section>
+</section>
+
+<section>
+    <h2>Inheritance: Base classes and subclasses</h2>
+    <p>Previously, we used an example of a Car class. But what about other types of vehicles?</p>
+    <ul>
+        <li>Stick shifts are still cars, but there are a few differences. Acceleration is limited by your current gear. Braking might stall the car.</li>
+        <li>Boats are vehicles, they can accelerate, but not brake.</li>
+        <li>Tanks can accelerate, brake, turn left and right, have a color. But they can also blow stuff up!</li>
+    </ul>
+    <p>Clearly there are a lot of similarities between different vehicle types, but also a number of variances in terms of properties and functionality. Object oriented Python uses inheritance as a way to de-duplicate this common functionality.</p>
+    <ul>
+        <li>Common features are abstracted into base classes (also known as super classes)</li>
+        <li>Derived classes (sub classes) inherit features from one or more base classes</li>
+        <li>Additional features can then be added, or existing ones changed in the derived class</li>
+        <li>Objects can be instantiated on a base class or a derived class</li>
+        <li>Inheritance chains can be any length in Python</li>
+    </ul>
+
+</section>
+
+<section>
+    <h2>Inheritance: Base classes and subclasses</h2>
+    <img src="{% static "img/car_inheritance.png" %}">
+</section>
+
+<section>
+    <section>
+        <h2>Simple inheritance example</h2>
+        <div class="col-5">
+            <p>Let's revisit our Car example and think of it as a Vehicle instead.</p>
+            <ul>
+                <li class="fragment">To make a class that is a subclass of another, use the <code>class SubClass(ParentClass)</code> notation to reference the parent class in the definition</li>
+                <li class="fragment">A Subclass has all of the same methods and attributes as its parent classes unless you specify otherwise.</li>
+            </ul>
+        </div>
+        <div class="col-6 col-offset-1 fragment" data-fragment-index="0">
+            <pre><code>
+class Vehicle(object):
+    def __init__(self, color):
+        self.speed = 0
+        self.direction = 0
+        self.color = color
+
+    def accelerate(self):
+        self.speed += max(0,1)
+
+    def brake(self):
+        self.speed -= max(0,1)
+
+    def turn_left(self):
+        self.direction -= 90
+
+
+class ManualTrans(Vehicle):
+    pass
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Simple inheritance example (Cont.)</h2>
+        <div class="col-5">
+            <ul>
+                <li class="fragment">For ManualTrans objects, we are adding <code>clutch_in</code> as an attribute and <code>engage_clutch()</code> and <code>disengage_clutch()</code> as methods.</li>
+                <li class="fragment">We'll overwrite <code>__init__()</code> to set the attr and <code>brake()</code> to call our methods.</li>
+                <li class="fragment">In Python, <code>super()</code> is a method that says 'do everything in the parent class version of this method'. Essentially, when you're overwriting a method, it allows you to preserve all the exisiting functionality, and add more on top.</li>
+            </ul>
+        </div>
+        <div class="col-6 col-offset-1">
+            <pre><code>
+class ManualTrans(Vehicle):
+    def __init__(self, color):
+        super(ManualTrans, self).__init__(color)
+        self.clutch_in = False
+
+    def engage_clutch(self):
+        self.clutch_in = True
+
+    def disengage_clutch(self):
+        self.clutch_in = False
+
+    def brake(self):
+        self.engage_clutch()
+        super(ManualTrans, self).brake()
+        self.disengage_clutch()
+            </code></pre>
+        </div>
+    </section>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <p>Add ManualCar and Motorbike classes that subclass ManualTrans</p>
+    <ul>
+        <li>Overwrite some methods without using <code>super()</code> and see what happens</li>
+        <li>Overwrite <code>__init__()</code> or <code>brake()</code> using <code>super()</code>. Does this reference ManualTrans or Vehicle?</li>
+        <li>Add some differentiating functionality between ManualCar and Motorbike. Take them for a ride!</li>
+    </ul>
+    <p>Need more?</p>
+    <ul>
+        <li>Work through Codecademy's Introduction to Classes: <a href="http://www.codecademy.com/courses/python-intermediate-en-WL8e4/2/1">Inheritance</a></li>
+        <li>Take a look at <a href="http://learnpythonthehardway.org/book/">Learn Python the Hard Way</a>, exercises 43-44</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h2>Multiple Inheritance and Mixins</h2>
+        <div class="col-12">
+            <p>What happens if some of our Vehicles share the same functionality, but some don't?</p>
+            <p>For example, what if we wanted to add windshield wipers to some of our vehicles.</p>
+            <p>Python allows for objects to inherit from multiple classes. This is often called a Mixin, which allows us to share functionality between two classes</p>
+            <p>This also allows us to write DRY (Don't Repeat Yourself) code and not duplicate our wiper code in two places.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Multiple Inheritance and Mixins</h2>
+        <img src="{% static "img/car_mixin.png" %}">
+    </section>
+
+    <section>
+        <h2>Let's Create a Mixin</h2>
+        <div class="col-5">
+            <ul>
+                <li class="fragment">We'll create a new object <code>CarMixin</code> which will be our Mixin that contains the common wiper code.</li>
+                <li class="fragment">We'll create a class <code>ManualCar</code> which will inherit from our <code>ManualTrans</code> class.</li>
+                <li class="fragment">We'll create a class <code>RaceCar</code> which will inherit from both <code>ManualCar</code> and <code>CarMixin</code>.</li>
+                <li class="fragment">If we create a new instance of <code>RaceCar</code> we can now call <code>CarMixin</code>'s functions as well as <code>ManualTrans</code>'s.</li>
+            </ul>
+        </div>
+        <div class="col-6 col-offset-1">
+            <pre><code>
+class CarMixin(object):
+    def start_wipers(self):
+        self.wipers = "on"
+
+    def stop_wipers(self):
+        self.wipers = "off"
+
+class ManualCar(ManualTrans):
+    def __init__(self):
+        super(ManualCar, self).__init__()
+
+class RaceCar(ManualCar, CarMixin):
+    def __init__(self):
+        super(RaceCar, self).__init__()
+            </code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's put it altogether in a python application</p>
+        <ol>
+            <li>Create classes for the rest of the objects in the diagram. Pay attention to which classes they inherit from.</li>
+            <li>Add print statements to the various methods so our output can inform us that the car is breaking or the boat has accelerated.</li>
+            <li>Have your program create 1 instance of each of the following: RaceCar, StreetCar, Motorbike, AutoCar, Boat.</li>
+            <li>Have your program drive and control each of the classes by calling the various methods. When you run it, there should be output describing what is happening.</li>
+        </ol>
+        <p><b>Bonus:</b> Add a <code>RadioMixin</code> to some of your classes, which can turn the radio on and off as well as change the station.</p>
+    </section>
+</section>
+
+{% endblock %}

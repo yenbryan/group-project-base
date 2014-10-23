@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Lab: Django App
+{% endblock %}
+
+{% block presentation_title %}
+    Lab: Django App
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Building a real Django project</h2>
+    <p>Before sending you off to work on your projects, we want you to practice pulling all the pieces together into a functioning Django project. You should work on this lab for homework and in class tomorrow.</p>
+    <p>You've learned all you need to build a basic Django app. Let's recap what we've covered:</p>
+    <ul>
+        <li>Models and the ORM</li>
+        <li>Admin</li>
+        <li>Basic apps with resourceful (CRUD) routing--the backbone of the internet</li>
+        <li>Templates and static files</li>
+        <li>Registration and custom user models</li>
+        <li>Some non-standard routing, like with the War game</li>
+    </ul>
+</section>
+<section>
+    <h2>Pair programming</h2>
+    <p>Pair programming is a very common developer practice in many companies. Many people swear that it increases productivity and reduces bugs. It takes practice to be good at working in a pair, so for this assignment we want you to pair with another student.</p>
+    <h4>What pairing is</h4>
+    <ul>
+        <li>One computer, two people</li>
+        <li>Collaborative</li>
+        <li>A learning experience. If you a know a topic better than your pair, it's a good opportunity to explain how somehting works--the best way to learn is to teach. If you don't know a topic as well as your pair, it's a great chance to see how someone else solves problems.</li>
+        <li>One "driver", who alternates</li>
+    </ul>
+    <h4>What pairing isn't</h4>
+    <ul>
+        <li>One person doing all the work</li>
+        <li>Being rude</li>
+    </ul>
+</section>
+<section>
+    <section>
+        <h2>Your mission</h2>
+        <p>Choose from one of the following assignments to pair program on. Regardless of which assignment you choose, you should have the following features:</p>
+        <ul>
+            <li>Users should be able to login, reset their passwords, and edit their profiles</li>
+            <li>It shouldn't look hideous (e.g., no plain HTML pages)</li>
+        </ul>
+        <p>These projects all make use of 3rd party plugins. You can <code>pip install</code> packages available on <a href="https://pypi.python.org/pypi">PyPI</a>, and you can get reviews of Django packages on <a href="https://www.djangopackages.com/">Django Packages</a>.</p>
+    </section>
+    <section>
+        <h2>Wanderful</h2>
+        <p>Create a Django app that allows users to store locations they want to travel to. Users should be able to input locations and have them stored in a list. Bonus functionality: allow users to have multiple lists of locations. Use a Django mapping 3rd party app to plot the locations on a map (don't use a JS library). Use HTML5 geolocation to get the user's current location and output how far each stored location is from the present position. It would be great if users could upload photos of each location.</p>
+    </section>
+    <section>
+        <h2>It's in a Book</h2>
+        <p>Create a Django app that allows users to learn words by reading them in context. Allow users to store words that they want to learn. Use Beautiful Soup to get a bunch of text from articles or books online. When a user clicks on a word in their word list, they should then see the text of an article / book where the word is used. Users should be able to delete words, and move them to a 'learned' list once they've learned a word.</p>
+    </section>
+    <section>
+        <h2>Movie Mapper</h2>
+        <p>Allow users to store favorite movies and favorite locations. Use one of the IMDB packages available on PyPI to get locations for movies. Users should be able to see a map of their locations, showing movies shot there, and similarly, see a movie and the locations it was shot.</p>
+    </section>
+</section>
+<section>
+    <h2>FYI</h2>
+    <ul>
+        <li>Mapping is a common feature on the web. Both Google Maps and its top competitor with developers, Leaflet, have Django plugins you can use without any JavaScript. Think maps are boring or easy? You clearly haven't read <a href="http://alistapart.com/article/hack-your-maps">this excellent post</a> (the demo project in it is REALLY cool).</li>
+        <li>Along with maps, you should be aware of HTML5 (and other forms of) geolocation. You don't have to be able to write native mobile apps to take advantage of user location. <a href="http://diveintohtml5.info/geolocation.html">This post</a> explains the options well.</li>
+        <li>Web scraping can be a really useful tool. Imagine there is this great site that has information you want to (legally) use, but they don't have an API. For example, a recipe site. The home page always lists the top 10 recipes in the same format, and each recipe page has the same structure (&lt;h2> title, &lt;ul> for ingredients, &lt;ol> for instructions, etc.). How can you get all that data without manually looking at the recipes? Web scraping! Learn about using <a href="http://docs.python-guide.org/en/latest/scenarios/scrape/">Python's xml and requests libraries</a>, which are important libraries you should know about, then maybe learn a simpler way of doing the same with <a href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>.</li>
+    </ul>
+</section>
+
+{% endblock %}

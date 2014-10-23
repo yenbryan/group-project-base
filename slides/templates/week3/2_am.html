@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% load staticfiles mezzanine_tags blog_tags keyword_tags i18n %}
+
+{% block running_title %}
+    Django Templating: Logic, Filters, and Tags
+{% endblock %}
+
+{% block presentation_title %}
+    Django Templating: Logic, Filters, and Tags
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>Why Templates?</h2>
+        <p>Most web frameworks use a templating language. Just like programming languages, they all have different syntax, but are usually simpler. So why do we use them?</p>
+        <ul>
+            <li>They allow us to separate business logic from HTML.</li>
+            <li>We can easily place data into our HTML.</li>
+            <li>Can now reuse our HTML to keep our application DRY.</li>
+            <li>Some common security issues are protected against.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Template Review</h2>
+        <p>Here's our basic template. We have our HTML and we're including a variable in our template.</p>
+            <pre><code>
+{% verbatim %}
+&lt;html>
+    &lt;body>
+        <div>{{ some_variable }}</div>
+    &lt;/body>
+&lt;/html>
+{% endverbatim %}
+            </code></pre>
+    </section>
+
+    <section>
+        <h2>Playing Cards</h2>
+        <p>Let's set up the example we'll be using for this morning.</p>
+        <p>First, create a new Django project with an application called "cards". See the <a href="{% url "start_project" %}">instructions</a> for starting a project if you forget.</p>
+        <p>Second, in our models.py let's add the following model, then run our migrations.</p>
+        <pre><code class="python">class Card(models.Model):
+    SPADE = 0
+    CLUB = 1
+    DIAMOND = 2
+    HEART = 3
+    SUITS = (
+        (SPADE, "spade"),
+        (CLUB, "club"),
+        (DIAMOND, "diamond"),
+        (HEART, "heart")
+    )
+    suit = models.PositiveSmallIntegerField(choices=SUITS)
+    rank = models.CharField(max_length=5)</code></pre>
+        <div>The suit field is a good example of how in Django we represent a field that has a defined set of choices.</div>
+    </section>
+
+    <section>
+        <h2>Playing Cards (Cont.)</h2>
+        <p>Next, let's create a file in our cards application called <code>utils.py</code></p>
+        <p>Copy the following code into our file.</p>
+        <pre><code class="python">from cards.models import Card
+
+def create_deck():
+    """
+    Create a list of playing cards in our database
+    """
+    suits = [0, 1, 2, 3]
+    ranks = ['two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace']
+    cards = [Card(suit=suit, rank=rank) for rank in ranks for suit in suits]
+    Card.objects.bulk_create(cards)
+        </code></pre>
+        <div>Now let's run this function, which will create a list of cards in our database.</div>
+        <ol>
+            <li><code>python manage.py shell</code></li>
+            <li><code>from cards.utils import create_deck</code></li>
+            <li><code>create_deck()</code></li>
+        </ol>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Logic</h2>
+        <p>Templates can have some basic logic statements like conditionals and for loops, which come in handy when presenting data in our HTML.</p>
+        <p>It's important to realize though, that our templates are not python. If you're trying to do something that you're finding complicated, that means you should probably be doing it in python.</p>
+        <p>Copy the code below for our first page. Also create a blank template, <code>cards.html</code>.</p>
+        <div class="col-7">
+            <h4>urls.py</h4>
+            <pre><code class="python">urlpatterns = patterns('',
+    url(r'^$', 'cards.views.home', name='home'),
+)</code></pre>
+            <h4>views.py</h4>
+            <pre><code class="python">def home(request):
+    data = {
+        'cards': Card.objects.all()
+    }
+
+    return render(request, 'cards.html', data)</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Conditionals</h2>
+        <p>Django's templating language gives us some basic if / else type of statements.</p>
+        <pre><code>
+{% verbatim %}<div>
+    {% if some_variable == 0 %}
+        <span>Some text for 0</span>
+    {% elif some_variable == 1 %}
+        <span>Some text for 1!</span>
+    {% else %}
+        <span>Some text for everything else...</span>
+    {% endif %}
+</div>{% endverbatim %}
+        </code></pre>
+        <p>Now depending on the value of our variables, whether they be strings, integers, booleans, etc we can have different HTML in our templates.</p>
+        <p>You can do other basic comparisons that you're used to normally doing: <code>!= > >= < <= not and or in</code>.</p>
+    </section>
+
+    <section>
+        <h2>Loops</h2>
+        <p>Let's put the following code in our currently blank template, <code>cards.html</code>.</p>
+        <pre><code>
+{% verbatim %}<div>
+    {% for card in cards %}
+        <p>Suit: {{ card.suit }}, Rank: {{ card.rank }}</p>
+    {% endfor %}
+</div>{% endverbatim %}
+        </code></pre>
+        <p>As we've seen before, we can loop over our list of cards and create HTML for each one. In the loop we'll have access to a <code>card</code> object, which we know has <code>suit</code> and <code>rank</code> fields.</p>
+        <p>We can use an easier to read version of suit by replacing <code>card.suit</code> with <code>card.get_suit_display</code>. Try this out in your template file.</p>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Use template logic for the following:</p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Create a page that only displays cards that are clubs.</li>
+            <li>Create a page that only displays cards that are diamonds or hearts.</li>
+            <li>Create a page that displays the message "This is just a spade" if the card is a spade or displays the usual suit and rank.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>Create a page that displays only face cards. Only use 1 if statement.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Filters</h2>
+        <p>Django has built in filters that you can apply easily to variables in templates. Let's check out just a few.</p>
+        <p>Create a new page, which also passes our card data to a template called <code>card_filters.html</code></p>
+        <pre><code>{% verbatim %}
+We have {{ cards | length }} cards!
+
+{% for card in cards %}
+    <div>
+        <p>
+            Capitalized Suit: {{ card.get_suit_display | capfirst }} <br>
+            Uppercased Rank: {{ card.rank | upper }}
+        </p>
+    </div>
+{% endfor %}
+    {% endverbatim %}</code></pre>
+        <div>We can see above we used three different filters.</div>
+        <ul>
+            <li><code>length</code> gives us the length of a list or string.</li>
+            <li><code>capfirst</code> capitalizes a string.</li>
+            <li><code>upper</code> will uppercase a whole string.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Template Tags</h2>
+        <p>There are also template tags, like <code>url</code> which do slightly more complicated functions than filters.</p>
+        <p>Let's again, make a new page for this example.</p>
+        <pre><code>{% verbatim %}
+&lt;style>
+    .odd {
+        color: blue;
+    }
+&lt;/style>
+
+It's {% now "SHORT_DATETIME_FORMAT" %}!
+
+{% for card in cards %}
+    <p class="{% cycle 'even' 'odd' %}">
+        Suit: {{ card.get_suit_display }}, Rank: {{ card.rank }}
+    </p>
+{% endfor %}{% endverbatim %}</code></pre>
+        <div>Above we're using 2 template tags.</div>
+        <ul>
+            <li><code>now</code> gives us the current timestamp, which we can format however we'd like.</li>
+            <li><code>cycle</code> switches back and forth printing out each value for every pass through the for loop.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Look for the Django documentation on template tags and filters to help you with the problems below.</p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Using a filter, truncate the suit so that only the first letter is shown.</li>
+            <li>Change the <code>now</code> template tag, to display the full month and date only.</li>
+            <li>Using a template tag, put a link on our filter page that links to our tag page and vice versa</li>
+
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>Using a filter, get a random card to display from the list.</li>
+            <li>Using a filter, display only the last card from the list.</li>
+            <li>Use the <code>regroup</code> template tag to display the cards by their Suit.</li>
+        </ul>
+    </section>
+</section>
+
+
+<section>
+    <section>
+        <h2>Custom Filters and Tags</h2>
+        <p>We're also able to create our own filters and tags to use within our own templates.</p>
+        <p>These filters and tags are just python functions taking in parameters from our template and outputting back html or values to be placed back in our pages.</p>
+        <p>First let's recreate a couple of built in filters to see how they work.</p>
+    </section>
+
+    <section>
+        <h2>Our First Filter</h2>
+        <p>Let's see how the <code>first</code> filter actually works.</p>
+        <ol>
+            <li>Create a python package called <code>templatetags</code> in your cards application.</li>
+            <li>Make sure you have an <code>__init__.py</code> file in your templatetags folder.</li>
+            <li>Create a file in <code>templatetags</code> called <code>list_filters.py</code></li>
+            <li>Add the following code to the file:
+<pre><code class="python">
+from django import template
+
+register = template.Library()
+
+@register.filter
+def first(list):
+    if list is not None and len(list):
+        return list[0]
+</code></pre>
+                <ul>
+                    <li>We can see that our filter is just a python function, which grabs the first item in a list.</li>
+                    <li>We use the <code>@register</code> decorator to tell Django to recognize this function as a filter.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Our First Filter (Cont.)</h2>
+        <p>Now let's use it.</p>
+        <ol>
+            <li>Set up a new page (url, view, and template).</li>
+            <li>Include the following in your template
+<pre><code>{% verbatim %}{% load list_filters %}
+
+{{ cards|first }}
+
+{% with cards|first as first_card %}
+    <p>Suit: {{ first_card.get_suit_display }}, Rank: {{ first_card.rank }}</p>
+{% endwith %}
+{% endverbatim %}</code></pre>
+                <ul>
+                    <li>We need to load our custom filters by using the name of the python file, <code>list_filters</code>.</li>
+                    <li>We can now use it just like all of the built-in filters.</li>
+                    <li>Since this returns a whole new object, we can use the <code>with</code> template tag to store it as a new variable in order to access it's different properties.</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Custom Filter w/ Parameters</h2>
+        <p>Let's see one more example, where we also pass a parameter to our custom filter.</p>
+        <ol>
+            <li>Put this new filter in our <code>list_filters.py</code> file.
+<pre><code>{% verbatim %}@register.filter
+def suit(list, suit_type):
+    return [item for item in list if item.get_suit_display() == suit_type]
+{% endverbatim %}</code></pre>
+                <ul>
+                    <li>This filter will return only cards in the list with the given suit.</li>
+                </ul>
+            </li>
+        </ol>
+        <ol>
+            <li>Create a new page and place this in your template.
+<pre><code>{% verbatim %}{% load list_filters %}
+
+{% for card in cards|suit:"diamond"  %}
+    <p>Suit: {{ card.get_suit_display }}, Rank: {{ card.rank }}</p>
+{% endfor %}
+{% endverbatim %}</code></pre>
+                <ul>
+                    <li>We can call our filter and now pass it the suit we'd like to filter the deck of cards by.</li>
+                    <li>In this example <code>suit_type</code> in our custom filter ends up being "diamond".</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Write a filter, which filters the list to only show "Aces".</li>
+            <li>Write a filter, which takes a parameter called rank, and filters the list of cards for only that rank.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>Write a filter, which shuffles deck and returns the list in a random order.</li>
+            <li>Write a filter, which takes in a parameter, amount, and returns ("deals") that many cards from the list.</li>
+            <li>Create a page, which uses your shuffle and deal filter tags to deal 5 random cards.</li>
+        </ul>
+    </section>
+</section>
+
+{% endblock %}

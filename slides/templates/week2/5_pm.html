@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block presentation_title %}
+    Basic Django App
+{% endblock %}
+
+{% block slides %}
+<section>
+    <h2>Recap</h2>
+    <div class="col-3">
+        <p>We've made it as far as tying together our urls, views, and templates.</p>
+    </div>
+    <div class="col-8 col-offset-1">
+        <img src="{% static "img/app_flow2.png" %}" class="pull-right">
+    </div>
+</section>
+
+<section>
+    <h2>Adding models</h2>
+    <div class="col-3">
+        <p>Let's fill in the rest of this diagram: adding models, and allowing users to interact with our application instead of just serving static pages.</p>
+    </div>
+    <div class="col-8 col-offset-1">
+        <img src="{% static "img/app_flow_all.png" %}" class="pull-right">
+    </div>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <div class="col-5">
+        <ul>
+            <li>Create a new Django project called Favorites</li>
+            <li>Add an app called <code>hollywood</code></li>
+            <li>Add the following models and migrate</li>
+            <li>Feel free to use the <a href="{% url "start_project" %}">start project cheatsheet</a></li>
+        </ul>
+    </div>
+    <div class="col-6 col-offset-1">
+<pre><code>
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Movie(models.Model):
+    name = models.CharField(max_length=100)
+    release_year = models.PositiveSmallIntegerField()
+    genre = models.ForeignKey(Genre)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Actor(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.PositiveSmallIntegerField()
+    movies = models.ManyToManyField(Movie)
+
+    def __unicode__(self):
+        return self.name
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Laying out our application</h2>
+    <p>Our Django app will have this site map. This basic layout can be found in many applications.</p>
+    <img src="{% static "img/hollywood_site_map.png" %}">
+</section>
+
+<section>
+    <h2>First, let's create a site landing page</h2>
+    <div class="col-6">
+        <h4>urls.py</h4>
+        <pre><code>
+from django.conf.urls import patterns, include, url
+
+urlpatterns = patterns('',
+    url(r'^$', 'hollywood.views.home', name='home'),
+)
+        </code></pre>
+        <br><br><br>
+        <h4>templates/home.html</h4>
+        <pre><code>
+&lt;h1>Welcome to Hollywood!&lt;/h1>
+        </code></pre>
+    </div>
+    <div class="col-5 col-offset-1">
+        <h4>views.py</h4>
+        <pre><code>
+from django.shortcuts import render
+
+def home(request):
+    return render(request, "home.html")
+        </code></pre>
+        <p>There are a number of different ways to return an HTML response. Showing multiple examples.</p>
+        <h4>views.py (alternate)</h4>
+        <pre><code>
+from django.shortcuts import render_to_response
+
+def home(request):
+    return render_to_response("home.html")
+        </code></pre>
+    </div>
+</section>
+
+<section>
+    <section>
+        <h2>Then we add a Genre landing page</h2>
+        <div class="col-6">
+            <h4>urls.py</h4>
+            <pre><code>
+urlpatterns = patterns('',
+    ##
+    url(r'^genres/$', 'hollywood.views.genres', name='genres'),
+)
+            </code></pre>
+            <h4>views.py</h4>
+            <pre><code>
+def genres(request):
+    return render_to_response("genres.html")
+            </code></pre>
+            <h4>genres.html</h4>
+            <pre><code>
+&lt;h1>Genres live here&lt;/h1>
+            </code></pre>
+        </div>
+        <div class="col-5 col-offset-1">
+            <p>We can now update our home page to include a link to the genres page</p>
+            <h4>home.html</h4>
+            <pre><code>
+&lt;h1>Welcome to Hollywood!&lt;/h1>
+&lt;a href="&#123;% url "genres" %}">Genres&lt;/a>
+            </code></pre>
+            <p>By using a named URL route, we can now refer to the page by its name, instead of hardcoding the page link. The <code>&#123;% %}</code> syntax denotes a Django template tag. We will talk about them more later.</p>
+        </div>
+    </section>
+    <section>
+        <h2>Creating an index page</h2>
+        <div class="col-4">
+            <p>Of course, we don't just want a static genre page. It would make sense to turn this into an index page (a page that lists all our genres), so users can see them all. This is where we can add in our models.</p>
+            <p>We use Django template tags to write a for loop with <code>&#123;% for %}</code> and <code>&#123;% endfor %}</code></p>
+        </div>
+        <div class="col-7 col-offset-1">
+            <h4>views.py</h4>
+            <pre><code>
+def genres(request):
+    genres = Genre.objects.all()
+    return render_to_response("genres.html", {'genres': genres})
+            </code></pre>
+            <h4>genres.html</h4>
+            <pre><code>
+&lt;h1>Genres live here&lt;/h1>
+<ul>
+    &#123;% for genre in genres %}
+        <li>&#123;{ genre.name }}</li>
+    &#123;% endfor %}
+</ul>
+&lt;a href="&#123;% url "home" %}">Back to Hollywood&lt;/a>
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Flow through app</h2>
+        <img src="{% static "img/app_flow3.png" %}">
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Add a movie index page that lists out all your movies. Add some movies in your Django shell so that you can see them.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Create new entries</h2>
+        <div class="col-7">
+            <p>Users can't just log into the admin to make changes. We need to create a page where they can do that.</p>
+            <p>This page will include a form where users can input the information necessary to create a new genre. Where before we wrote programs that used Python's <code>raw_input</code>, now users will be able to input information in a web form.</p>
+        </div>
+        <div class="col-4 col-offset-1">
+            <img src="{% static "img/genre_form.png" %}" class="pull-right">
+        </div>
+    </section>
+    <section>
+        <h2>Model forms</h2>
+        <div class="col-5">
+            <p>Django makes this easy for us by automatically creating forms for models.</p>
+            <p>All we need is to declare this ModelForm subclass and specify the model we are interested in. Then Django will introspect the model and create an appropriate form.</p>
+        </div>
+        <div class="col-6 col-offset-1">
+            <h4>hollywood/forms.py</h4>
+            <pre><code>
+from django.forms import ModelForm
+from hollywood.models import Genre
+
+__author__ = 'baylee'
+
+
+class GenreForm(ModelForm):
+    class Meta:
+        model = Genre
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Display our model form</h2>
+        <div class="col-6">
+            <h4>urls.py</h4>
+            <pre><code>
+urlpatterns = patterns('',
+    ##
+    url(r'^genres/new/$', 'hollywood.views.new_genre', name='new_genre'),
+)
+            </code></pre>
+            <h4>views.py</h4>
+            <pre><code>
+def new_genre(request):
+    form = GenreForm()
+    data = {'form': form}
+    return render(request, "new_genre.html", data)
+            </code></pre>
+        </div>
+        <div class="col-5 col-offset-1">
+            <h4>genres.html</h4>
+            <pre><code>
+<a href="&#123;% url 'new_genre' %}">Add new genre</a>
+            </code></pre>
+            <p>We add a <code>csrf_token</code> (for security) and render the <code>&#123;{ form }}</code>, and Django displays the form for creating a Genre.</p>
+            <h4>new_genre.html</h4>
+            <pre><code>
+<h1>Add new genre</h1>
+<form method="post">
+    &#123;% csrf_token %}
+    &#123;{ form }}
+    <input type="submit" value="Add new genre" />
+</form>
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Process our form</h2>
+        <div class="col-3">
+            <p>When you visit an HTML page, you are sending a GET request. When you are creating a new object, you are sending a POST request. Django lets you examine these requests and determine which is which. So, when you first go to the form page, you are sending a GET request and will hit the <code>else</code> condition, and when you submit the form you will hit the <code>if</code> condition.</p>
+        </div>
+        <div class="col-8 col-offset-1">
+            <h4>views.py</h4>
+            <pre><code>
+def new_genre(request):
+    # If the user is submitting the form
+    if request.method == "POST":
+
+        # Get the instance of the form filled with the submitted data
+        form = GenreForm(request.POST)
+
+        # Django will check the form's validity for you
+        if form.is_valid():
+
+            # Saving the form will create a new Genre object
+            if form.save():
+
+                # After saving, redirect the user back to the index page
+                return redirect("/genres")
+
+    # Else if the user is looking at the form page
+    else:
+        form = GenreForm()
+    data = {'form': form}
+    return render(request, "new_genre.html", data)
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>App flow through object creation</h2>
+        <img src="{% static "img/app_flow4.png" %}">
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Add a page to create new movies, with the necessary routing, form handling, links and redirects.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Viewing your data</h2>
+        <div class="col-4">
+            <p>Once you've created these new entries, people are going to want a way to look at the data. You can add more data to the index page, but as you can imagine this would get messy with complex models. Instead, it is common practice to have a detailed view page.</p>
+        </div>
+        <div class="col-7 col-offset-1">
+            <h4>urls.py</h4>
+            <pre><code>
+urlpatterns = patterns('',
+    ##
+    url(r'^genres/(?P&lt;genre_id>\w+)/$', 'hollywood.views.view_genre', name='view_genre'),
+)
+            </code></pre>
+            <h4>views.py</h4>
+            <pre><code>
+def view_genre(request, genre_id):
+    genre = Genre.objects.get(id=genre_id)
+    data = {"genre": genre}
+    return render(request, "view_genre.html", data)
+            </code></pre>
+        </div>
+    </section>
+    <section>
+        <h2>Viewing your data</h2>
+        <div>
+            <div class="col-4">
+                <p>Add a template...</p>
+            </div>
+            <div class="col-7 col-offset-1">
+                <h4>view_genre.html</h4>
+                <pre><code>
+<h1>&#123;{ genre.name }}</h1>
+&lt;a href="&#123;% url "home" %}">Back to Hollywood&lt;/a>
+&lt;a href="&#123;% url "genres" %}">Back to Genres&lt;/a>
+                </code></pre>
+            </div>
+        </div>
+        <div>
+            <div class="col-4">
+                <p>...And update your genre index page.</p>
+                <p>For urls that take arguments, you can pass the arguments within the <code>&#123;% url %}</code> tag after the url name.</p>
+            </div>
+            <div class="col-7 col-offset-1">
+                <h4>genres.html</h4>
+                <pre><code>
+&lt;h1>Genres live here&lt;/h1>
+<ul>
+    &#123;% for genre in genres %}
+        <li>&lt;a href="&#123;% url "view_genre" genre.id %}">&#123;{ genre.name }}&lt;/li>
+    &#123;% endfor %}
+</ul>
+&lt;a href="&#123;% url "home" %}">Back to Hollywood&lt;/a>
+                </code></pre>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Do it yourself</h2>
+        <p>Make view pages for your movies. These will be more interesting because they have more data.</p>
+    </section>
+</section>
+
+<section>
+    <h2>Do it yourself</h2>
+    <h4>Finish Hollywood</h4>
+    <p>Add the index, create, and detail pages for Actors as we did for movies and genres. Go ahead and add some of your favorite movies, actors, and genres.</p>
+    <h4>Reorganize templates</h4>
+    <p>You should have a lot of template files now. It's kind of messy. Move your model-specific templates into model-specific folders within your templates folder (e.g., all your movie templates go in templates/movies). Make sure you update your views so they now point to the right place.</p>
+    <h4>New favorites</h4>
+    <p>Make a new app within your favorites project. It will be another logical grouping of favorite things. E.g., it could be <code>nascar</code> and your models could be Car, Team, Driver, or your app could be <code>pokemon</code>, and your models could be Pokemon, Species, Attack, Trainer, etc. Add the routes, views, templates, etc. to have list, create, and detail views for these models.</p>
+</section>
+
+{% endblock %}

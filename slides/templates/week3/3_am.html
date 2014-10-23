@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block running_title %}
+    Users: Built-In Django Auth
+{% endblock %}
+
+{% block presentation_title %}
+    Users: Built-In Django Auth
+{% endblock %}
+
+{% block slides %}
+<section>
+    <section>
+        <h2>The User Model</h2>
+        <p>Django comes with a built in application called <code>auth</code> that you can use right out of the box. It has all of the basic functionality of signing up, logging in, and logging out.</p>
+        <p>It looks something like you see below:</p>
+        <pre><code class="python">
+class User(models.Model):
+    username = models.CharField(_('username'), max_length=30, unique=True,
+        help_text=_('Required. 30 characters or fewer. Letters, numbers and '
+                    '@/./+/-/_ characters'),
+        validators=[
+            validators.RegexValidator(re.compile('^[\w.@+-]+$'), _('Enter a valid username.'), 'invalid')
+        ])
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    email = models.EmailField(_('email address'), blank=True)
+    is_staff = models.BooleanField(_('staff status'), default=False,
+        help_text=_('Designates whether the user can log into this admin '
+                    'site.'))
+    is_active = models.BooleanField(_('active'), default=True,
+        help_text=_('Designates whether this user should be treated as '
+                    'active. Unselect this instead of deleting accounts.'))
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+        </code></pre>
+    </section>
+    <section>
+        <h2>Why the User model is special</h2>
+        <p>Having users is great. It's probably the most common feature across web applications.</p>
+        <p>But, the Django user model is important for more than just that convenience. Django provides a number of additional features that depend on the user model. These features include groups, permissioning, signing into the admin, and more.</p>
+        <p>Because of this, and the uniqueness of users, it's important to remember that you can only have one user model per project.</p>
+    </section>
+    <section>
+        <h2>History of the User Model</h2>
+        <p>The user model had remained mostly static up until recently where a refactor was done to make the User model extensible.</p>
+        <p>Previously if you wanted to add custom fields to this user model you'd have to make your own <code>UserProfile</code> model that related to this one.</p>
+        <p>What that means is that you had two separate tables in your database, one for the Django Auth User model and one for your own, which would store a few fields like phone number.</p>
+        <p>This user model is also heavily bent towards English names. Having a first and last name field is not friendly to a large part of the world's population whose names don't abide by this format.</p>
+    </section>
+
+    <section>
+        <h2>What's next?</h2>
+        <p>Now that migrations are part of the core Django library, the core developers are actually starting to make small changes to the User model that they haven't been able to for a long time.</p>
+        <p>Some specific changes include increasing the max length of the email field, which was one of the most common issues with the built-in User model people had.</p>
+        <p>Be on the lookout for a few more changes in the next release of Django, which will help fix some of the legacy issues with the User model.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>User Admin</h2>
+        <p>Out of the box, the Django Admin has the User model registered. The actual User Admin is a bit customized and is set up so that when you add a new user, at first you only enter their username and password first. Afterwards, you get access to edit the rest of the fields.</p>
+        <p>The admin is great for first creating users to test with as well as staff users, who should have access to use the admin. This is what the <code>is_staff</code> flag is used for.</p>
+        <p>You can also see when people joined by default and change their password if need be.</p>
+        <p>Also note the "History" button, which shows you the Django Admin Log for the particular model you're looking at. It's a great way to keep track of whose doing what in the Admin if you have multiple staff users.</p>
+    </section>
+
+    <section>
+        <h2>Permissions & Groups</h2>
+        <p>Staff users can be assigned permissions, so that they only have access to create, edit, or delete different models. When a staff user is logged in, they will only see links to the Admin sections that they've been given permissions for.</p>
+        <p>For small sites this permissioning system works great, but sometimes at scale it can fall apart because not all permissions are just based on models.</p>
+        <p>Groups are just predefined sets of permissions. For example you may have a group called "Blog Authors", where all users who belong to that group are allowed to manage the Blog section of the website.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Auth Forms</h2>
+        <p>Django has several built in forms in it's auth application that we can use to get user functionality up and running quickly.</p>
+        <p>Feel free to take a look at <code>django.contrib.auth.forms</code> for the entire list or Django's documentation.</p>
+        <p>For all of the practice today, let's continue with our playing card project.</p>
+    </section>
+
+    <section>
+        <h2>Sign Up</h2>
+        <p>First, let's set up the sign up form so people can sign up for our site.</p>
+        <div class="col-8">
+            <h4>urls.py</h4>
+            <pre><code class="python">url(r'^register/$', 'cards.views.register', name='register')</code></pre>
+            <h4>views.py</h4>
+            <pre><code class="python">def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+    else:
+        form = UserCreationForm()
+
+    return render(request, "registration/register.html", {
+        'form': form,
+    })</code></pre>
+        </div>
+        <div class="col-3 col-offset-1">
+            <p>Our register view uses Django auth's built in <code>UserCreationForm</code>. This is a custom model form that has a couple additions:</p>
+            <ul>
+                <li>Checks the confirm password matches the first password.</li>
+                <li>Checks that this username isn't already being used by someone.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Sign Up (Cont.)</h2>
+        <p>Now let's create our template. Note, it's common django practice to pull all auth related templates in a folder called <code>registration</code>.</p>
+        <p>This is a very straightforward template including a form as we've seen before.</p>
+        <div class="col-7">
+            <h4>registration/register.html</h4>
+            <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock %}
+            {% endverbatim %}</code></pre>
+        </div>
+        <p style="clear:both;">Now let's try it out and sign up with a user. We can check in our admin that a new user was created.</p>
+    </section>
+
+    <section>
+        <h2>Login Form</h2>
+        <p>How about if we've already created a user and we just want to log back in? There's a built-in form for that too. There's actually already a view defined for us, we just need to hook up the url and a template.</p>
+        <div class="col-8">
+            <h4>urls.py</h4>
+            <pre><code class="python">url(r'^login/$', 'django.contrib.auth.views.login', name='login'),</code></pre>
+            <h4>registration/login.html</h4>
+            <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Log in" />
+    </form>
+
+    <p>Not member? <a href="{% url 'register' %}">Register!</a></p>
+{% endblock %}
+            {% endverbatim %}</code></pre>
+        </div>
+        <div class="col-3 col-offset-1">
+            <p>This again, is a pretty straightforward template for a form. We've added a link to the sign up page in case our user hasn't registered yet.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Login Form (Cont.)</h2>
+        <p>Now if we try to login, we get a 404 error because we're sent to <code>/accounts/profile</code>. This is the default login redirect URL.</p>
+        <p>We want the login page to go to our profile page, which just lives at <code>/profile</code>.</p>
+        <p>To change this let's set <code>LOGIN_REDIRECT_URL = 'profile'</code> in our <code>settings.py</code></p>
+        <p>Now if we login we're redirected to the proper page.</p>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>request.user</h2>
+        <p>We've now got the ability for users to sign up and login to our website.</p>
+        <p>In all of our views we have access to the request object, which always has a <code>user</code> property whether a user is signed in or not.</p>
+        <p>With <code>request.user</code> we're able to do a bunch of things, including checking if the user is currently logged in, if they're an active user, and access any properties about the user.</p>
+    </section>
+
+    <section>
+        <h2>Auth in Template</h2>
+        <p>One of the most common use cases for using the user instance in the template is printing out a greeting.</p>
+        <ul>
+            <li>In our profile.html, let's change "Player 1" to <code>user.username</code>.</li>
+            <li>Note that in your template, you don't have to do <code>request.user</code>. The template just understands the variable <code>user</code>. In your views you will use <code>request.user</code>.</li>
+            <li>Username is just a field on the user model, we can access it like we would any other variable in our template.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Logout</h2>
+        <p>We've got Sign up + Login, logically the next feature we're missing is Logout.</p>
+        <p>Like login, this view comes standard with Django and we just need to hook up the pieces.</p>
+        <div class="col-8">
+            <h4>urls.py</h4>
+            <pre><code class="python">url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),</code></pre>
+            <h4>registration/logged_out.html</h4>
+            <pre><code>{% verbatim %}
+{% extends "base_template.html" %}
+
+{% block content %}
+    <p>Come back soon!</p>
+{% endblock %}
+            {% endverbatim %}</code></pre>
+        </div>
+        <div class="col-3 col-offset-1">
+            <p>Navigate to the logout page in your browser. Check that if you go back to the profile page, your username no longer appears.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Auth in Template Part 2</h2>
+        <p>So now we have pages to register, login, and logout. If a user is currently authenticated, we only want to show them the logout link in the nav and if they're not currently authenticated then we want to show them the login and register links.</p>
+        <p>We can easily pull this off in the template with an if statement.</p>
+        <p>Put the follow code inside of <code>base_template.html</code> at the end of the navigation div.</p>
+        <pre><code>{% verbatim %}<span style="float:right;">
+    {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+</span>{% endverbatim %}</code></pre>
+        <p>If the user is authenticated, then we just display the Logout link, else we display both the login and register links.</p>
+    </section>
+
+    <section>
+        <h2>Auth in View</h2>
+        <p>We also have access to the user object in the view. Let's say we actually don't want to show the profile page at all if a user is not logged in.</p>
+        <p>We have write the following code in the view, which will redirect users not logged in to the login page.</p>
+        <pre><code class="python">def profile(request):
+    if not request.user.is_authenticated():
+        return redirect("login")
+
+    return render(request, 'profile.html', {})</code></pre>
+        <p>Test it out. Make sure you've logged out first then try to go the profile page. <code>request.user.is_authenticated()</code> returns False and you're redirected to the login page.</p>
+    </section>
+
+    <section>
+        <h2>Auth as Decorator</h2>
+        <p>As mentioned previously, this kind of code we just saw checking for a logged in user in a view is something we'd probably want to reuse.</p>
+        <p>Django's auth library has prepackaged a decorator called <code>login_required</code>, which does just that.</p>
+        <p>First we need to put this in our <code>settings.py</code> to configure where our login url is located: <code>LOGIN_URL = 'login'</code></p>
+        <p>Remove the code we just wrote from our view and instead use the decorator as seen below. Note, you will need to import the decorator.</p>
+        <pre><code class="python">@login_required
+def profile(request):
+    return render(request, 'profile.html', {})</code></pre>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p></p>
+        <h3>Beginner</h3>
+        <ul>
+            <li>Only show the "Profile" page link if the user is currently authenticated.</li>
+            <li>On the profile page, also display the user's <code>last_login</code> datetime.</li>
+            <li>Display the user's username, if logged in, up in the right hand nav. Set this to be the new link to the profile page.</li>
+        </ul>
+        <h3>Advanced</h3>
+        <ul>
+            <li>If the user is logged in and a staff user, put a link in the top right hand nav to the Django admin.</li>
+            <li>On the profile page, also display how long ago the user registered via <code>date_joined</code>. Hint: template filter.</li>
+        </ul>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Customizing User Form</h2>
+        <p>The built-in Django <code>UserCreationForm</code> is missing one of the most important fields when a user is first signing up: email.</p>
+        <p>Let's build upon this form to add email as a field user's need to first fill out when they sign up.</p>
+        <p>First we need to create our own form, which will inherit from Django auth's.</p>
+        <ol>
+            <li>Create a <code>forms.py</code> in our cards application.</li>
+            <li>Put the following code in <code>forms.py</code> to create our own form which inherits from Django's but includes an email field:
+                <pre><code class="python">from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
+class EmailUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")</code></pre>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Customizing User Form (Cont.)</h2>
+        <p>Now, in our <code>register</code> view, we need to use this new form instead of Django's built in one.</p>
+        <p>After you change <code>UserCreationForm</code> to <code>EmailUserCreationForm</code> try signing up. We should now see an email field.</p>
+        <p>To test that we are saving the email correctly, let's print the email out in <code>profile.html</code> as well.</p>
+        <pre><code>{% verbatim %}<p>Your email address is {{ user.email }}</p>{% endverbatim %}</code></pre>
+    </section>
+
+    <section>
+        <h2>Do it Yourself</h2>
+        <p>Let's extend our user form to also let the user enter their First and Last names when registering. These are fields already on the User model called <code>first_name</code> and <code>last_name</code>.</p>
+    </section>
+</section>
+
+
+
+{% endblock %}
