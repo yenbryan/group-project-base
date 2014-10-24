@@ -1,0 +1,8 @@
+---
+
+db_name: ""
+db_user: ""
+db_password: ""
+nginx_server_name: ""
+django_settings_file: "lms.settings"
+proxy_ip: 127.0.0.1:8001
