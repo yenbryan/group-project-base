@@ -3,14 +3,15 @@ from django.db import models
 
 
 class Profile(AbstractUser):
+    real_name = models.CharField(max_length=100)
     image = models.ImageField(
-        upload_to='media/profile_picutures',
+        upload_to='profile_pictures',
         blank=True,
         null=True)
     is_student = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u"{} {}".format(self.first_name, self.last_name)
+        return u"(), {}".format(self.username, self.real_name)
 
 
 class Slide(models.Model):

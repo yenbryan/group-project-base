@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -6,6 +8,18 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url("^$", TemplateView.as_view(template_name="index.html"), name="slides_home"),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^profile/$', 'slides.views.profile', name='profile'),
+    url(r'^register/$', 'slides.views.register', name='register'),
+    url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
+    url(r'^edit_account/$', 'slides.views.edit_account', name='edit_account'),
+    url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password_reset'),
+    url(r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done', name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'django.contrib.auth.views.password_reset_confirm',
+        name='password_reset_confirm'),
+    url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
     # Week 1 - OO Python
     url("^week1/1/$", TemplateView.as_view(template_name="week1/1.html"), name="week1_day1"),
@@ -38,3 +52,6 @@ urlpatterns = patterns('',
     url("^week3/3_pm/$", TemplateView.as_view(template_name="week3/3_pm.html"), name="week3_day3_pm"),
     url("^week3/lab/$", TemplateView.as_view(template_name="week3/lab.html"), name="week3_lab"),
 )
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
