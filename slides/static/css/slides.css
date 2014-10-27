@@ -1,3 +1,8 @@
+#myModal {
+    margin-top: 6%;
+    border-radius: 20px;
+}
+
 #actionButton {
     margin-top: .5%;
     border: none;
@@ -10,23 +15,25 @@
     font-weight: 300;
 }
 
-#actionModal {
-    z-index: 100;
-    width: 80%;
-    height: 80%;
+.modalTitle {
+    padding-top: 1%;
+    font-weight: bold;
+    margin-left: 3%;
 }
 
-
-#modalContainer {
-    border: 3px solid red;
-    border-radius: 10px;
-    width: 600px;
-    height: 500px;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    margin-right: auto;
-    margin-left: auto;
+.modalName {
+    padding: 0;
+    text-align: right;
+    font-weight: bold;
+    /*margin-right: -10%;*/
+    padding-left: 20px;
 }
+
+.name {
+    margin: 0;
+    padding-top: 0;
+}
+
 
 .modalActionButtons {
     margin-top: 10%;
@@ -39,14 +46,33 @@
 }
 
 #helpButton {
+    width: 95%;
     margin-left: 5%;
+}
+
+.help {
     background-color: #cc282f;
+}
+
+.help_active {
+    background-color: white;
+    border: 2px solid red;
+    color: red;
 }
 
 #doneButton {
     width: 95%;
     margin-right: 5%;
+}
+
+.done {
     background-color: #37d765;
+}
+
+.done_active {
+    background-color: white;
+    border: 2px solid #37d765;
+    color: #37d765;
 }
 
 #questionButton {
@@ -56,6 +82,55 @@
     margin-right: 10%;
     background-color: #bea10e;
     text-align: left;
+}
+
+#questionDiv {
+    background-color: #bea10e;
+    margin-top: 4%;
+    margin-left: 5%;
+    padding-top: 3%;
+    border-radius: 10px;
+    width: 90%;
+    color: white;
+    font-size: 35px;
+}
+
+.question_text {
+    margin-top: 2%;
+    margin-left: 1%;
+    border-radius: 10px;
+    font-size: 20px;
+    color: black;
+}
+
+textarea {
+    width: 98%;
+    height: 100px;
+}
+
+.question_submit {
+    margin-top: -9%;
+    position: absolute;
+    margin-left: 75%;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.inlineName {
+    display: inline-block;
+    margin-left: 5%;
+}
+
+#userName {
+    margin-right: 5%;
+    font-size: 20px;
+}
+
+#myModalLabel {
+    font-size: 20px;
 }
 
 #questionImage {
