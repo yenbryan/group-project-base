@@ -32,8 +32,9 @@ class Profile(AbstractUser):
 #         return u"pk:{} order:{} name: {}".format(self.pk, self.order, self.name)
 
 
-#we need a utils.py to add slides and attach to slide decks
+# we need a utils.py to add slides and attach to slide decks
 class Slide(models.Model):
+    name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
     day = models.IntegerField()
     am_pm = models.SmallIntegerField()
