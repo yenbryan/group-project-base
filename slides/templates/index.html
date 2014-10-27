@@ -23,11 +23,11 @@
                     {% else %}
                         <b>"teacher"</b>
                     {% endif %}
-                    <span><a href='{% url "edit_account" %}'>{{ user.real_name }} </a></span>
+                    <span><a href='{% url "profile" %}'>{{ user.real_name }} </a></span>
                     {% if user.image %}
-                        <span><a href="{% url "edit_account" %}"><img height="50" width="50" class="img-circle" src='{{ user.image.url }}'></a></span>
+                        <span><a href="{% url "profile" %}"><img height="50" width="50" class="img-circle" src='{{ user.image.url }}'></a></span>
                     {% else %}
-                        <span><a href="{% url "edit_account" %}"><img height="50" width="50" src="{% static "img/Assets/default-profile-photo.png" %}"></a></span>
+                        <span><a href="{% url "profile" %}"><img height="50" width="50" src="{% static "img/Assets/default-profile-photo.png" %}"></a></span>
                     {% endif %}
                         <button class="btn btn-default"><a href='{% url "profile" %}'>Profile</a></button>
                         <button class="btn btn-default"><a href="{% url 'logout' %}">Logout</a></button>

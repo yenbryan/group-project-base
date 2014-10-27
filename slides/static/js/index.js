@@ -27,4 +27,6 @@ $(document).ready(function() {
         $('.question_text').val("");
     });
 
+
+
 });

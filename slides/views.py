@@ -1,8 +1,12 @@
+import json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.core.validators import validate_email
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -13,13 +17,18 @@ from django.shortcuts import render, redirect
 
 # Registration
 # from slides.forms import ProfileForm, UpdateProfileForm
+from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
+from slides.models import Profile
 
 
 @login_required
 def profile(request):
     return render(request, 'profile.html')
 
+@login_required
+def test(request):
+    return render(request, 'test.html')
 
 # def edit_account(request):
 #     args = {}
@@ -56,11 +65,11 @@ def profile(request):
 #                 return redirect("slides_home")
 #     else:
 #         form = UserChangeForm()
-#     return render(request, 'edit_account.html',
+#     return render(request, 'profile.html',
 #         {'form': form}
 #     )
 
-def edit_account(request):
+# def edit_account(request):
     # if request.method == 'POST':
     #     user = request.user
     #     form = UserChangeForm(request.POST, request.FILES, instance=user)
@@ -79,9 +88,39 @@ def edit_account(request):
     #             return redirect("slides_home")
     # else:
     #     form = UserChangeForm()
-    return render(request, 'edit_account.html',
+    # return render(request, 'profile.html',
         # {'form': form}
-    )
+    # )
+@csrf_exempt
+def edit_name(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if data:
+            request.user.real_name = data
+            request.user.save()
+            status = "success"
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
+
+@csrf_exempt
+def edit_email(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        try:
+            validate_email(data)
+            request.user.email = data
+            request.user.save()
+            status = "success"
+        except ValidationError:
+            pass
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
 
 def register(request):
     if request.method == 'POST':
