@@ -12,8 +12,9 @@ class Profile(AbstractUser):
     is_student = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u"{}, {}".format(self.username, self.real_name)
-    # if there isn't a first and last name return username
+        return u"{}".format(self.real_name) \
+            if self.first_name \
+            else u"{}".format(self.username) # prints out real_name or Username
 
 """
     am_pm input takes 1 small integer -1, 0, 1
@@ -22,17 +23,6 @@ class Profile(AbstractUser):
     PM equals 1
 """
 
-# class SlideDeck(models.Model):
-#     name = models.CharField(max_length=150)
-#     week = models.IntegerField(null=True)
-#     order = models.IntegerField(help_text="order within week starting at 0")
-#     template = models.CharField(max_length=150)
-#
-#     def __unicode__(self):
-#         return u"pk:{} order:{} name: {}".format(self.pk, self.order, self.name)
-
-
-# we need a utils.py to add slides and attach to slide decks
 class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
@@ -44,14 +34,19 @@ class Slide(models.Model):
     # deck = models.ForeignKey(SlideDeck, related_name="slides")
 
     def url_construct(self):
-        res_str = ''
+        res_str = u"week{}/{}".format(self.week, self.day)
+
         if self.am_pm == 0:
-            res_str = "_am"
+            res_str += "_am"
         elif self.am_pm == 1:
-            res_str = "_pm"
-        else:
-            res_str = ""
-        return u"week{}/{}{}/#/{}/{}".format(self.week, self.day, res_str, self.slide_number, self.sub_slide_number)
+            res_str += "_pm"
+
+        res_str += "/#/{}".format(self.slide_number)
+
+        if self.sub_slide_number:
+            res_str += "/{}".format(self.sub_slide_number)
+
+        return res_str
 
     def save(self, *args, **kwargs):
         self.url = self.url_construct()
