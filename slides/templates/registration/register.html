@@ -1,0 +1,23 @@
+{% load crispy_forms_tags %}
+{#{% extends 'base_template.html' %}#}
+{#{% load staticfiles %}#}
+{##}
+{#{% block title %}#}
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">#}
+{#    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">#}
+{#    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>#}
+{#{% endblock title %}#}
+{##}
+{#{% block content %}#}
+    <div class="container">
+        <div class="middlebox">
+{#            <form enctype="multipart/form-data" method="post" action=".">#}
+                {% csrf_token %}
+                {% crispy form %}
+
+{#                <input type="submit" value="Submit">#}
+{#            </form>#}
+        </div>
+    </div>
+{#{% endblock %}#}
+
