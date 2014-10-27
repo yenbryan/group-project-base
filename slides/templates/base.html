@@ -56,8 +56,13 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <div class="row">
                             <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
-                            <b class="inlineName pull-right" id="userName">Adam Grossman</b>
-                            <img height="30" width="30" class="inlineName pull-right" src="{% static "img/Assets/default-profile-photo.png" %}">
+                            <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
+                            {% if user.image %}
+                                <img height="30" width="30" class="inlineName pull-right" src="{{ user.image.url }}">
+                            {% else %}
+                                <img height="30" width="30" class="inlineName pull-right" src="{% static "img/Assets/default-profile-photo.png" %}">
+                            {% endif %}
+
                         </div>
 
                         <div class="row">
