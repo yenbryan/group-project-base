@@ -22,23 +22,25 @@ class Profile(AbstractUser):
     PM equals 1
 """
 
-class SlideDeck(models.Model):
-    name = models.CharField(max_length=150)
-    week = models.IntegerField(null=True)
-    order = models.IntegerField(help_text="order within week starting at 0")
+# class SlideDeck(models.Model):
+#     name = models.CharField(max_length=150)
+#     week = models.IntegerField(null=True)
+#     order = models.IntegerField(help_text="order within week starting at 0")
+#     template = models.CharField(max_length=150)
+#
+#     def __unicode__(self):
+#         return u"pk:{} order:{} name: {}".format(self.pk, self.order, self.name)
 
-    def __unicode__(self):
-        return u"{} {}".format(self.order, self.name)
 
 #we need a utils.py to add slides and attach to slide decks
 class Slide(models.Model):
     week = models.IntegerField()
     day = models.IntegerField()
     am_pm = models.SmallIntegerField()
-    slide_number = models.IntegerField()
+    slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
-    deck = models.ForeignKey(SlideDeck, related_name="slides")
+    # deck = models.ForeignKey(SlideDeck, related_name="slides")
 
     def url_construct(self):
         res_str = ''
