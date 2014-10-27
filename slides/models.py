@@ -12,7 +12,7 @@ class Profile(AbstractUser):
     is_student = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u"(), {}".format(self.username, self.real_name)
+        return u"{}, {}".format(self.username, self.real_name)
     # if there isn't a first and last name return username
 
 """
@@ -22,7 +22,15 @@ class Profile(AbstractUser):
     PM equals 1
 """
 
+class SlideDeck(models.Model):
+    name = models.CharField(max_length=150)
+    week = models.IntegerField(null=True)
+    order = models.IntegerField(help_text="order within week starting at 0")
 
+    def __unicode__(self):
+        return u"{} {}".format(self.order, self.name)
+
+#we need a utils.py to add slides and attach to slide decks
 class Slide(models.Model):
     week = models.IntegerField()
     day = models.IntegerField()
@@ -30,6 +38,7 @@ class Slide(models.Model):
     slide_number = models.IntegerField()
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
+    deck = models.ForeignKey(SlideDeck, related_name="slides")
 
     def url_construct(self):
         res_str = ''
