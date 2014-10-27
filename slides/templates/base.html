@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="{% static "css/reveal.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/slides.css" %}">
+
 
     <!-- If the query includes 'print-pdf', include the PDF print sheet -->
     <script>
@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
 
     <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
+    <link rel="stylesheet" href="{% static "css/slides.css" %}">
     <script>
         less = {
             logLevel: 0
@@ -56,6 +57,7 @@
                 <div class="col-5">
                     <a href="{% url "slides_home" %}" id="rocketULogo"><img class="pull-right" src="{% static "img/rocketu-logo-dark.png" %}"></a>
                 </div>
+                <button id="actionButton" class="btn pull-right">Actions</button>
             </div>
 
             {% block title_slide %}
