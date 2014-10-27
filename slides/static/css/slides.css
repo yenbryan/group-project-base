@@ -1,5 +1,5 @@
 #actionButton {
-    margin-top: 2%;
+    margin-top: .5%;
     border: none;
     border-radius: 10px;
     font-size: 20px;
@@ -10,3 +10,61 @@
     font-weight: 300;
 }
 
+#actionModal {
+    z-index: 100;
+    width: 80%;
+    height: 80%;
+}
+
+
+#modalContainer {
+    border: 3px solid red;
+    border-radius: 10px;
+    width: 600px;
+    height: 500px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.modalActionButtons {
+    margin-top: 10%;
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 10px;
+    font-size: 35px;
+    color: white;
+}
+
+#helpButton {
+    margin-left: 5%;
+    background-color: #cc282f;
+}
+
+#doneButton {
+    width: 95%;
+    margin-right: 5%;
+    background-color: #37d765;
+}
+
+#questionButton {
+    width: 96%;
+    margin-top: 5%;
+    margin-left: 2%;
+    margin-right: 10%;
+    background-color: #bea10e;
+    text-align: left;
+}
+
+#questionImage {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.modalActions {
+    margin-top: -3%;
+    padding-right: 5%;
+    height: 45px;
+}

@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Profile(AbstractUser):
+    real_name = models.CharField(max_length=100)
     image = models.ImageField(
         upload_to='profile_pictures',
         blank=True,
@@ -11,9 +12,7 @@ class Profile(AbstractUser):
     is_student = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u"{} {}".format(self.first_name, self.last_name) \
-            if self.first_name \
-            else u"{}".format(self.username)
+        return u"(), {}".format(self.username, self.real_name)
     # if there isn't a first and last name return username
 
 """
