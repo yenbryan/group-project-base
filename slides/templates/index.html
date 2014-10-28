@@ -6,11 +6,14 @@
     <title>Slide Home</title>
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/index.css" %}">
     <script src="{% static "js/jquery-1.11.1.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/index.js" %}"></script>
 
 </head>
 <body>
+<div class="container">
     <h1>Welcome to the slides!</h1>
     <div class="col-6">
         <dl class="accordion">
@@ -42,7 +45,7 @@
             <dt>Week 1</dt>
             <dd>
                 <ul>
-                    <li><a href="{% url "week1_day1" %}">Welcome and Introductions</a></li>
+                    <li><a href="{% url "week1_day1" %}">Welcome and Introductions</a> | <p>Teacher Entry</p></li>
                     <li><a href="{% url "week1_day2" %}">Python Programs</a></li>
                     <li><a href="{% url "week1_day3" %}">Object-Oriented Python I</a></li>
                     <li><a href="{% url "week1_day4_am" %}">Object-Oriented Python II: Inheritance</a></li>
@@ -78,5 +81,6 @@
             </dd>
         </dl>
     </div>
+</div>
 </body>
 </html>

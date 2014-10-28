@@ -23,14 +23,15 @@ class Profile(AbstractUser):
     PM equals 1
 """
 
-
 class Slide(models.Model):
+    name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
     day = models.IntegerField()
     am_pm = models.SmallIntegerField()
-    slide_number = models.IntegerField()
+    slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
+    # deck = models.ForeignKey(SlideDeck, related_name="slides")
 
     def url_construct(self):
         res_str = u"week{}/{}".format(self.week, self.day)

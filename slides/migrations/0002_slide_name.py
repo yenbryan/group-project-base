@@ -11,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='slide',
-            name='url',
-            field=models.CharField(max_length=150),
+            name='name',
+            field=models.CharField(max_length=150, null=True),
             preserve_default=True,
         ),
     ]
