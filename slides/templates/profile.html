@@ -1,17 +1,143 @@
-{% load staticfiles %}
+{% load i18n future staticfiles %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block meta_title %}{% endblock %}</title>
+    <meta name="author" content="Yeti LLC">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{% static "css/reveal.min.css" %}">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
+
+    <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
+    <script src="{% static "js/less-1.7.0.min.js" %}"></script>
+    <script src="{% static "js/jquery-1.11.1.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/profile.js" %}"></script>
 </head>
-<div class="container">
-<h1 align="center">Profile</h1>
-<hr>
-<div class="panel-heading"> <span id="profile"> <b>{{ user.username }}</b> </span>, good to see you again!</div>
-<div class="panel-body">
-<p><b>Real Name: </b>{{ user.real_name }}</p>
-<p><b>Email: </b> {{ user.email }}</p>
+
+<body>
+    <script>
+        $(document).ready(function() {
+            $('.btn-danger').popover({
+                trigger: "click",
+                placement: "right",
+{#                title: "This is a default title",#}
+                });
+            });
+    </script>
+    <div class="reveal">
+
+        <!-- Any section element inside of this container is displayed as a slide -->
+        <div class="slides">
+            <div id="runningTitle">
+                <div class="col-7">
+                    <a href="#">{% block running_title %}{% endblock %}</a>
+                </div>
+                <div class="col-5">
+                    <a href="{% url "slides_home" %}" id="rocketULogo"><img class="pull-right" src="{% static "img/rocketu-logo-dark.png" %}"></a>
+                </div>
+            </div>
+
+            <section>
+                <h2>Profile<span style="font-size: 24px; float: right;">Username: {{ user.username }}</span></h2>
+                {% if user.image %}
+                    <div><a href="{% url "profile" %}"><img height="150" width="150" class="img-circle" src='{{ user.image.url }}'></a></div>
+                {% else %}
+                    <div><a href="{% url "profile" %}"><img height="150" width="150" class="img-circle" src="{% static "img/Assets/default-profile-photo.png" %}"></a></div>
+                {% endif %}
+                <p align="center">Upload a new profile photo</p>
+                <div align="center">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td align="right"> Real Name </td>
+                                <td> <span id="change_name">{{ user.real_name }}</span> <input type="text" style="display: none;" id="change_name_text" placeholder="New name..."/></td>
+                                <td> <button class="btn btn-default" id="change_name_edit">Edit</button></td>
+                                <td> <button class="btn btn-primary" style="display: none;" id="change_name_save">Save</button></td>
+                            </tr>
+
+                            <tr>
+                                <td align="right"> Email </td>
+                                <td> <span id="change_email">{{ user.email }}</span> <input type="text" style="display: none;" id="change_email_text" placeholder="email@abc.de"/></td>
+                                <td> <button class="btn btn-default" id="change_email_edit">Edit</button></td>
+                                <td> <button class="btn btn-primary" style="display: none;" id="change_email_save">Save</button></td>
+                            </tr>
+                            <tr>
+                                <td> Password </td>
+                                <td> <button class="btn btn-default">Change your password </button> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+{#                <h2>Edit Account</h2>#}
+{#                <form enctype="multipart/form-data" method="post" action=".">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form.as_p }}#}
+{##}
+{#                    <input type="submit" value="Submit">#}
+{#                </form>#}
+
+            </section>
+
+            <div class="footer">
+            </div>
+
+        </div>
+
     </div>
-<div class="clearfix"></div>
-<hr>
-<p>Registered at: {{ user.date_joined }}</p>
-<p>Last log-in at: {{ user.last_login }}</p>
-</div>
+
+    <script src="{% static "js/head.min.js" %}"></script>
+    <script src="{% static "js/reveal.js" %}"></script>
+
+    <script>
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            width: 1170,
+            height: 750,
+            controls: false,
+            progress: false,
+            history: false,
+            center: false,
+            slideNumber: false,
+
+			theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+            transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Parallax scrolling
+            // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+            // parallaxBackgroundSize: '2100px 900px',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                { src: '{% static "js/classList.js" %}', condition: function() { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '{% static "plugin/highlight/highlight.js" %}', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '{% static "plugin/zoom-js/zoom.js" %}', async: true, condition: function() { return !!document.body.classList; } },
+                { src: '{% static "plugin/notes/notes.js" %}', async: true, condition: function() { return !!document.body.classList; } }
+            ]
+        });
+
+    </script>
+
+    <script src="{% static "js/slides.js" %}"></script>
+
+</body>
+</html>
+
