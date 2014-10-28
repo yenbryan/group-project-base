@@ -1,0 +1,72 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!-- Bootstrap Core CSS -->
+{#    <link href="css/bootstrap.min.css" rel="stylesheet">#}
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/slides.css' %}" rel="stylesheet">
+
+
+</head>
+<body>
+{#<div class="container">#}
+{#<button id="actionButton" class="btn pull-right" data-toggle="modal" data-target="#actionModal">Actions</button>#}
+<button id="actionButton" class="btn pull-right" data-toggle="modal" data-target="#actionModal">Actions</button>
+
+<div id="modalContainer" class="container">
+{#    <div class="row">#}
+    <div style="padding: 5px; padding-left: 15px; padding-right: 15px;" class="row">
+        <div class="col-md-8">
+            <h4>User Experience Design</h4>
+        </div>
+        <div class="col-md-4" align="right">
+            <h4>Adam Grossman</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            <button class="modalActionButtons" id="helpButton"><span><img class="modalActions"
+                                                                          src="{% static 'img/Assets/Exclamation-filled.png' %}"
+                                                                          alt=""/></span>Help
+            </button>
+        </div>
+        <div class="col-md-6">
+            <button class="modalActionButtons" id="doneButton"><span><img class="modalActions"
+                                                                          src="{% static 'img/Assets/Checkmark-filled.png' %}"
+                                                                          alt=""/></span>Done
+            </button>
+        </div>
+    </div>
+
+{#    <div class="row">#}
+        <div class="col-md-12" style="background-color: #bea10e">
+            <button class="modalActionButtons" id="questionButton"><span><img id="questionImage" class="modalActions"
+                                                                              src="{% static 'img/Assets/Questionmark-filled.png' %}"
+                                                                              alt=""/></span>Question
+            </button>
+        </div>
+        <div class="col-md-12">
+{#            <form method="post" action=".">#}
+{#                {% form %}#}
+{#                <input type="submit" value="Submit"/>#}
+{#            </form>#}
+        </div>
+    </div>
+</div>
+
+<!-- jQuery Version 1.11.0 -->
+<script src="js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
