@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -72,33 +72,28 @@ def register(request):
 
 
 @csrf_exempt
-def new_help(request):
+def new_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
         student = Profile.objects.get(username=request.user.username)
-        current_slide = Slide.objects.get(url=data['slide'])
-        Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
-        return HttpResponse(content_type='application/json')
+        current_slide = Slide.objects.get(url="week"+data['slide'])
+        # HELP
+        if int(action) == 1:
+            Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+        # DONE
+        elif int(action) == 2:
+            try:
+                help_action = Action.objects.get(need_help=True, profile=student, slide=current_slide)
+                help_action.done = True
+                help_action.need_help = False
+                help_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
+        # QUESTION
+        elif int(action) == 3:
+            Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
 
-
-@csrf_exempt
-def new_done(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        student = Profile.objects.get(username=request.user.username)
-        current_slide = Slide.objects.get(url=data['slide'])
-        Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
-        return HttpResponse(content_type='application/json')
-
-
-@csrf_exempt
-def new_question(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        student = Profile.objects.get(username=request.user.username)
-        current_slide = Slide.objects.get(url=data['slide'])
-        Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
-        return HttpResponse(content_type='application/json')
+    return HttpResponse(content_type='application/json')
 
 
 def teacher(request, week, day, am_pm):
