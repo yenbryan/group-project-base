@@ -1,6 +1,8 @@
 from HTMLParser import HTMLParser
+import os
 from slides.models import Slide
 from bs4 import BeautifulSoup
+from django.db.utils import IntegrityError
 
 
 __author__ = 'GoldenGate'
@@ -21,14 +23,36 @@ class MyHTMLParser(HTMLParser):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        # x = ["bryan", "peter"]
-        # for names in x:
-        #     print names
-        # Slide.objects.create(week=1, day=1, am_pm=-1, slide_number=0)
         week = 1
         day = 1
-        with open('./slides/templates/week'+str(week)+'/'+str(day)+'.html') as f:
-            html = f.read()
+        # return directories where slide decks live
+        walker = os.walk('./slides/templates/')
+        # navigating to individual slide decks
+        for folder in walker:
+            index1 = folder[0]
+            index = index1[-5:]
+            index = index[:-1]
+            # print folder
+            if index == "week":
+                files = folder[2]
+                for file in files:
+                    file_location = str(folder[0]) + "/" + str(file)
+                    week = index1[-1]
+                    day_am_pm = file[:-5]
+                    if day_am_pm[-3:] == "_am":
+                        am_pm = 0
+                        day = day_am_pm[:1]
+                    elif day_am_pm[-3:] == "_pm":
+                        am_pm = 1
+                        day = day_am_pm[:1]
+                    else:
+                        am_pm = -1
+                        day = day_am_pm
+                    self.run_soup(file_location, week, day, am_pm)
+
+    def run_soup(self, location, week, day, am_pm):
+        with open(location) as template:
+            html = template.read()
             soup = BeautifulSoup(html)
             sections = soup.find_all('section')
             all_headers = []
@@ -40,14 +64,22 @@ class Command(BaseCommand):
             print all_headers
             count = 0
             tracker = 1
+            # to_be_deleted = Slide.objects.all()
+            # to_be_deleted.delete()
             for header in all_headers:
                 if count == 0:
-                    Slide.objects.create(name=str(header), week=week, day=day, am_pm=-1, slide_number=tracker)
+                    try:
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "Integrity!!!!"
                     print "created header at count" + str(count)
                     print header
                     tracker += 1
                 elif header != all_headers[(count-1)]:
-                    Slide.objects.create(week=week, day=day, am_pm=-1, slide_number=(tracker))
+                    try:
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "integrity!!!"
                     print "created header at count" + str(count)
                     print header
                     tracker += 1
