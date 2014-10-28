@@ -7,14 +7,12 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('slides', '0001_initial'),
+        ('slides', '0002_auto_20141028_0202'),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='slide',
-            name='url',
-            field=models.CharField(max_length=150),
-            preserve_default=True,
+        migrations.AlterUniqueTogether(
+            name='slide',
+            unique_together=set([('week', 'day', 'am_pm', 'slide_number', 'name')]),
         ),
     ]

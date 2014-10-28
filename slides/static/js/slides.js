@@ -8,4 +8,10 @@ $(document).ready(function() {
             $(this).next().slideDown();
         }
     });
+
+    $('#actionButton').click(function() {
+        url = document.location.href;
+        console.log(url);
+    });
 });
+
