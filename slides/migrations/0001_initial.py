@@ -82,6 +82,10 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.AlterUniqueTogether(
+            name='slide',
+            unique_together=set([('week', 'day', 'am_pm', 'slide_number', 'name')]),
+        ),
         migrations.AddField(
             model_name='question',
             name='slide',

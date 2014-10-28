@@ -46,7 +46,7 @@ class Command(BaseCommand):
                         am_pm = 1
                         day = day_am_pm[:1]
                     else:
-                        am_pm = -1
+                        am_pm = 2
                         day = day_am_pm
                     self.run_soup(file_location, week, day, am_pm)
 

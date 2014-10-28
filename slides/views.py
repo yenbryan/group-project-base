@@ -17,8 +17,10 @@ from django.shortcuts import render, redirect
 
 # Registration
 # from slides.forms import ProfileForm, UpdateProfileForm
+from django.template import response
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
+from slides.models import Profile, Slide, Action, Question
 
 
 @login_required
@@ -145,4 +147,27 @@ def register(request):
 def new_help(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print data
+        student = Profile.objects.get(username=request.user.username)
+        current_slide = Slide.objects.get(url=data['slide'])
+        Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+        return HttpResponse(content_type='application/json')
+
+
+@csrf_exempt
+def new_done(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        student = Profile.objects.get(username=request.user.username)
+        current_slide = Slide.objects.get(url=data['slide'])
+        Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
+        return HttpResponse(content_type='application/json')
+
+
+@csrf_exempt
+def new_question(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        student = Profile.objects.get(username=request.user.username)
+        current_slide = Slide.objects.get(url=data['slide'])
+        Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
+        return HttpResponse(content_type='application/json')
