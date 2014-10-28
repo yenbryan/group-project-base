@@ -69,5 +69,7 @@ $(document).ready(function() {
             dataType: 'json',
             data: slide_datas
         });
+
+        $('.question_text').val("");
     });
 });
