@@ -22,6 +22,9 @@ urlpatterns = patterns('',
         name='password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
+#   teacher facing site
+    url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
+
 # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
     url(r'^edit/email/$', 'slides.views.edit_email', name='edit_email'),
