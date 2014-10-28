@@ -1,51 +1,48 @@
 $(document).ready(function() {
     $('h2').append('<button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button>');
 
+    function page_data(num) {
+        var current_slide = page_url;
+        var slide_url = current_slide.split('week')[1];
+        var question_text = $('.question_text').val();
+
+        var datas = {
+            slide: slide_url,
+            text: question_text
+        };
+
+        datas = JSON.stringify(datas);
+
+        $.ajax({
+            url: '/action/' + num,
+            type: 'POST',
+            dataType: 'json',
+            data: datas
+        });
+    }
+
     $('.help').on('click', function() {
-        console.log('help');
-        console.log(page_title);
-        console.log(page_url);
         $(this).addClass("help_active");
         setTimeout(function () {
             $(".help").removeClass("help_active");
         }, 3000);
 
-        var student_real_name = $('#userName').text();
-        console.log(student_real_name);
-        var current_slide = $('#myModalLabel').text();
-        console.log(current_slide);
-
-        var datas = {
-            student: student_real_name,
-            slide: current_slide
-        };
-        datas = JSON.stringify(datas);
-        console.log(datas);
-
-        $.ajax({
-            url: '/help/',
-            type: 'POST',
-            dataType: 'json',
-            data: datas,
-            success: function (response) {
-                console.log(response);
-            }
-        });
+        page_data(1);
     });
 
     $('.done').on('click', function() {
-        console.log('done');
-        console.log(page_title);
-        console.log(page_url);
         $(this).addClass("done_active");
         setTimeout(function(){$(".done").removeClass("done_active");}, 3000);
+
+        page_data(2);
+
     });
 
     $('.question_submit').on('click', function() {
-        console.log('question');
-        console.log(page_title);
-        console.log(page_url);
-        console.log($('.question_text').val());
+        var question_text = $('.question_text').val();
         $('.question_text').val("");
+
+        page_data(3);
+
     });
 });

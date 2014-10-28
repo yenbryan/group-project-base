@@ -22,14 +22,14 @@ urlpatterns = patterns('',
         name='password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
-#   teacher facing site
+    #   teacher facing site
     url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
 
-# ajax call
+    # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
     url(r'^edit/email/$', 'slides.views.edit_email', name='edit_email'),
-    # url(r'^help/(?P<student_real_name>\w+)/(?P<current_slide>\w+)/$', 'slides.views.new_help', name='new_help'),
-    url(r'^help/', 'slides.views.new_help', name='new_help'),
+
+    url(r'^action/(?P<action>\d+)', 'slides.views.new_action', name='new_action'),
 
     # Week 1 - OO Python
     url("^week1/1/$", TemplateView.as_view(template_name="week1/1.html"), name="week1_day1"),

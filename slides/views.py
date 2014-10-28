@@ -1,96 +1,25 @@
 import json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-# Create your views here.
-# @login_required
-# def profile(request):
-#     return render(request, 'profile.html')
-
-
-# Registration
-# from slides.forms import ProfileForm, UpdateProfileForm
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
-from slides.models import Slide
+from slides.models import Profile, Slide, Action, Question
 
 
 @login_required
 def profile(request):
     return render(request, 'profile.html')
 
+
 @login_required
 def test(request):
     return render(request, 'test.html')
 
-# def edit_account(request):
-#     args = {}
-#
-#     if request.method == 'POST':
-#         form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
-#         form.actual_user = request.user
-#         if form.is_valid():
-#             password1 = form.cleaned_data['password1']
-#             password2 = form.
-#             form.save()
-#             return HttpResponseRedirect(reverse('update_profile_success'))
-#     else:
-#         form = UpdateProfileForm()
-#
-#     args['form'] = form
 
-# def edit_account(request):
-#     if request.method == 'POST':
-#         form = UserChangeForm(request.POST, request.FILES)
-#         user = request.user
-#         if form.is_valid():
-#             image = form.cleaned_data['image']
-#             real_name = form.cleaned_data['real_name']
-#             password1 = form.cleaned_data['password1']
-#             password2 = form.cleaned_data['password2']
-#             email = form.cleaned_data['email']
-#             if password1 == password2 and password1 != "":
-#                 user.password = user.set_password(password1)
-#                 user.email = email
-#                 user.image = image
-#                 user.real_name = real_name
-#                 user.save()
-#                 return redirect("slides_home")
-#     else:
-#         form = UserChangeForm()
-#     return render(request, 'profile.html',
-#         {'form': form}
-#     )
-
-# def edit_account(request):
-    # if request.method == 'POST':
-    #     user = request.user
-    #     form = UserChangeForm(request.POST, request.FILES, instance=user)
-    #     if form.is_valid():
-    #         image = form.cleaned_data['image']
-    #         real_name = form.cleaned_data['real_name']
-    #         password1 = form.cleaned_data['password1']
-    #         password2 = form.cleaned_data['password2']
-    #         email = form.cleaned_data['email']
-    #         if password1 == password2 and password1 != "":
-    #             user.password = user.set_password(password1)
-    #             user.email = email
-    #             user.image = image
-    #             user.real_name = real_name
-    #             user.save()
-    #             return redirect("slides_home")
-    # else:
-    #     form = UserChangeForm()
-    # return render(request, 'profile.html',
-        # {'form': form}
-    # )
 @csrf_exempt
 def edit_name(request):
     status = None
@@ -143,10 +72,29 @@ def register(request):
 
 
 @csrf_exempt
-def new_help(request):
+def new_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print data
+        student = Profile.objects.get(username=request.user.username)
+        current_slide = Slide.objects.get(url="week"+data['slide'])
+        # HELP
+        if int(action) == 1:
+            Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+        # DONE
+        elif int(action) == 2:
+            try:
+                help_action = Action.objects.get(need_help=True, profile=student, slide=current_slide)
+                help_action.done = True
+                help_action.need_help = False
+                help_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
+        # QUESTION
+        elif int(action) == 3:
+            Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
+
+    return HttpResponse(content_type='application/json')
+
 
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
