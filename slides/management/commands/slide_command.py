@@ -23,8 +23,6 @@ class MyHTMLParser(HTMLParser):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        week = 1
-        day = 1
         # return directories where slide decks live
         walker = os.walk('./slides/templates/')
         # navigating to individual slide decks
