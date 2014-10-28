@@ -70,8 +70,9 @@ class Migration(migrations.Migration):
             name='Slide',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=150, null=True)),
                 ('week', models.IntegerField()),
-                ('day', models.IntegerField()),
+                ('day', models.CharField(max_length=150)),
                 ('am_pm', models.SmallIntegerField()),
                 ('slide_number', models.IntegerField(help_text=b'index starts at 0')),
                 ('sub_slide_number', models.IntegerField(null=True, blank=True)),
