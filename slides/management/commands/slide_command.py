@@ -2,6 +2,7 @@ from HTMLParser import HTMLParser
 import os
 from slides.models import Slide
 from bs4 import BeautifulSoup
+from django.db.utils import IntegrityError
 
 
 __author__ = 'GoldenGate'
@@ -63,14 +64,22 @@ class Command(BaseCommand):
             print all_headers
             count = 0
             tracker = 1
+            # to_be_deleted = Slide.objects.all()
+            # to_be_deleted.delete()
             for header in all_headers:
                 if count == 0:
-                    Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                    try:
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "Integrity!!!!"
                     print "created header at count" + str(count)
                     print header
                     tracker += 1
                 elif header != all_headers[(count-1)]:
-                    Slide.objects.create(name=str(header), week=week, day=day, am_pm=-1, slide_number=(tracker))
+                    try:
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "integrity!!!"
                     print "created header at count" + str(count)
                     print header
                     tracker += 1

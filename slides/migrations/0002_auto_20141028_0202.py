@@ -11,10 +11,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='slide',
-            name='name',
-            field=models.CharField(max_length=150, null=True),
-            preserve_default=True,
+        migrations.AlterUniqueTogether(
+            name='slide',
+            unique_together=set([('week', 'day', 'am_pm', 'name')]),
         ),
     ]

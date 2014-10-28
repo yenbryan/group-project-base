@@ -32,6 +32,9 @@ class Slide(models.Model):
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
 
+    class Meta:
+        unique_together = ("week", "day", "am_pm", "slide_number", "name")
+
     def url_construct(self):
         res_str = u"week{}/{}".format(self.week, self.day)
 
