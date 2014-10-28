@@ -25,6 +25,8 @@ urlpatterns = patterns('',
 # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
     url(r'^edit/email/$', 'slides.views.edit_email', name='edit_email'),
+    # url(r'^help/(?P<student_real_name>\w+)/(?P<current_slide>\w+)/$', 'slides.views.new_help', name='new_help'),
+    url(r'^help/', 'slides.views.new_help', name='new_help'),
 
     # Week 1 - OO Python
     url("^week1/1/$", TemplateView.as_view(template_name="week1/1.html"), name="week1_day1"),

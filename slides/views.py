@@ -19,7 +19,6 @@ from django.shortcuts import render, redirect
 # from slides.forms import ProfileForm, UpdateProfileForm
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
-from slides.models import Profile
 
 
 @login_required
@@ -140,3 +139,10 @@ def register(request):
     return render(request, "registration/register.html", {
         'form': form,
     })
+
+
+@csrf_exempt
+def new_help(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print data
