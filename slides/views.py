@@ -19,6 +19,7 @@ from django.shortcuts import render, redirect
 # from slides.forms import ProfileForm, UpdateProfileForm
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
+from slides.models import Slide
 
 
 @login_required
@@ -146,3 +147,7 @@ def new_help(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         print data
+
+def teacher(request, week, day, am_pm):
+    deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
+    return HttpResponse(deck)
