@@ -92,7 +92,6 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__fi
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, "static", *MEDIA_URL.strip("/").split("/"))
 
-
 LOGIN_REDIRECT_URL = 'slides_home'
 LOGIN_URL = 'login'
 
