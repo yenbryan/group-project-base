@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+///**
+// * Created by GoldenGate on 10/26/14.
+// */
+//$(document).ready(function() {
+////    $(".slide-deck").append("<a href="+ {% url 'week1_day1' %}+">")
+//});
+=======
 $(document).ready(function() {
     $('h2').append('<button style="float: right;" class="btn btn-primary btn-lg get_url" data-toggle="modal" data-target="#myModal">Actions</button>');
 
@@ -28,3 +36,4 @@ $(document).ready(function() {
     });
 
 });
+>>>>>>> d7b6dbb674a71ee0482ce7602226e4b3f2db7cf6
