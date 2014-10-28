@@ -47,45 +47,46 @@
 
 <body class="{% block body_css %}{% endblock body_css %}">
 {#popup window#}
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="row">
-                    <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
-                    <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
-                    {% if user.image %}
-                        <img height="35" width="35" class="inlineName pull-right img-circle" src="{{ user.image.url }}">
-                    {% else %}
-                        <img height="35" width="35" class="inlineName pull-right img-circle"
-                             src="{% static "img/Assets/default-profile-photo.png" %}">
-                    {% endif %}
-                </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="container">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
+                            <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
+                            {% if user.image %}
+                                <img height="35" width="35" class="inlineName pull-right img-circle" src="{{ user.image.url }}">
+                            {% else %}
+                                <img height="35" width="35" class="inlineName pull-right img-circle" src="{% static "img/Assets/default-profile-photo.png" %}">
+                            {% endif %}
+                        </div>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <button class="modalActionButtons help" id="helpButton"><span><img class="modalActions"
-                                                                                           src="{% static 'img/Assets/Exclamation-filled.png' %}"
-                                                                                           alt=""/></span>Help
-                        </button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button class="modalActionButtons done" id="doneButton"><span><img class="modalActions"
-                                                                                           src="{% static 'img/Assets/Checkmark-filled.png' %}"
-                                                                                           alt=""/></span>Done
-                        </button>
-                    </div>
-                </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <button class="modalActionButtons help" id="helpButton"><span><img class="modalActions"
+                                                                                              src="{% static 'img/Assets/Exclamation-filled.png' %}"
+                                                                                              alt=""/></span>Help
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button class="modalActionButtons done" id="doneButton"><span><img class="modalActions"
+                                                                                              src="{% static 'img/Assets/Checkmark-filled.png' %}"
+                                                                                              alt=""/></span>Done
+                                </button>
+                            </div>
+                        </div>
 
-                <div class="row">
-                    <div class="col-md-12" id="questionDiv">
-                        <img id="questionImage" class="modalActions"
-                             src="{% static 'img/Assets/Questionmark-filled.png' %}"
-                             alt=""/></span>Question
-                        <form class="question_content">
-                            <textarea name="Text1" cols="31" rows="2" class="question_text"></textarea>
-                            <button type="button" class="btn pull-right question_submit">SUBMIT</button>
-                        </form>
+                        <div class="row">
+                            <div class="col-md-12" id="questionDiv">
+                                <img id="questionImage" class="modalActions" src="{% static 'img/Assets/Questionmark-filled.png' %}"
+                                                                                                  alt=""/></span>Question
+                                <form class="question_content">
+                                    <textarea name="Text1" cols="31" rows="2" class="question_text"></textarea>
+                                    <button type="button" class="btn pull-right question_submit">SUBMIT</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
