@@ -111,4 +111,3 @@ def new_help(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         print data
-
