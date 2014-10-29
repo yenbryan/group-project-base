@@ -63,7 +63,7 @@ class Action(models.Model):
     need_help = models.BooleanField(default=False)
     profile = models.ForeignKey(Profile, related_name="actions")
     slide = models.ForeignKey(Slide, related_name="actions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return u"{}'s Action on slide {}".format(self.profile.first_name, self.slide.url)
@@ -73,7 +73,7 @@ class Question(models.Model):
     body = models.TextField()
     profile = models.ForeignKey(Profile, related_name="questions")
     slide = models.ForeignKey(Slide, related_name="questions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.body
