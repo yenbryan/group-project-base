@@ -48,4 +48,9 @@ $(document).ready(function() {
         console.log($('.question_text').val());
         $('.question_text').val("");
     });
+//    $('#actionButton').click(function() {
+//        var url = document.location.href;
+//        console.log(url);
+//        console.log($(this).parent.attr('id'))
+//    });
 });

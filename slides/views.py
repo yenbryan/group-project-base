@@ -148,6 +148,7 @@ def new_help(request):
         data = json.loads(request.body)
         print data
 
+
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=int(week), day=str(day))
     deck.filter(am_pm=am_pm)
