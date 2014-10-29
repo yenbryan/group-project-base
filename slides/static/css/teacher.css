@@ -1,0 +1,75 @@
+ /*HELP*/
+
+.help-icon {
+    height: 55px;
+    margin-top: 5%;
+}
+
+.help-scroll {
+    overflow-y: auto;
+    height: 80%;
+}
+
+.help-header {
+    font-family: ProximaNova-Bold;
+    font-size: 22px;
+    text-align: left;
+    color: #de544e;
+}
+
+.help-header-hr {
+    color: #de544e;
+    background-color: #de544e;
+    height: 2px;
+    margin-top: -3%;
+}
+
+.user-photo {
+    box-shadow: 0 2px 5px #888888;
+    height: 35px;
+    width: 35px;
+}
+
+.user-photo-div {
+    margin-left: -4%
+}
+
+.user-name {
+    color: black;
+    margin-top: 5%;
+    margin-left: -5%;
+    font-size: 20px;
+    text-align: left;
+}
+
+.time {
+    color: #cfd1d1;
+    margin-top: -2%;
+    margin-left: -5%;
+    font-size: 20px;
+    text-align: left;
+}
+
+.help-status {
+    border: 3px solid #cc2930;
+    margin-bottom: 10%;
+    background-color: #cc2930;
+    color: white;
+}
+
+.help-text {
+    margin-top: 4%;
+    font-size: 20px;
+}
+
+.help-button {
+    border: none;
+    margin-left: -10%;
+    margin-right: -10%;
+    background-color: #cc2930;
+    width: 110%;
+}
+
+.test {
+     border: 1px solid red;
+}

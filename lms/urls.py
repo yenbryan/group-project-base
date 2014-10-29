@@ -24,6 +24,9 @@ urlpatterns = patterns('',
 
     #   teacher facing site
     url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
+    url(r'^teacher/help/$', 'slides.views.teacher_help', name="teacher_help"),
+    url(r'^teacher/done/$', 'slides.views.teacher_help', name="teacher_done"),
+    url(r'^teacher_action/(?P<action>\d+)', 'slides.views.change_action', name='change_action'),
 
     # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),

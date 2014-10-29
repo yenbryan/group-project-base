@@ -77,6 +77,7 @@ def new_action(request, action):
         data = json.loads(request.body)
         student = Profile.objects.get(username=request.user.username)
         current_slide = Slide.objects.get(url="week"+data['slide'])
+        print current_slide
         # HELP
         if int(action) == 1:
             Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
@@ -99,3 +100,18 @@ def new_action(request, action):
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
     return HttpResponse(deck)
+
+
+def teacher_help(request):
+    students = Profile.objects.all()
+    help = Action.objects.filter(need_help=True, done=False)
+    done = Action.objects.filter(done=True)
+    data = {'help': help, 'done': done, 'students': students}
+    return render(request, 'teacher/help.html', data)
+
+
+@csrf_exempt
+def change_action(request, action):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
