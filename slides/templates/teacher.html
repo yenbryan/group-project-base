@@ -5,6 +5,8 @@
     <title></title>
 </head>
 <body>
-
+{% for slide in deck %}
+<p>{{ slide.name }}</p>
+{% endfor %}
 </body>
 </html>

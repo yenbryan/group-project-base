@@ -149,5 +149,9 @@ def new_help(request):
         print data
 
 def teacher(request, week, day, am_pm):
-    deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
-    return HttpResponse(deck)
+    deck = Slide.objects.filter(week=int(week), day=str(day))
+    deck.filter(am_pm=am_pm)
+    data = {
+        "deck": deck
+    }
+    return render(request, "teacher.html", data)

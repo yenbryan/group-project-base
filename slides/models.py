@@ -17,11 +17,12 @@ class Profile(AbstractUser):
             else u"{}".format(self.username) # prints out real_name or Username
 
 """
-    am_pm input takes 1 small integer -1, 0, 1
-    AM NOR PM equals -1
+    am_pm input takes 1 small integer 2, 0, 1
+    AM NOR PM equals 2
     AM equals 0
     PM equals 1
 """
+
 
 class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
