@@ -9,10 +9,10 @@ $(document).ready(function() {
         }
     });
 
-    $('#actionButton').click(function() {
-        url = document.location.href;
-        console.log(url);
-        console.log($(this).parent.attr('id'))
-    });
+//    $('#actionButton').click(function() {
+//        url = document.location.href;
+//        console.log(url);
+//        console.log($(this).parent.attr('id'))
+//    });
 });
 
