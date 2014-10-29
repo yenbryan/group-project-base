@@ -76,7 +76,15 @@ def new_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
         student = Profile.objects.get(username=request.user.username)
-        current_slide = Slide.objects.get(url="week"+data['slide'])
+        week = int(data['week'])
+        am_pm = int(data['am_pm'])
+        slide_number = int(data['slide_number'])
+        new_slides = Slide.objects.filter(week=week, day=data["day"])
+        print new_slides
+        day = data['day']
+        our_url = "week"+str(week)+"/"+day+"/#/"+str(slide_number)
+        print our_url
+        current_slide = Slide.objects.get(url=our_url)
         print current_slide
         # HELP
         if int(action) == 1:
@@ -98,9 +106,12 @@ def new_action(request, action):
 
 
 def teacher(request, week, day, am_pm):
-    deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
-    return HttpResponse(deck)
-
+    deck = Slide.objects.filter(week=int(week), day=str(day))
+    deck.filter(am_pm=am_pm)
+    data = {
+        "deck": deck
+    }
+    return render(request, "teacher.html", data)
 
 def teacher_help(request):
     students = Profile.objects.all()
@@ -127,4 +138,3 @@ def teacher_question(request):
 def change_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
-

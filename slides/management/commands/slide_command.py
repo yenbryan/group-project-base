@@ -37,7 +37,6 @@ class Command(BaseCommand):
                     file_location = str(folder[0]) + "/" + str(file)
                     week = index1[-1]
                     day_am_pm = file[:-5]
-                    # print day_am_pm
                     if day_am_pm[-3:] == "_am":
                         am_pm = 0
                         day = day_am_pm[:1]
@@ -51,8 +50,7 @@ class Command(BaseCommand):
                         print am_pm
                         print ""
                     else:
-                        # for some reason, it returns -2 or -1 randomly
-                        am_pm = -1
+                        am_pm = 2
                         day = day_am_pm
                         print "day_am_pm " + str(day_am_pm)
                         print am_pm
@@ -75,12 +73,14 @@ class Command(BaseCommand):
             for header in all_headers:
                 if count == 0:
                     try:
+                        print ""
                         Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
                     except IntegrityError:
                         print "Integrity!!!!"
                     tracker += 1
                 elif header != all_headers[(count-1)]:
                     try:
+                        print ""
                         Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
                     except IntegrityError:
                         print "integrity!!!"
