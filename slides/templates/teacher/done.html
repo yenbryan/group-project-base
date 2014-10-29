@@ -32,29 +32,26 @@
 <div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
-            <img class="help-icon" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/>
+            <img class="icon" src="{% static 'img/Assets/Checkmark-HOLLOW.png' %}" alt=""/>
         </div>
     </div>
     <div class="row">
         <div align="center" class="col-xs-12">
-            <h4 class="help-header">{{ help | length }} Needs Help</h4>
-            <hr class="help-header-hr">
+            <h4 class="header done">{{ done | length }} Done</h4>
+            <hr class="done done-header-hr">
         </div>
     </div>
 </div>
-<div class="container help-scroll">
+<div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
-            {% for student in Action.help.all %}
+            {% for student in done.all %}
                 <div class="col-xs-2 user-photo-div">
                     <img class="img-circle user-photo" src="{{ student.profile.image.url }}">
                 </div>
                 <div class="col-xs-10">
                     <h3 class="user-name">{{ student.profile }}</h3>
                     <h3 class="time">{{ student.time }}</h3>
-                </div>
-                <div class="col-xs-12 help-status">
-                    <button class="help-button"><span class="help-text">Helped?</span></button>
                 </div>
             {% endfor %}
         </div>

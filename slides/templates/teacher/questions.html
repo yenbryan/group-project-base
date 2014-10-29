@@ -32,29 +32,30 @@
 <div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
-            <img class="icon" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/>
+            <img class="icon" src="{% static 'img/Assets/Questionmark-hollow.png' %}" alt=""/>
         </div>
     </div>
     <div class="row">
         <div align="center" class="col-xs-12">
-            <h4 class="header help">{{ help | length }} Needs Help</h4>
-            <hr class="help help-header-hr">
+            <h4 class="header question">{{ question | length }} Total Questions</h4>
+            <hr class="question question-header-hr">
         </div>
     </div>
 </div>
 <div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
-            {% for student in help.all %}
+            {% for question in question.all %}
                 <div class="col-xs-2 user-photo-div">
-                    <img class="img-circle user-photo" src="{{ student.profile.image.url }}">
+                    <img class="img-circle user-photo" src="{{ question.profile.image.url }}">
                 </div>
                 <div class="col-xs-10">
-                    <h3 class="user-name">{{ student.profile }}</h3>
-                    <h3 class="time">{{ student.time }}</h3>
+                    <h3 class="user-name">{{ question.profile }}</h3>
+                    <h3 class="question-text">{{ question.body }}</h3>
+                    <h3 class="time">{{ question.time }}</h3>
                 </div>
-                <div class="col-xs-12 help-status">
-                    <button class="help-button"><span class="status-text">Helped?</span></button>
+                <div class="col-xs-12 question-status">
+                    <button class="question-button"><span class="status-text">Answered?</span></button>
                 </div>
             {% endfor %}
         </div>

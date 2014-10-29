@@ -1,7 +1,7 @@
 $(document).ready(function() {
-
-
     $('h2').append('<button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button>');
+    $('#help-button-img-done').hide();
+    $('#done-button-img-done').hide();
 
     $('#actionButton').click(function() {
         url = page_url;
@@ -16,26 +16,12 @@ $(document).ready(function() {
         idCounter++;
     });
 
-
-//    $.each('h2', function(){
-//        counter = 1;
-//        var slide_id = $(this).attr('id', counter);
-//        counter++;
-//        console.log(slide_id);
-//    });
-
-
-//    $('h2').attr('id', counter);
-
-
     function page_data(num) {
-//        var current_slide = $('h2').each().attr('id');
         var current_slide = page_url;
         var slide_url = current_slide.split('week')[1];
 
+        console.log(slide_url);
 
-
-        console.log(current_slide);
         var question_text = $('.question_text').val();
 
         var datas = {
@@ -55,16 +41,27 @@ $(document).ready(function() {
 
     $('.help').on('click', function() {
         $(this).addClass("help_active");
+        $('#help-button-img').hide();
+        $('#help-button-img-done').show();
+
         setTimeout(function () {
-            $(".help").removeClass("help_active");
-        }, 3000);
+            $('#help-button-img-done').hide();
+            $('#help-button-img').show();
+            $(".help").removeClass("help_active");}, 3000);
+
 
         page_data(1);
     });
 
     $('.done').on('click', function() {
         $(this).addClass("done_active");
-        setTimeout(function(){$(".done").removeClass("done_active");}, 3000);
+        $('#done-button-img').hide();
+        $('#done-button-img-done').show();
+
+        setTimeout(function(){
+            $('#done-button-img-done').hide();
+            $('#done-button-img').show();
+            $(".done").removeClass("done_active");}, 3000);
 
         page_data(2);
 
@@ -76,7 +73,7 @@ $(document).ready(function() {
         page_data(3);
 
         $('.question_text').val("Question submitted!");
-        setTimeout(function(){ jQuery(".question_text").val("");}, 2000);
+        setTimeout(function(){ jQuery(".question_text").val("");}, 1500);
     });
 });
 
