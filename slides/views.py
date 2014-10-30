@@ -150,8 +150,18 @@ def new_action(request, action):
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=int(week), day=str(day))
     deck.filter(am_pm=am_pm)
+    return_list = []
+    for slide in deck:
+        return_list.append({
+            'slide': slide,
+            'done': Action.objects.filter(slide=slide, done=True).count(),
+            'need_help': Action.objects.filter(slide=slide, need_help=True).count(),
+            'questions': Question.objects.filter(slide=slide).count(),
+        })
+
     data = {
-        "deck": deck
+        "deck": deck,
+        'return_list': return_list
     }
     return render(request, "teacher.html", data)
 
@@ -162,10 +172,16 @@ def teacher_help(request):
     return render(request, 'teacher/help.html', data)
 
 
-def teacher_done(request):
-    students = Profile.objects.all()
-    done = Action.objects.filter(done=True)
-    data = {'done': done, 'students': students}
+def teacher_done(request, slide_url):
+    student = Profile.objects.filter(is_student=True)
+    actions = Action.objects.filter(slide=Slide.objects.get(url=slide_url))
+    done = actions.filter(done=True)
+    exclude_pk = done.values_list('profile__pk', flat=True)
+    not_done_students = student.exclude(pk__in=exclude_pk)
+
+    slide = Slide.objects.filter(url=slide_url)
+
+    data = {'done': done, 'not_done': not_done_students}
     return render(request, 'teacher/done.html', data)
 
 

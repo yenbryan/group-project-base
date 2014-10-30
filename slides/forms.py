@@ -21,7 +21,7 @@ class ProfileForm(UserCreationForm):
 
     class Meta:
         model = Profile
-        fields = ("username", "password1", "password2", "real_name", "email",  "image", "is_student")
+        fields = ("username", "password1", "password2", "real_name", "email",  "image")
 
     def clean_username(self):
         username = self.cleaned_data["username"]
