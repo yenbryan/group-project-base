@@ -1,0 +1,122 @@
+ /*HELP*/
+
+.icon {
+    height: 55px;
+    margin-top: 5%;
+}
+
+.scroll {
+    overflow-y: auto;
+    height: 80%;
+}
+
+.header {
+    font-family: ProximaNova-Bold, sans-serif;
+    font-size: 22px;
+    text-align: left;
+}
+
+.help {
+    color: #de544e;
+}
+
+.done {
+    color: #1dd665;
+}
+
+.question {
+    color: #c1a10a;
+}
+
+.help-header-hr {
+    background-color: #de544e;
+    height: 2px;
+    margin-top: -3%;
+}
+
+.done-header-hr {
+    background-color: #1dd665;
+    height: 2px;
+    margin-top: -3%;
+}
+
+.question-header-hr {
+    background-color: #c1a10a;
+    height: 2px;
+    margin-top: -3%;
+}
+
+.user-photo {
+    box-shadow: 0 2px 5px #888888;
+    height: 35px;
+    width: 35px;
+}
+
+.user-photo-div {
+    margin-left: -4%
+}
+
+.user-name {
+    color: black;
+    margin-top: 4%;
+    margin-left: -5%;
+    font-size: 20px;
+    text-align: left;
+}
+
+.time {
+    color: #cfd1d1;
+    margin-top: -2%;
+    margin-left: -5%;
+    font-size: 20px;
+    text-align: left;
+}
+
+.help-status {
+    height: 50px;
+    border: 3px solid #cc2930;
+    margin-bottom: 10%;
+    background-color: #cc2930;
+    color: white;
+}
+
+.help-button {
+    border: none;
+    margin-left: -10%;
+    margin-right: -10%;
+    background-color: #cc2930;
+    width: 100%;
+}
+
+.question-status {
+    height: 50px;
+    border: 3px solid #c1a10a;
+    margin-bottom: 10%;
+    background-color: #c1a10a;
+    color: white;
+}
+
+.question-button {
+    border: none;
+    margin-left: -10%;
+    margin-right: -10%;
+    background-color: #c1a10a;
+    width: 100%;
+}
+
+.status-text {
+    margin-top: 4%;
+    font-size: 20px;
+}
+
+.question-text {
+    margin-top: -1%;
+    margin-left: -5%;
+    text-align: left;
+    color: #949495;
+}
+
+
+.test {
+     border: 1px solid red;
+}

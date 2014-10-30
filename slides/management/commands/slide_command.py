@@ -10,6 +10,17 @@ __author__ = 'GoldenGate'
 from django.core.management import BaseCommand
 
 
+class MyHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag == "section":
+            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "SCRIPT!!!!!!!"
+        print "Encountered a start tag:", tag
+    def handle_endtag(self, tag):
+        print "Encountered an end tag :", tag
+    def handle_data(self, data):
+        print "Encountered some data  :", data
+
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         # return directories where slide decks live
@@ -26,7 +37,6 @@ class Command(BaseCommand):
                     file_location = str(folder[0]) + "/" + str(file)
                     week = index1[-1]
                     day_am_pm = file[:-5]
-                    # print day_am_pm
                     if day_am_pm[-3:] == "_am":
                         am_pm = 0
                         day = day_am_pm[:1]
@@ -40,52 +50,39 @@ class Command(BaseCommand):
                         print am_pm
                         print ""
                     else:
-                        # for some reason, it returns -2 or -1 randomly
-                        am_pm = -1
+                        am_pm = 2
                         day = day_am_pm
-
                         print "day_am_pm " + str(day_am_pm)
                         print am_pm
                         print ""
                     self.run_soup(file_location, week, day, am_pm)
 
-    def run_recursive_soup(self,location, week, day, am_pm):
-        with open(location) as template:
-            html = template.read()
-            soup = BeautifulSoup(html)
-            self.rec_parse(soup, week, day, am_pm)
-
     def run_soup(self, location, week, day, am_pm):
         with open(location) as template:
             html = template.read()
             soup = BeautifulSoup(html)
-            slide_num = 0
-            while(soup.find('section')):
-                sub_num = 0
-                slide_num += 1
-                s = soup.find('section').extract()
-                if s.contents[1].name == "section":
-                    sub_1 = s.find('section').extract()
-                    name = sub_1.find('h2')
-                    self.savedata(str(name), week, day, am_pm, slide_num, sub_num)
-                    while(s.find('section')):
-                        sub_num += 1
-                        sub = s.find('section').extract()
-                        name = sub.find('h2')
-                        self.savedata(str(name), week, day, am_pm, slide_num, sub_num)
-                else:
-                    name = s.find('h2')
-                    self.savedata(str(name), week, day, am_pm, slide_num)
-
-    def savedata(self, name, week, day, am_pm, slide_num, sub_num=None):
-        name = BeautifulSoup(name).text
-        if sub_num:
-            try:
-                Slide.objects.create(name=name, week=week, day=day, am_pm=am_pm, slide_number=slide_num, sub_slide_number=sub_num)
-            except IntegrityError:
-                pass
-        else:
-            try:
-                Slide.objects.create(name=name, week=week, day=day, am_pm=am_pm, slide_number=slide_num)
-            except IntegrityError:
-                pass
+            sections = soup.find_all('section')
+            all_headers = []
+            for header in sections:
+                instance = str((header.find('h2')))
+                instance = instance[4:]
+                instance = instance[:-5]
+                all_headers.append(instance)
+            count = 0
+            tracker = 1
+            for header in all_headers:
+                if count == 0:
+                    try:
+                        print ""
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "Integrity!!!!"
+                    tracker += 1
+                elif header != all_headers[(count-1)]:
+                    try:
+                        print ""
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
+                    except IntegrityError:
+                        print "integrity!!!"
+                    tracker += 1
+                count += 1

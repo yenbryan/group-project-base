@@ -1,10 +1,30 @@
+.form-group {
+    margin-bottom: 0;
+}
+
+#registration_form {
+    margin-top: 30px;
+}
+
+#rocketULogo_regi {
+    width: 80%;
+    margin-top: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #myModal {
     margin-top: 6%;
+}
+
+#myModalLabel {
+    width: 50%;
 }
 
 .modal-content {
     border-radius: 15px;
 }
+
 
 #actionButton {
     margin-top: .5%;
@@ -16,6 +36,7 @@
     background-color: #22779c;
     padding: 8px 45px;
     font-weight: 300;
+    float: right;
 }
 
 .modalTitle {
@@ -32,7 +53,7 @@
     /*padding-right: -5%;*/
     margin-right: -3%;
     margin-top: -1%;
-    box-shadow: 0 1px 5px #888888;
+    box-shadow: 0 2px 5px #888888;
 }
 
 .modalName {
@@ -65,12 +86,12 @@
 
 .help {
     background-color: #cc282f;
-    font-family: ProximaNova-Bold;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .help_active {
     background-color: white;
-    border: 2px solid red;
+    border: 3px solid red;
     color: red;
 }
 
@@ -81,12 +102,12 @@
 
 .done {
     background-color: #37d765;
-    font-family: ProximaNova-Bold;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .done_active {
     background-color: white;
-    border: 2px solid #37d765;
+    border: 3px solid #37d765;
     color: #37d765;
 }
 
@@ -153,7 +174,7 @@ textarea {
 }
 
 .modal-title {
-    font-family: ProximaNova-Bold;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 #questionImage {

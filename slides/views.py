@@ -1,23 +1,27 @@
 import json
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from slides.forms import UpdateUserImageForm
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
 from slides.models import Profile, Slide, Action, Question
 
 
 @login_required
-def profile(request):
-    return render(request, 'profile.html')
-
-
-@login_required
-def test(request):
-    return render(request, 'test.html')
+def account(request):
+    if request.method == 'POST':
+        imageform = UpdateUserImageForm(request.POST, request.FILES, instance=request.user)
+        if imageform.is_valid():
+            imageform.save()
+    else:
+        imageform = UpdateUserImageForm()
+    return render(request, 'account.html', {
+        'imageform': imageform,
+    })
 
 
 @csrf_exempt
@@ -51,6 +55,37 @@ def edit_email(request):
                         content_type='application/json')
 
 
+@csrf_exempt
+def edit_password(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if not data[0] == data[1]:                    #check passwords are correctly repeated
+            status = "mismatch"
+        elif data[0]:
+            user = request.user
+            user.set_password(data[1])
+            user.save()
+            status = "success"
+            update_session_auth_hash(request, user)
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
+
+@csrf_exempt
+def edit_photo(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        request.user.photo = data
+        request.user.save()
+        status = "success"
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
+
 def register(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
@@ -76,7 +111,16 @@ def new_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
         student = Profile.objects.get(username=request.user.username)
-        current_slide = Slide.objects.get(url="week"+data['slide'])
+        week = int(data['week'])
+        am_pm = int(data['am_pm'])
+        slide_number = int(data['slide_number'])
+        new_slides = Slide.objects.filter(week=week, day=data["day"])
+        print new_slides
+        day = data['day']
+        our_url = "week"+str(week)+"/"+day+"/#/"+str(slide_number)
+        print our_url
+        current_slide = Slide.objects.get(url=our_url)
+        print current_slide
         # HELP
         if int(action) == 1:
             try:
@@ -104,5 +148,35 @@ def new_action(request, action):
 
 
 def teacher(request, week, day, am_pm):
-    deck = Slide.objects.filter(week=week, day=day, am_pm=am_pm)
-    return HttpResponse(deck)
+    deck = Slide.objects.filter(week=int(week), day=str(day))
+    deck.filter(am_pm=am_pm)
+    data = {
+        "deck": deck
+    }
+    return render(request, "teacher.html", data)
+
+def teacher_help(request):
+    students = Profile.objects.all()
+    help = Action.objects.filter(need_help=True, done=False)
+    data = {'help': help, 'students': students}
+    return render(request, 'teacher/help.html', data)
+
+
+def teacher_done(request):
+    students = Profile.objects.all()
+    done = Action.objects.filter(done=True)
+    data = {'done': done, 'students': students}
+    return render(request, 'teacher/done.html', data)
+
+
+def teacher_question(request):
+    students = Profile.objects.all()
+    question = Question.objects.all()
+    data = {'question': question, 'students': students}
+    return render(request, 'teacher/questions.html', data)
+
+
+@csrf_exempt
+def change_action(request, action):
+    if request.method == 'POST':
+        data = json.loads(request.body)
