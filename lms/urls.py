@@ -23,9 +23,11 @@ urlpatterns = patterns('',
 
     #   teacher facing site
     url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
-    url(r'^teacher/help/$', 'slides.views.teacher_help', name="teacher_help"),
-    url(r'^teacher/done/$', 'slides.views.teacher_done', name="teacher_done"),
-    url(r'^teacher/question/$', 'slides.views.teacher_question', name="teacher_question"),
+    # url(r'^teacher/help/$', 'slides.views.teacher_help', name="teacher_help"),
+    url(r'^teacher/done/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_done', name="teacher_done"),
+    url(r'^teacher/help/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_help', name="teacher_help"),
+    url(r'^teacher/question/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_question', name="teacher_question"),
+    # url(r'^teacher/question/$', 'slides.views.teacher_question', name="teacher_question"),
     url(r'^teacher_action/(?P<action>\d+)', 'slides.views.change_action', name='change_action'),
 
     # ajax call

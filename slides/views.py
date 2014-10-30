@@ -150,29 +150,56 @@ def new_action(request, action):
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=int(week), day=str(day))
     deck.filter(am_pm=am_pm)
+    return_list = []
+    for slide in deck:
+        return_list.append({
+            'slide': slide,
+            'done': Action.objects.filter(slide=slide, done=True).count(),
+            'need_help': Action.objects.filter(slide=slide, need_help=True).count(),
+            'questions': Question.objects.filter(slide=slide).count(),
+        })
+
     data = {
-        "deck": deck
+        "deck": deck,
+        'return_list': return_list
     }
     return render(request, "teacher.html", data)
 
-def teacher_help(request):
-    students = Profile.objects.all()
-    help = Action.objects.filter(need_help=True, done=False)
-    data = {'help': help, 'students': students}
+
+def teacher_help(request, slide_url):
+    not_helped = Action.objects.filter(
+        slide=Slide.objects.get(url=slide_url),
+        need_help=True)
+    helped = Action.objects.filter(
+        slide=Slide.objects.get(url=slide_url),
+        need_help=False,
+        done=False)
+
+    data = {'helped': helped, 'not_helped': not_helped}
     return render(request, 'teacher/help.html', data)
 
 
-def teacher_done(request):
-    students = Profile.objects.all()
-    done = Action.objects.filter(done=True)
-    data = {'done': done, 'students': students}
+def teacher_done(request, slide_url):
+    done = Action.objects.filter(
+        slide=Slide.objects.get(url=slide_url),
+        done=True)
+    exclude_pk = done.values_list('profile__pk', flat=True)
+    not_done_students = Profile.objects\
+        .filter(is_student=True)\
+        .exclude(pk__in=exclude_pk)
+
+    data = {'done': done, 'not_done': not_done_students}
     return render(request, 'teacher/done.html', data)
 
 
-def teacher_question(request):
-    students = Profile.objects.all()
-    question = Question.objects.all()
-    data = {'question': question, 'students': students}
+def teacher_question(request, slide_url):
+    need_answers = Question.objects.filter(
+        slide=Slide.objects.get(url=slide_url),
+        answered=False)
+    answered = Question.objects.filter(
+        slide=Slide.objects.get(url=slide_url),
+        answered=True)
+    data = {'need_answers': need_answers, 'answered': answered}
     return render(request, 'teacher/questions.html', data)
 
 
