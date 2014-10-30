@@ -44,7 +44,9 @@
     <script src="{% static "js/jquery-1.11.1.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/less-1.7.0.min.js" %}"></script>
+{% if user.is_authenticated %}
     <script src="{% static "js/index.js" %}"></script>
+{% endif %}
 </head>
 
 <body class="{% block body_css %}{% endblock body_css %}">
