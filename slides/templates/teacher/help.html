@@ -1,43 +1,18 @@
+{% extends "teacher/teacher_base.html" %}
 {% load i18n future staticfiles %}
+{% block teacher_content %}
 
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <title>{% block meta_title %}{% endblock %}</title>
-    <meta name="author" content="Yeti LLC">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="{% static "css/reveal.min.css" %}">
-
-    <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
-    <link rel="stylesheet" href="{% static "css/teacher.css" %}">
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
-
-    <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
-    <script src="{% static "js/less-1.7.0.min.js" %}"></script>
-    <script src="{% static "js/jquery-1.11.1.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-    <script src="{% static "js/profile.js" %}"></script>
-    <script src="{% static "js/teacher.js" %}"></script>
-</head>
-
-<body>
 <div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
             <img class="icon" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/>
         </div>
     </div>
+</div>
+<div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
-            <h4 class="header help">{{ help | length }} Needs Help</h4>
+            <h4 class="header help">{{ not_helped | length }} Needs Help</h4>
             <hr class="help help-header-hr">
         </div>
     </div>
@@ -45,22 +20,32 @@
 <div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
-            {% for student in help.all %}
+            {% for help in not_helped %}
                 <div class="col-xs-2 user-photo-div">
-                    <img class="img-circle user-photo" src="{{ student.profile.image.url }}">
+                    <img class="img-circle user-photo" src="{{ help.profile.image.url }}">
                 </div>
                 <div class="col-xs-10">
-                    <h3 class="user-name">{{ student.profile }}</h3>
-                    <h3 class="time">{{ student.time|date:"g:ia, F d" }}</h3>
+                    <h3 class="user-name">{{ help.profile }}</h3>
+                    <h3 class="time">{{ help.time|date:"g:ia, F d" }}</h3>
                 </div>
                 <div class="col-xs-12 help-status">
                     <button class="help-button"><span class="status-text">Helped?</span></button>
+                </div>
+            {% endfor %}
+            {% for help in helped %}
+                <div class="col-xs-2 user-photo-div">
+                    <img class="img-circle user-photo" src="{{ help.profile.image.url }}">
+                </div>
+                <div class="col-xs-10">
+                    <h3 class="user-name">{{ help.profile }}</h3>
+                    <h3 class="time">{{ help.time|date:"g:ia, F d" }}</h3>
+                </div>
+                <div class="col-xs-12 help-status">
+                    <button class="help-button"><span class="status-text">Helped!</span></button>
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
 
-</body>
-</html>
-
+{% endblock %}

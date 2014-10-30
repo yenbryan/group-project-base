@@ -75,6 +75,7 @@ class Question(models.Model):
     profile = models.ForeignKey(Profile, related_name="questions")
     slide = models.ForeignKey(Slide, related_name="questions")
     time = models.DateTimeField(auto_now_add=True)
+    answered = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.body
