@@ -21,12 +21,20 @@ urlpatterns = patterns('',
         name='password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
-# ajax call
+    #   teacher facing site
+    url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
+    url(r'^teacher/help/$', 'slides.views.teacher_help', name="teacher_help"),
+    url(r'^teacher/done/$', 'slides.views.teacher_done', name="teacher_done"),
+    url(r'^teacher/question/$', 'slides.views.teacher_question', name="teacher_question"),
+    url(r'^teacher_action/(?P<action>\d+)', 'slides.views.change_action', name='change_action'),
+
+    # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
     url(r'^edit/email/$', 'slides.views.edit_email', name='edit_email'),
     url(r'^edit/password/$', 'slides.views.edit_password', name='edit_password'),
     # url(r'^help/(?P<student_real_name>\w+)/(?P<current_slide>\w+)/$', 'slides.views.new_help', name='new_help'),
-    url(r'^help/', 'slides.views.new_help', name='new_help'),
+
+    url(r'^action/(?P<action>\d+)', 'slides.views.new_action', name='new_action'),
 
     # Week 1 - OO Python
     url("^week1/1/$", TemplateView.as_view(template_name="week1/1.html"), name="week1_day1"),

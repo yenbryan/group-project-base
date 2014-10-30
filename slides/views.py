@@ -1,25 +1,14 @@
 import json
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-# Create your views here.
-# @login_required
-# def profile(request):
-#     return render(request, 'account.html')
-
-
-# Registration
-# from slides.forms import ProfileForm, UpdateProfileForm
+from slides.forms import UpdateUserImageForm
 from django.views.decorators.csrf import csrf_exempt
-from slides.forms import ProfileForm, UpdateUserImageForm
-from slides.models import Profile
+from slides.forms import ProfileForm
+from slides.models import Profile, Slide, Action, Question
 
 
 @login_required
@@ -118,7 +107,76 @@ def register(request):
 
 
 @csrf_exempt
-def new_help(request):
+def new_action(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print data
+        student = Profile.objects.get(username=request.user.username)
+        week = int(data['week'])
+        am_pm = int(data['am_pm'])
+        slide_number = int(data['slide_number'])
+        new_slides = Slide.objects.filter(week=week, day=data["day"])
+        print new_slides
+        day = data['day']
+        our_url = "week"+str(week)+"/"+day+"/#/"+str(slide_number)
+        print our_url
+        current_slide = Slide.objects.get(url=our_url)
+        print current_slide
+        # HELP
+        if int(action) == 1:
+            try:
+                done_action = Action.objects.get(done=True, profile=student, slide=current_slide)
+                done_action.done = False
+                done_action.need_help = True
+                done_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+            # Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+        # DONE
+        elif int(action) == 2:
+            try:
+                help_action = Action.objects.get(need_help=True, profile=student, slide=current_slide)
+                help_action.done = True
+                help_action.need_help = False
+                help_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
+        # QUESTION
+        elif int(action) == 3:
+            Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
+
+    return HttpResponse(content_type='application/json')
+
+
+def teacher(request, week, day, am_pm):
+    deck = Slide.objects.filter(week=int(week), day=str(day))
+    deck.filter(am_pm=am_pm)
+    data = {
+        "deck": deck
+    }
+    return render(request, "teacher.html", data)
+
+def teacher_help(request):
+    students = Profile.objects.all()
+    help = Action.objects.filter(need_help=True, done=False)
+    data = {'help': help, 'students': students}
+    return render(request, 'teacher/help.html', data)
+
+
+def teacher_done(request):
+    students = Profile.objects.all()
+    done = Action.objects.filter(done=True)
+    data = {'done': done, 'students': students}
+    return render(request, 'teacher/done.html', data)
+
+
+def teacher_question(request):
+    students = Profile.objects.all()
+    question = Question.objects.all()
+    data = {'question': question, 'students': students}
+    return render(request, 'teacher/questions.html', data)
+
+
+@csrf_exempt
+def change_action(request, action):
+    if request.method == 'POST':
+        data = json.loads(request.body)

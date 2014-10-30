@@ -17,6 +17,7 @@
 <div class="container">
     <div class="col-md-1"></div>
     <div class="col-md-10">
+    {#register/login#}
         <div class="pull-right" style="margin-top: 30px;">
             {% if user.is_authenticated %}
                 {% if user.is_student %}
@@ -37,7 +38,7 @@
             {% endif %}
         </div>
         <h1 style="border-bottom: 2px solid #168eae; margin-top: 50px">Welcome to the slides!</h1>
-    {#register/login#}
+
 
 
         <div class="col-6">

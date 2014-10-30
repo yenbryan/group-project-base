@@ -17,11 +17,12 @@ class Profile(AbstractUser):
             else u"{}".format(self.username) # prints out real_name or Username
 
 """
-    am_pm input takes 1 small integer -1, 0, 1
-    AM NOR PM equals -1
+    am_pm input takes 1 small integer 2, 0, 1
+    AM NOR PM equals 2
     AM equals 0
     PM equals 1
 """
+
 
 class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
@@ -63,7 +64,7 @@ class Action(models.Model):
     need_help = models.BooleanField(default=False)
     profile = models.ForeignKey(Profile, related_name="actions")
     slide = models.ForeignKey(Slide, related_name="actions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return u"{}'s Action on slide {}".format(self.profile.first_name, self.slide.url)
@@ -73,7 +74,7 @@ class Question(models.Model):
     body = models.TextField()
     profile = models.ForeignKey(Profile, related_name="questions")
     slide = models.ForeignKey(Slide, related_name="questions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.body
