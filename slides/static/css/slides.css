@@ -162,7 +162,11 @@ textarea {
     resize: none;
 }
 
-textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus, .done_active:focus, .done_active:active {
+textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus, .done_active:focus, .done_active:focus {
+    outline: 0;
+}
+
+textarea:active, .question_submit:active, #actionButton:active, .help_active:active, .done_active:active, .done_active:active {
     outline: 0;
 }
 
@@ -171,13 +175,11 @@ textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus,
     position: absolute;
     margin-left: 75%;
     background-color: transparent;
-    /*opacity: 0.6;*/
     padding-bottom: 0;
     padding-right: 0;
     color: black;
     cursor: pointer;
     font-size: 19px;
-    /*font-weight: bold;*/
     font-family: ProximaNova-Bold, sans-serif;
 }
 
