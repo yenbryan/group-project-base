@@ -116,9 +116,22 @@ def teacher(request, week, day, am_pm):
 def teacher_help(request):
     students = Profile.objects.all()
     help = Action.objects.filter(need_help=True, done=False)
-    done = Action.objects.filter(done=True)
-    data = {'help': help, 'done': done, 'students': students}
+    data = {'help': help, 'students': students}
     return render(request, 'teacher/help.html', data)
+
+
+def teacher_done(request):
+    students = Profile.objects.all()
+    done = Action.objects.filter(done=True)
+    data = {'done': done, 'students': students}
+    return render(request, 'teacher/done.html', data)
+
+
+def teacher_question(request):
+    students = Profile.objects.all()
+    question = Question.objects.all()
+    data = {'question': question, 'students': students}
+    return render(request, 'teacher/questions.html', data)
 
 
 @csrf_exempt

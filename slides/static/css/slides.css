@@ -70,7 +70,7 @@
 
 .help_active {
     background-color: white;
-    border: 2px solid red;
+    border: 3px solid red;
     color: red;
 }
 
@@ -86,7 +86,7 @@
 
 .done_active {
     background-color: white;
-    border: 2px solid #37d765;
+    border: 3px solid #37d765;
     color: #37d765;
 }
 
