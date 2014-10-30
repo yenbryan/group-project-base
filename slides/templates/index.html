@@ -32,11 +32,11 @@
                     {% else %}
                         <span><a href="{% url "account" %}"><img height="50" width="50" src="{% static "img/Assets/default-profile-photo.png" %}"></a></span>
                     {% endif %}
-                        <button class="btn btn-default"><a href='{% url "account" %}'>Account</a></button>
-                        <button class="btn btn-default"><a href="{% url 'logout' %}">Logout</a></button>
+                        <a href='{% url "account" %}'><button class="btn btn-default">Account</button></a>
+                        <a href="{% url 'logout' %}"><button class="btn btn-default">Logout</button></a>
                 {% else %}
-                    <button class="btn btn-default"><a href='{% url "register" %}'>Register</a></button>
-                    <button class="btn btn-default"><a href='{% url "login" %}'>Log-In</a></button>
+                    <a href='{% url "register" %}'><button class="btn btn-default">Register</button></a>
+                    <a href='{% url "login" %}'><button class="btn btn-default">Log-In</button></a>
                 {% endif %}
             </div>
 
