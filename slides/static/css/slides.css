@@ -17,10 +17,6 @@
     margin-top: 6%;
 }
 
-#myModalLabel {
-    width: 50%;
-}
-
 .modal-content {
     border-radius: 15px;
 }
@@ -82,6 +78,7 @@
 #helpButton {
     width: 95%;
     margin-left: 5%;
+    padding-top: 8px;
 }
 
 .help {
@@ -98,6 +95,7 @@
 #doneButton {
     width: 95%;
     margin-right: 5%;
+    padding-top: 8px;
 }
 
 .done {
@@ -109,6 +107,20 @@
     background-color: white;
     border: 3px solid #37d765;
     color: #37d765;
+}
+
+.modal-label {
+    font-family: ProximaNova-Bold, sans-serif;
+    padding-left: 30px;
+    padding-top: 3px;
+    font-size: 38px;
+    margin-top: -2%;
+    margin-bottom: -2%;
+}
+
+.question-label-div {
+    margin-left: -2%;
+    margin-top: -2%;
 }
 
 #questionButton {
@@ -129,23 +141,29 @@
     width: 90%;
     color: white;
     font-size: 38px;
-    font-family: ProximaNova-Bold;
     padding-bottom: 1.5%;
 }
 
 .question_text {
+    padding: 3%;
     margin-top: 2%;
     margin-left: 1%;
     border-radius: 15px;
-    font-size: 20px;
-    color: black;
+    font-size: 19px;
+    font-weight: 100;
+    color: #323039;
     border-width: 0;
 }
 
 textarea {
+    margin-top: -2%;
     width: 98%;
-    height: 100px;
+    height: 110px;
     resize: none;
+}
+
+textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus, .done_active:focus, .done_active:active {
+    outline: 0;
 }
 
 .question_submit {
@@ -153,10 +171,14 @@ textarea {
     position: absolute;
     margin-left: 75%;
     background-color: transparent;
+    /*opacity: 0.6;*/
+    padding-bottom: 0;
+    padding-right: 0;
     color: black;
     cursor: pointer;
     font-size: 19px;
-    font-weight: bold;
+    /*font-weight: bold;*/
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .inlineName {
@@ -171,6 +193,7 @@ textarea {
 
 #myModalLabel {
     font-size: 20px;
+    width: 50%;
 }
 
 .modal-title {
