@@ -11,7 +11,7 @@
 }
 
 .header {
-    font-family: ProximaNova-Bold;
+    font-family: ProximaNova-Bold, sans-serif;
     font-size: 22px;
     text-align: left;
 }

@@ -1,23 +1,27 @@
 import json
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from slides.forms import UpdateUserImageForm
 from django.views.decorators.csrf import csrf_exempt
 from slides.forms import ProfileForm
 from slides.models import Profile, Slide, Action, Question
 
 
 @login_required
-def profile(request):
-    return render(request, 'profile.html')
-
-
-@login_required
-def test(request):
-    return render(request, 'test.html')
+def account(request):
+    if request.method == 'POST':
+        imageform = UpdateUserImageForm(request.POST, request.FILES, instance=request.user)
+        if imageform.is_valid():
+            imageform.save()
+    else:
+        imageform = UpdateUserImageForm()
+    return render(request, 'account.html', {
+        'imageform': imageform,
+    })
 
 
 @csrf_exempt
@@ -46,6 +50,37 @@ def edit_email(request):
             status = "success"
         except ValidationError:
             pass
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
+
+@csrf_exempt
+def edit_password(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if not data[0] == data[1]:                    #check passwords are correctly repeated
+            status = "mismatch"
+        elif data[0]:
+            user = request.user
+            user.set_password(data[1])
+            user.save()
+            status = "success"
+            update_session_auth_hash(request, user)
+    response = status
+    return HttpResponse(json.dumps(response),
+                        content_type='application/json')
+
+
+@csrf_exempt
+def edit_photo(request):
+    status = None
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        request.user.photo = data
+        request.user.save()
+        status = "success"
     response = status
     return HttpResponse(json.dumps(response),
                         content_type='application/json')
@@ -88,7 +123,14 @@ def new_action(request, action):
         print current_slide
         # HELP
         if int(action) == 1:
-            Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+            try:
+                done_action = Action.objects.get(done=True, profile=student, slide=current_slide)
+                done_action.done = False
+                done_action.need_help = True
+                done_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+            # Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
         # DONE
         elif int(action) == 2:
             try:
