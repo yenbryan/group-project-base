@@ -9,7 +9,6 @@ $(document).ready(function() {
     });
 
     $('h2').append('<div class="buttonSelector"><button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
-//    $('h2').append('<button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button>');
 
     $('#actionButton').click(function() {
         url = page_url;
@@ -116,11 +115,7 @@ $(document).ready(function() {
         $('.question_text').val("Question submitted!");
         setTimeout(function(){ jQuery(".question_text").val("");}, 2000);
     });
-//    $('#actionButton').click(function() {
-//        var url = document.location.href;
-//        console.log(url);
-//        console.log($(this).parent.attr('id'))
-//    });
+    $('.buttonSelector').addClass()
 });
 
 
