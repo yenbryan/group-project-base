@@ -8,4 +8,10 @@ $(document).ready(function() {
             $(this).next().slideDown();
         }
     });
+
+
+    $('#id_password').css("background-color", "white");
+
+
 });
+

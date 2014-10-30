@@ -1,0 +1,189 @@
+.form-group {
+    margin-bottom: 0;
+}
+
+#registration_form {
+    margin-top: 30px;
+}
+
+#rocketULogo_regi {
+    width: 80%;
+    margin-top: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#myModal {
+    margin-top: 6%;
+}
+
+#myModalLabel {
+    width: 50%;
+}
+
+.modal-content {
+    border-radius: 15px;
+}
+
+
+#actionButton {
+    margin-top: .5%;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    color: white;
+    display: inline;
+    background-color: #22779c;
+    padding: 8px 45px;
+    font-weight: 300;
+    float: right;
+}
+
+.modalTitle {
+    padding-top: 1%;
+    font-weight: bold;
+    margin-left: 3%;
+}
+
+.modal-body {
+    margin-bottom: 2%;
+}
+
+.userPhoto {
+    /*padding-right: -5%;*/
+    margin-right: -3%;
+    margin-top: -1%;
+    box-shadow: 0 2px 5px #888888;
+}
+
+.modalName {
+    padding: 0;
+    text-align: right;
+    font-weight: bold;
+    /*margin-right: -10%;*/
+    padding-left: 20px;
+}
+
+.name {
+    margin: 0;
+    padding-top: 0;
+}
+
+.modalActionButtons {
+    margin-top: 10%;
+    width: 100%;
+    height: 80px;
+    border: none;
+    border-radius: 15px;
+    font-size: 38px;
+    color: white;
+}
+
+#helpButton {
+    width: 95%;
+    margin-left: 5%;
+}
+
+.help {
+    background-color: #cc282f;
+    font-family: ProximaNova-Bold, sans-serif;
+}
+
+.help_active {
+    background-color: white;
+    border: 3px solid red;
+    color: red;
+}
+
+#doneButton {
+    width: 95%;
+    margin-right: 5%;
+}
+
+.done {
+    background-color: #37d765;
+    font-family: ProximaNova-Bold, sans-serif;
+}
+
+.done_active {
+    background-color: white;
+    border: 3px solid #37d765;
+    color: #37d765;
+}
+
+#questionButton {
+    width: 96%;
+    margin-top: 5%;
+    margin-left: 2%;
+    margin-right: 10%;
+    background-color: #bea10e;
+    text-align: left;
+}
+
+#questionDiv {
+    background-color: #bea10e;
+    margin-top: 4%;
+    margin-left: 5%;
+    padding-top: 3%;
+    border-radius: 15px;
+    width: 90%;
+    color: white;
+    font-size: 38px;
+    font-family: ProximaNova-Bold;
+    padding-bottom: 1.5%;
+}
+
+.question_text {
+    margin-top: 2%;
+    margin-left: 1%;
+    border-radius: 15px;
+    font-size: 20px;
+    color: black;
+    border-width: 0;
+}
+
+textarea {
+    width: 98%;
+    height: 100px;
+    resize: none;
+}
+
+.question_submit {
+    margin-top: -10%;
+    position: absolute;
+    margin-left: 75%;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.inlineName {
+    display: inline-block;
+    margin-left: 5%;
+}
+
+#userName {
+    margin-right: 5%;
+    font-size: 18px;
+}
+
+#myModalLabel {
+    font-size: 20px;
+}
+
+.modal-title {
+    font-family: ProximaNova-Bold, sans-serif;
+}
+
+#questionImage {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.modalActions {
+    margin-top: -3%;
+    padding-right: 5%;
+    height: 45px;
+}
