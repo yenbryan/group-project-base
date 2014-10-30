@@ -11,7 +11,7 @@ $(document).ready(function() {
         page_url = window.location.href;
     });
 
-    $('h2').append('<div class="buttonSelector"><button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
+    $('h2').append('<div class="buttonSelector"><button style="float: right;" class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
 
     $('#actionButton').click(function() {
         url = page_url;
