@@ -1,34 +1,7 @@
+{% extends "teacher/teacher_base.html" %}
 {% load i18n future staticfiles %}
+{% block teacher_content %}
 
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <title>{% block meta_title %}{% endblock %}</title>
-    <meta name="author" content="Yeti LLC">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="{% static "css/reveal.min.css" %}">
-
-    <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
-    <link rel="stylesheet" href="{% static "css/teacher.css" %}">
-    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
-
-    <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
-    <script src="{% static "js/less-1.7.0.min.js" %}"></script>
-    <script src="{% static "js/jquery-1.11.1.js" %}"></script>
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-    <script src="{% static "js/profile.js" %}"></script>
-    <script src="{% static "js/teacher.js" %}"></script>
-</head>
-
-<body>
 <div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
@@ -36,13 +9,15 @@
         </div>
     </div>
 </div>
-<div class="container scroll">
+<div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
             <h4 class="header done">{{ done | length }} Done</h4>
             <hr class="done done-header-hr">
         </div>
     </div>
+</div>
+<div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
             {% for student in done.all %}
@@ -56,12 +31,16 @@
             {% endfor %}
         </div>
     </div>
+</div>
+<div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
             <h4 class="header done">{{ not_done | length }} Not Done</h4>
             <hr class="done done-header-hr">
         </div>
     </div>
+</div>
+<div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
             {% for 4lazy in not_done.all %}
@@ -77,8 +56,4 @@
     </div>
 </div>
 
-</body>
-</html>
-
-{#{% for student in students %}#}
-{#{% if student is done %}#}
+{% endblock %}
