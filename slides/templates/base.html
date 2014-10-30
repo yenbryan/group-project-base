@@ -86,8 +86,11 @@
 
                         <div class="row">
                             <div class="col-md-12 col-xs-12" id="questionDiv">
-                                <img id="questionImage" class="modalActions" src="{% static 'img/Assets/Questionmark-filled.png' %}"
-                                                                                                  alt=""/>Question
+                                <div class="col-md-1 question-label-div">
+                                    <img id="questionImage" class="modalActions" src="{% static 'img/Assets/Questionmark-filled.png' %}"
+                                                                                                  alt=""/>
+                                </div>
+                                <div class="col-md-4 modal-label">Question</div>
                                 <form class="question_content">
                                     <textarea name="Text1" cols="31" rows="2" class="question_text"></textarea>
                                     <button type="button" class="btn pull-right question_submit">SUBMIT</button>
