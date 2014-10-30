@@ -13,5 +13,8 @@ $(document).ready(function() {
         url = document.location.href;
         console.log(url);
     });
+
+    $('#id_password').css("background-color", "white");
+
 });
 

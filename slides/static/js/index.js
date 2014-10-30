@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('h2').append('<button style="float: right;" class="btn btn-primary btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button>');
+    $('h2').prepend('<button class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button>');
 
     $('.help').on('click', function() {
         console.log('help');

@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, ReadOnlyPasswordHashField
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
+from django.forms import ModelForm
 from slides.models import Profile
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -41,7 +42,19 @@ class ProfileForm(UserCreationForm):
         # msg.send()
         return user
 
-#
+
+class UpdateUserImageForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ("image",)
+
+
+# class UpdatePasswordForm(ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ("password",)
+
+
 # class UpdateProfileForm(forms.ModelForm):
 #     real_name = forms.CharField(required=True)
 #     email = forms.EmailField(required=True)
