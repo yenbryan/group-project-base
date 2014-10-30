@@ -13,7 +13,6 @@ $(document).ready(function() {
 //Removed btn-primary from class btn btn-primary. primary makes the hover weird
     $('h2').append('<div class="buttonSelector"><button style="float: right;" class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
 
-
     $('#actionButton').click(function() {
         url = page_url;
         var test = $('#actionButton').text();
