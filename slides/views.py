@@ -88,7 +88,14 @@ def new_action(request, action):
         print current_slide
         # HELP
         if int(action) == 1:
-            Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+            try:
+                done_action = Action.objects.get(done=True, profile=student, slide=current_slide)
+                done_action.done = False
+                done_action.need_help = True
+                done_action.save()
+            except ObjectDoesNotExist:
+                Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
+            # Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
         # DONE
         elif int(action) == 2:
             try:

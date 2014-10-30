@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-xs-10">
                     <h3 class="user-name">{{ student.profile }}</h3>
-                    <h3 class="time">{{ student.time }}</h3>
+                    <h3 class="time">{{ student.time|date:"g:ia, F d" }}</h3>
                 </div>
                 <div class="col-xs-12 help-status">
                     <button class="help-button"><span class="status-text">Helped?</span></button>
