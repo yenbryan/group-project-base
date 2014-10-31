@@ -44,6 +44,7 @@ $(document).ready(function() {
         $(this).removeClass('help-button').addClass('help-button-active');
         active_div = $(this).parent().parent();
         $(this).parent().parent().parent().append(active_div);
+        $(this).children().html("Helped!")
     });
 
 
@@ -69,6 +70,7 @@ $(document).ready(function() {
         $(this).removeClass('question-button').addClass('question-button-active');
         active_div = $(this).parent().parent();
         $(this).parent().parent().parent().append(active_div);
+        $(this).children().html("Answered!")
     });
 
 
