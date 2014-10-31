@@ -6,7 +6,6 @@
     <title>Slide Home</title>
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/index.css" %}">
     <script src="{% static "js/jquery-1.11.1.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/index.js" %}"></script>
@@ -28,11 +27,11 @@
                     {% endif %}
 
                     <span><a href='{% url "account" %}'>{{ user.real_name }} </a></span>
-                    {% if user.image %}
+{#                    {% if user.image %}#}
                         <span><a href="{% url "account" %}"><img height="50" width="50" class="img-circle" src='{{ user.image.url }}'></a></span>
-                    {% else %}
-                        <span><a href="{% url "account" %}"><img height="50" width="50" src="{% static "img/Assets/default-profile-photo.png" %}"></a></span>
-                    {% endif %}
+{#                    {% else %}#}
+{#                        <span><a href="{% url "account" %}"><img height="50" width="50" src="{% static "img/Assets/../../static/media/profile_pictures/default-profile-photo.png" %}"></a></span>#}
+{#                    {% endif %}#}
                         <a href='{% url "account" %}'><button class="btn btn-default">Account</button></a>
                         <a href="{% url 'logout' %}"><button class="btn btn-default">Logout</button></a>
                 {% else %}

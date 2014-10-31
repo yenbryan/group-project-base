@@ -2,12 +2,18 @@
 
 .icon {
     height: 55px;
-    margin-top: 5%;
+    margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 .scroll {
     overflow-y: auto;
-    height: 100%;
+    height: 30%;
+}
+
+.scroll-help {
+    overflow-y: auto;
+    height: 60%;
 }
 
 .header {
@@ -31,19 +37,19 @@
 .help-header-hr {
     background-color: #de544e;
     height: 2px;
-    margin-top: -3%;
+    margin-top: -10px;
 }
 
 .done-header-hr {
     background-color: #1dd665;
     height: 2px;
-    margin-top: -3%;
+    margin-top: -10px;
 }
 
 .question-header-hr {
     background-color: #c1a10a;
     height: 2px;
-    margin-top: -3%;
+    margin-top: -10px;
 }
 
 .user-photo {
@@ -53,29 +59,38 @@
 }
 
 .user-photo-div {
-    margin-left: -4%
+    margin-left: -3%;
+    margin-bottom: 30px;
 }
 
 .user-name {
     color: black;
-    margin-top: 4%;
+    margin-top: 10px;
     margin-left: -5%;
     font-size: 20px;
     text-align: left;
+    letter-spacing: 0.3px;
+}
+
+.user-name-not {
+    margin-bottom: 48px;
 }
 
 .time {
-    color: #cfd1d1;
-    margin-top: -2%;
+    color: #dbdadb;
+    margin-top: -4px;
     margin-left: -5%;
     font-size: 20px;
     text-align: left;
+    letter-spacing: 0.4px;
+    margin-bottom: 25px;
 }
 
 .help-status {
-    height: 50px;
+    height: 52px;
     border: 3px solid #cc2930;
-    margin-bottom: 10%;
+    margin-top: -13px;
+    margin-bottom: 38px;
     background-color: #cc2930;
     color: white;
 }
@@ -86,6 +101,11 @@
     margin-right: -10%;
     background-color: #cc2930;
     width: 100%;
+}
+
+.help_active {
+    background-color: white;
+    color: #cc2930;
 }
 
 .question-status {

@@ -23,11 +23,9 @@ $(document).ready(function() {
 
     $('.help-button').on('click', function() {
 
-
-        $(this).addClass("help_active");
-        setTimeout(function () {
-            $(".help").removeClass("help_active");
-        }, 3000);
+        $(this).toggleClass("help_active");
+        toggle();
+        setTimeout(toggle(), 3000);
 
         page_data(1);
 
