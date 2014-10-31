@@ -225,4 +225,10 @@ h2 {
     margin-top: -300px;
 
 }
+
+a, a:hover {
+    color: #464646;
+    text-decoration: none;
+}
+
 button:focus {outline:0;}

@@ -36,8 +36,8 @@
                         <a href='{% url "account" %}'><button class="btn btn-default">Account</button></a>
                         <a href="{% url 'logout' %}"><button class="btn btn-default">Logout</button></a>
                 {% else %}
-                    <a href='{% url "register" %}'><button class="btn btn-default">Register</button></a>
-                    <a href='{% url "login" %}'><button class="btn btn-default">Log-In</button></a>
+                    <a href='{% url "register" %}'><button id="registerButton" class="btn btn-default">Register</button></a>
+                    <a href='{% url "login" %}'><button id="loginButton" class="btn btn-default">Log-In</button></a>
                 {% endif %}
             </div>
 
