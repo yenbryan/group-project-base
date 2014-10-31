@@ -11,7 +11,7 @@ $(document).ready(function() {
         page_url = window.location.href;
     });
 //Removed btn-primary from class btn btn-primary. primary makes the hover weird
-    $('h2').append('<div class="buttonSelector"><button style="float: right;" class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
+    $('h2').append('<div class="buttonSelector pull-right"><button class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
 
     $('#actionButton').click(function() {
         url = page_url;
@@ -119,16 +119,4 @@ $(document).ready(function() {
         $('.question_text').val("Question submitted!");
         setTimeout(function(){ jQuery(".question_text").val("");}, 1500);
     });
-//    $('.buttonSelector').css("margin-top", "-5%");
-    $('.buttonSelector').css("postion", "absolute");
-//    $('.buttonSelector').css("margin-bottom", "5%");
-    $('.buttonSelector').css("display", "inline-block");
-    $('.buttonSelector').css("float", "right");
-
-
-
-
-
-//    $('.buttonSelector').css("position", "absolute")
-
 });

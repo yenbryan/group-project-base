@@ -210,3 +210,17 @@ textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus,
     padding-right: 5%;
     height: 45px;
 }
+
+h2 {
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+.buttonSelector {
+    /*postion: absolute;*/
+    display: inline-flex;
+    margin-top: -300px;
+
+}
+button:focus {outline:0;}
