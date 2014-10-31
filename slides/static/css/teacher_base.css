@@ -1,0 +1,47 @@
+.slide-title {
+    font-family: ProximaNova-Bold, sans-serif;
+    /*margin-top: 30px;*/
+    font-size: 30px;
+    /*margin-bottom: -10px;*/
+    letter-spacing: .1px;
+}
+
+.divider-hr {
+    height: 1px;
+    background-color: #dfdfdf;
+}
+
+.status-info {
+    /*padding-top: 8px;*/
+    /*padding-bottom: 8px;*/
+    font-size: 36px;
+    font-weight: 100;
+    font-family: ProximaNova-Light, sans-serif;
+}
+
+.status-text {
+    font-style: italic;
+}
+
+.help {
+    color: #de544e;
+}
+
+.done {
+    color: #1dd665;
+}
+
+.question {
+    color: #c1a10a;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.icon {
+    margin-top: -10px;
+    /*margin-bottom: -10px;*/
+    height: 56px;
+    display: inline-block;
+}

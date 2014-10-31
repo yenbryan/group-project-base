@@ -1,17 +1,47 @@
+{% load i18n future staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block meta_title %}{% endblock %}</title>
+    <meta name="author" content="Yeti LLC">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="{% static "css/reveal.min.css" %}">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
+{#    <link rel="stylesheet" href="{% static "css/teacher.css" %}">#}
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
+
+    <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
+    <link rel="stylesheet" href="{% static "css/teacher_base.css" %}">
+    <script src="{% static "js/less-1.7.0.min.js" %}"></script>
+    <script src="{% static "js/jquery-1.11.1.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/profile.js" %}"></script>
+    <script src="{% static "js/teacher.js" %}"></script>
 </head>
 <body>
-<h1>fasffs{{ deck.name }}</h1>
-{% for item in return_list %}
-    <p>{{ item.slide.name }}</p>
-    {{ item.slide.slide_number }}
-    <a href="{% url 'teacher_done' item.slide.url %}"><p>{{ item.done }} done</p></a>
-    <a href="{% url 'teacher_question' item.slide.url %}"><p>{{ item.questions }} questions</p></a>
-    <a href="{% url 'teacher_help' item.slide.url %}"><p>{{ item.need_help }} needs help</p></a>
-{% endfor %}
+<div class="container">
+    <h1>fasffs{{ deck.name }}</h1>
+
+    {% for item in return_list %}
+        <h2 class="slide-title">{{ item.slide.name }}</h2>
+        <hr class="divider-hr">
+        <a href="{% url 'teacher_done' item.slide.url %}"><p class="status-info done">{{ item.done }} <span class="status-info status-text">done</span></p></a>
+        <hr class="divider-hr">
+        <a href="{% url 'teacher_question' item.slide.url %}"><p class="status-info questions">{{ item.questions }} <span class="status-info status-text">questions</span></p></a>
+        <hr class="divider-hr">
+        <a href="{% url 'teacher_help' item.slide.url %}"><p class="status-info help">{{ item.need_help }} <span class="status-info status-text">needs help</span><img class="icon pull-right" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/></p></a>
+        <hr class="divider-hr">
+    {% endfor %}
+</div>
 </body>
 </html>

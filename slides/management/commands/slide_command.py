@@ -73,14 +73,14 @@ class Command(BaseCommand):
             for header in all_headers:
                 if count == 0:
                     try:
-                        print ""
+                        print header
                         Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
                     except IntegrityError:
                         print "Integrity!!!!"
                     tracker += 1
                 elif header != all_headers[(count-1)]:
                     try:
-                        print ""
+                        print header
                         Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
                     except IntegrityError:
                         print "integrity!!!"
