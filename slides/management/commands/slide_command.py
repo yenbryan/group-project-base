@@ -1,24 +1,10 @@
-from HTMLParser import HTMLParser
+__author__ = 'GoldenGate'
+
 import os
 from slides.models import Slide
 from bs4 import BeautifulSoup
 from django.db.utils import IntegrityError
-
-
-__author__ = 'GoldenGate'
-
 from django.core.management import BaseCommand
-
-
-class MyHTMLParser(HTMLParser):
-    def handle_starttag(self, tag, attrs):
-        if tag == "section":
-            print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", "SCRIPT!!!!!!!"
-        print "Encountered a start tag:", tag
-    def handle_endtag(self, tag):
-        print "Encountered an end tag :", tag
-    def handle_data(self, data):
-        print "Encountered some data  :", data
 
 
 class Command(BaseCommand):
@@ -33,6 +19,7 @@ class Command(BaseCommand):
             # print folder
             if index == "week":
                 files = folder[2]
+                # constructing file path location and parsing the path with parameters
                 for file in files:
                     file_location = str(folder[0]) + "/" + str(file)
                     week = index1[-1]
@@ -57,6 +44,7 @@ class Command(BaseCommand):
                         print ""
                     self.run_soup(file_location, week, day, am_pm)
 
+    # take location of decks and loop over each to create individual slides
     def run_soup(self, location, week, day, am_pm):
         with open(location) as template:
             html = template.read()
@@ -64,7 +52,6 @@ class Command(BaseCommand):
             second_tag = first_tag.replace("{% endblock %}","</div>")
             soup2 = BeautifulSoup(second_tag)
             topic = soup2.find("div", {"id": "topic"}).get_text().lstrip()
-            print topic, len(topic)
             soup = BeautifulSoup(html)
             sections = soup.find_all('section')
             all_headers = []
@@ -75,6 +62,7 @@ class Command(BaseCommand):
                 all_headers.append(instance)
             count = 0
             tracker = 1
+            # create slide unless its already been created (checked by unique together in models)
             for header in all_headers:
                 if count == 0:
                     try:
