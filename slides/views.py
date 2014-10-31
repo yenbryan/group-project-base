@@ -1,4 +1,5 @@
 import json
+
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -147,6 +148,7 @@ def new_action(request, action):
     return HttpResponse(content_type='application/json')
 
 
+@login_required
 def teacher(request, week, day, am_pm):
     name = Slide.objects.get(week=int(week), day=str(day), am_pm=am_pm, slide_number=1)
     deck = Slide.objects.filter(week=int(week), day=str(day), am_pm=am_pm)
@@ -168,6 +170,7 @@ def teacher(request, week, day, am_pm):
     return render(request, "teacher/teacher.html", data)
 
 
+@login_required
 def teacher_help(request, slide_url):
     not_helped = Action.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -181,6 +184,7 @@ def teacher_help(request, slide_url):
     return render(request, 'teacher/help.html', data)
 
 
+@login_required
 def teacher_done(request, slide_url):
     done = Action.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -194,6 +198,7 @@ def teacher_done(request, slide_url):
     return render(request, 'teacher/done.html', data)
 
 
+@login_required
 def teacher_question(request, slide_url):
     need_answers = Question.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -206,6 +211,20 @@ def teacher_question(request, slide_url):
 
 
 @csrf_exempt
-def change_action(request, action):
+def help_done(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        action = Action.objects.get(pk=data)
+        action.need_help = False
+        action.save()
+    return HttpResponse(content_type='application/json')
+
+
+@csrf_exempt
+def question_done(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        question = Question.objects.get(pk=data)
+        question.answered = True
+        question.save()
+    return HttpResponse(content_type='application/json')
