@@ -1,8 +1,10 @@
 ---
 
-virtualenv_path: ""
+virtualenv_path: /home/ubuntu/.virtualenvs/slides
 git_repo: https://github.com/yenbryan/group-project-base
-project_name: ""
+git_version: developer
+project_name: slides
 project_path: "/home/ubuntu/{{ project_name }}"
 requirements_file: "{{ project_path }}/requirements.txt"
 supervisor_path: /etc/supervisor/conf.d/{{ project_name }}.conf
+wsgi_root: lms
