@@ -25,10 +25,15 @@ class ModelTestCase(TestCase):
         self.assertTrue(isinstance(self.profile, Profile))
         self.assertEqual(self.profile.__unicode__(), "test test")
 
-    def test_url_construct(self):
-        self.assertEqual(self.slide.url_construct(), 'week1/1_pm/#/1/1')
+    def test_am_url_construct(self):
+        slides_without_subslides = Slide.objects.create(
+            week=1,
+            day=1,
+            am_pm=0,
+            slide_number=1)
+        self.assertEqual(slides_without_subslides.url_construct(), 'week1/1_am/#/1')
 
-        # URL construction when there isn't a subslide
+    def test_pm_url_construct(self):
         slides_without_subslides = Slide.objects.create(
             week=1,
             day=1,
@@ -37,8 +42,11 @@ class ModelTestCase(TestCase):
         self.assertEqual(slides_without_subslides.url_construct(), 'week1/1_pm/#/1')
 
     def test_slide_creation(self):
+        self.assertEqual(self.slide.url_construct(), 'week1/1_pm/#/1/1')
+        self.slide.name = "test"
+        self.slide.save()
         self.assertTrue(isinstance(self.slide, Slide))
-        self.assertEqual(self.slide.__unicode__(), self.slide.url)
+        self.assertEqual(self.slide.__unicode__(), 'week1/1_pm/#/1/1 - test')
 
     def test_action_creation(self):
         self.assertTrue(isinstance(self.action, Action))
