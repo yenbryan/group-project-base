@@ -2,14 +2,16 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from lms import settings
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
-    url("^$", TemplateView.as_view(template_name="index.html"), name="slides_home"),
+    url("^$", login_required(TemplateView.as_view(template_name="index.html")), name="slides_home"),
     url(r'^admin/', include(admin.site.urls)),
+
     url(r'^account/$', 'slides.views.account', name='account'),
     url(r'^register/$', 'slides.views.register', name='register'),
     url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
@@ -21,6 +23,7 @@ urlpatterns = patterns('',
         name='password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='password_reset_complete'),
 
+
     #   teacher facing site
     url(r'^teacher/(?P<week>\w+)/(?P<day>\w+)/(?P<am_pm>\w+)/$', 'slides.views.teacher', name='teacher'),
     # url(r'^teacher/help/$', 'slides.views.teacher_help', name="teacher_help"),
@@ -28,14 +31,15 @@ urlpatterns = patterns('',
     url(r'^teacher/help/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_help', name="teacher_help"),
     url(r'^teacher/question/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_question', name="teacher_question"),
     # url(r'^teacher/question/$', 'slides.views.teacher_question', name="teacher_question"),
-    url(r'^teacher_action/(?P<action>\d+)', 'slides.views.change_action', name='change_action'),
+
 
     # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
     url(r'^edit/email/$', 'slides.views.edit_email', name='edit_email'),
     url(r'^edit/password/$', 'slides.views.edit_password', name='edit_password'),
     # url(r'^help/(?P<student_real_name>\w+)/(?P<current_slide>\w+)/$', 'slides.views.new_help', name='new_help'),
-
+    url(r'^question_done/$', 'slides.views.question_done', name='question_done'),
+    url(r'^help_done/$', 'slides.views.help_done', name='help_done'),
     url(r'^action/(?P<action>\d+)', 'slides.views.new_action', name='new_action'),
 
     # Week 1 - OO Python
