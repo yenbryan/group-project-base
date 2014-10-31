@@ -49,9 +49,9 @@
                         <div>
                             <a href="{% url 'teacher_done' item.slide.url %}"><p class="status-info done top-info">{{ item.done }} <span class="status-info status-text">done</span><img class="icon pull-right" src="{% static 'img/Assets/Checkmark-HOLLOW.png' %}" alt=""/></p></a>
                             <hr class="divider-hr">
-                            <a href="{% url 'teacher_question' item.slide.url %}"><p class="status-info question">{{ item.questions }} <span class="status-info status-text">{% if item.questions == 1 %}question{% elif item.questions != 1 %}questions{% endif %}</span><img class="icon pull-right" src="{% static 'img/Assets/Questionmark-hollow.png' %}" alt=""/></p></a>
+                            <a href="{% url 'teacher_question' item.slide.url %}"><p class="status-info question">{{ item.questions }} <span class="status-info status-text">{% if item.questions == 1 %}question{% else %}questions{% endif %}</span><img class="icon pull-right" src="{% static 'img/Assets/Questionmark-hollow.png' %}" alt=""/></p></a>
                             <hr class="divider-hr">
-                            <a href="{% url 'teacher_help' item.slide.url %}"><p class="status-info help">{{ item.need_help }} <span class="status-info status-text">{% if item.need_help == 1 or item.need_help == 0 %}need help{% elif item.questions != 1 and item.questions != 0 %}need help{% endif %}</span><img class="icon pull-right" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/></p></a>
+                            <a href="{% url 'teacher_help' item.slide.url %}"><p class="status-info help">{{ item.need_help }} <span class="status-info status-text">{% if item.need_help == 1 %}needs help{% else %}need help{% endif %}</span><img class="icon pull-right" src="{% static 'img/Assets/Exclamation-hollow.png' %}" alt=""/></p></a>
                             <hr class="divider-hr open-full">
                         </div>
                     </dd>
