@@ -32,7 +32,7 @@ $(document).ready(function() {
     });
 
     $(".buttonSelector").on('click', function() {
-        var parent = $(this).parent()
+        var parent = $(this).parent();
         h2SlideNumber = (parent.attr('id'))
 
     });
@@ -119,4 +119,5 @@ $(document).ready(function() {
         $('.question_text').val("Question submitted!");
         setTimeout(function(){ jQuery(".question_text").val("");}, 1500);
     });
+
 });

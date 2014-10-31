@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     var name = $('#change_name_text').val();
     var email = $('#change_email_text').val();
     var password = $('#change_password_text').val();
@@ -12,6 +13,7 @@ $(document).ready(function(){
             dataType: 'json',
             data: JSON.stringify(new_name),
             success: function(data){
+
                 setTimeout("$('.name_note').hide();", 3000);
                 if (data === "success"){
                     $('#change_name_save').show();

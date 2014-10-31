@@ -13,7 +13,7 @@ class Profile(AbstractUser):
 
     def __unicode__(self):
         return u"{}".format(self.real_name) \
-            if self.first_name \
+            if self.real_name \
             else u"{}".format(self.username) # prints out real_name or Username
 
 """
