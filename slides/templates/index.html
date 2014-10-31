@@ -30,7 +30,7 @@
                     {% if user.image %}
                         <span><a href="{% url "account" %}"><img height="50" width="50" class="img-circle" src='{{ user.image.url }}'></a></span>
                     {% else %}
-                        <span><a href="{% url "account" %}"><img height="50" width="50" src="{% static "img/Assets/default-profile-photo.png" %}"></a></span>
+                        <span><a href="{% url "account" %}"><img height="50" width="50" src="{% static "img/Assets/../../static/default-profile-photo.png" %}"></a></span>
                     {% endif %}
                         <a href='{% url "account" %}'><button class="btn btn-default">Account</button></a>
                         <a href="{% url 'logout' %}"><button class="btn btn-default">Logout</button></a>
