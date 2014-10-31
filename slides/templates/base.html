@@ -58,8 +58,8 @@
                         <div class="row">
                             <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
                             {% if user.image %}
-                                <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
-                                <img height="35" width="35" class="inlineName userPhoto img-circle pull-right" src="{{ user.image.url }}">
+                                <a href="{% url "account" %}"><b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
+                                <img height="35" width="35" class="inlineName userPhoto img-circle pull-right" src="{{ user.image.url }}"></a>
                             {% else %}
                                 <img height="35" width="35" class="inlineName img-circle pull-right" src="{% static "img/Assets/../../static/default-profile-photo.png" %}">
                             {% endif %}
