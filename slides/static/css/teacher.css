@@ -13,7 +13,12 @@
 
 .scroll-help {
     overflow-y: auto;
-    height: 60%;
+    height: 70%;
+}
+
+.scroll-question {
+    overflow-y: auto;
+    height: 70%;
 }
 
 .header {
@@ -31,7 +36,7 @@
 }
 
 .question {
-    color: #c1a10a;
+    color: #c9aa16;
 }
 
 .help-header-hr {
@@ -47,7 +52,7 @@
 }
 
 .question-header-hr {
-    background-color: #c1a10a;
+    background-color: #c9aa16;
     height: 2px;
     margin-top: -10px;
 }
@@ -65,7 +70,7 @@
 
 .user-name {
     color: black;
-    margin-top: 10px;
+    margin-top: 14px;
     margin-left: -5%;
     font-size: 20px;
     text-align: left;
@@ -99,7 +104,7 @@
     color: white;
     margin-left: -10%;
     margin-right: -10%;
-    width: 107%;
+    width: 105%;
     outline-style: none;
 }
 
@@ -112,26 +117,46 @@
     margin-bottom: 38px;
     margin-left: -10%;
     margin-right: -10%;
-    width: 107%;
+    width: 105%;
     outline-style: none;
     background-color: white;
     color: #cc2930;
 }
 
+
 .question-status {
-    height: 50px;
-    border: 3px solid #c1a10a;
-    margin-bottom: 10%;
-    background-color: #c1a10a;
-    color: white;
+    margin-top: -7px;
+    /*height: 50px;*/
+    /*border: 3px solid #c1a10a;*/
+    /*margin-bottom: 10%;*/
+    /*background-color: #c1a10a;*/
+    /*color: white;*/
 }
 
 .question-button {
-    border: none;
+    height: 50px;
+    border: 3px solid #c9aa16;
+    margin-top: 5px;
+    margin-bottom: 53px;
+    background-color: #c9aa16;
+    color: white;
     margin-left: -10%;
     margin-right: -10%;
-    background-color: #c1a10a;
-    width: 100%;
+    width: 105%;
+    outline-style: none;
+}
+
+.question-button-active {
+    height: 50px;
+    border: 3px solid #c9aa16;
+    margin-top: -13px;
+    margin-bottom: 53px;
+    background-color: white;
+    color: #c1a10a;
+    margin-left: -10%;
+    margin-right: -10%;
+    width: 105%;
+    outline-style: none;
 }
 
 .status-text {
@@ -140,10 +165,13 @@
 }
 
 .question-text {
-    margin-top: -1%;
+    margin-top: 10px;
     margin-left: -5%;
     text-align: left;
-    color: #949495;
+    color: #9c9ca1;
+    font-size: 20px;
+    letter-spacing: 0.4px;
+    line-height: 28px;
 }
 
 

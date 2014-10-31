@@ -12,7 +12,7 @@
 <div class="container">
     <div class="row">
         <div align="center" class="col-xs-12">
-            <h4 class="header help">{{ not_helped | length }} Need{% if not_helped == 1 %}s{% endif %} Help</h4>
+            <h4 class="header help">{{ not_helped | length }} {% if not_helped.count != "1" %}Need{% else %}Needs{% endif %} Help</h4>
             <hr class="help help-header-hr">
         </div>
     </div>
@@ -21,15 +21,17 @@
     <div class="row">
         <div align="center" class="col-xs-12">
             {% for help in not_helped %}
-                <div class="col-xs-2 user-photo-div">
-                    <img class="img-circle user-photo" src="{{ help.profile.image.url }}">
-                </div>
-                <div class="col-xs-10">
-                    <h3 class="user-name">{{ help.profile }}</h3>
-                    <h3 class="time">{{ help.time|date:"g:iA, F d" }}</h3>
-                </div>
-                <div class="col-xs-12 help-status">
-                    <button class="help-button"><span class="status-text">Helped?</span></button>
+                <div>
+                    <div class="col-xs-2 user-photo-div">
+                        <img class="img-circle user-photo" src="{{ help.profile.image.url }}">
+                    </div>
+                    <div class="col-xs-10">
+                        <h3 class="user-name">{{ help.profile }}</h3>
+                        <h3 class="time">{{ help.time|date:"g:iA, F d" }}</h3>
+                    </div>
+                    <div class="col-xs-12 help-status">
+                        <button class="help-button" id="{{ help.pk }}"><span class="status-text">Helped?</span></button>
+                    </div>
                 </div>
             {% endfor %}
             {% for help in helped %}

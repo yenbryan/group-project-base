@@ -211,6 +211,20 @@ def teacher_question(request, slide_url):
 
 
 @csrf_exempt
-def help_done(request, action):
+def help_done(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        action = Action.objects.get(pk=data)
+        action.need_help = False
+        action.save()
+    return HttpResponse(content_type='application/json')
+
+
+@csrf_exempt
+def question_done(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        question = Question.objects.get(pk=data)
+        question.answered = True
+        question.save()
+    return HttpResponse(content_type='application/json')
