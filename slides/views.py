@@ -148,8 +148,7 @@ def new_action(request, action):
 
 
 def teacher(request, week, day, am_pm):
-    deck = Slide.objects.filter(week=int(week), day=str(day))
-    deck.filter(am_pm=am_pm)
+    deck = Slide.objects.filter(week=int(week), day=str(day), am_pm=am_pm)
     return_list = []
     for slide in deck:
         return_list.append({
