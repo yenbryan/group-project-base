@@ -13,24 +13,26 @@ class Profile(AbstractUser):
 
     def __unicode__(self):
         return u"{}".format(self.real_name) \
-            if self.first_name \
+            if self.real_name \
             else u"{}".format(self.username) # prints out real_name or Username
 
 """
-    am_pm input takes 1 small integer -1, 0, 1
-    AM NOR PM equals -1
+    am_pm input takes 1 small integer 2, 0, 1
+    AM NOR PM equals 2
     AM equals 0
     PM equals 1
 """
+
 
 class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
     day = models.CharField(max_length=150)
-    am_pm = models.SmallIntegerField()
+    am_pm = models.IntegerField()
     slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
+    topic = models.CharField(max_length=150)
 
     class Meta:
         unique_together = ("week", "day", "am_pm", "slide_number", "name")
@@ -55,7 +57,7 @@ class Slide(models.Model):
         super(Slide, self).save(*args, **kwargs) # Call the "real" save() method.
 
     def __unicode__(self):
-        return self.url
+        return "{} - {}".format(self.url, self.name)
 
 
 class Action(models.Model):
@@ -63,7 +65,7 @@ class Action(models.Model):
     need_help = models.BooleanField(default=False)
     profile = models.ForeignKey(Profile, related_name="actions")
     slide = models.ForeignKey(Slide, related_name="actions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return u"{}'s Action on slide {}".format(self.profile.first_name, self.slide.url)
@@ -73,7 +75,8 @@ class Question(models.Model):
     body = models.TextField()
     profile = models.ForeignKey(Profile, related_name="questions")
     slide = models.ForeignKey(Slide, related_name="questions")
-    time = models.TimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True)
+    answered = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.body

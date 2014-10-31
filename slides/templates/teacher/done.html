@@ -1,0 +1,58 @@
+{% extends "teacher/teacher_base.html" %}
+{% load i18n future staticfiles %}
+{% block teacher_content %}
+
+<div class="container">
+    <div class="row">
+        <div align="center" class="col-xs-12">
+            <img class="icon" src="{% static 'img/Assets/Checkmark-HOLLOW.png' %}" alt=""/>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div align="center" class="col-xs-12">
+            <h4 class="header done">{{ done | length }} Done</h4>
+            <hr class="done done-header-hr">
+        </div>
+    </div>
+</div>
+<div class="container scroll">
+    <div class="row">
+        <div align="center" class="col-xs-12">
+            {% for student in done %}
+                <div class="col-xs-2 user-photo-div">
+                    <img class="img-circle user-photo" src="{{ student.profile.image.url }}">
+                </div>
+                <div class="col-xs-10">
+                    <h3 class="user-name">{{ student.profile }}</h3>
+                    <h3 class="time">{{ student.time|date:"g:iA, F d"  }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div align="center" class="col-xs-12">
+            <h4 class="header done">{{ not_done | length }} Not Done</h4>
+            <hr class="done done-header-hr">
+        </div>
+    </div>
+</div>
+<div class="container scroll">
+    <div class="row">
+        <div align="center" class="col-xs-12">
+            {% for 4lazy in not_done %}
+                <div class="col-xs-2 user-photo-div">
+                    <img class="img-circle user-photo" src="{{ 4lazy.image.url }}">
+                </div>
+                <div class="col-xs-10">
+                    <h3 class="user-name user-name-not">{{ 4lazy }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

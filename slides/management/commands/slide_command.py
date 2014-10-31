@@ -23,8 +23,6 @@ class MyHTMLParser(HTMLParser):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        week = 1
-        day = 1
         # return directories where slide decks live
         walker = os.walk('./slides/templates/')
         # navigating to individual slide decks
@@ -42,17 +40,31 @@ class Command(BaseCommand):
                     if day_am_pm[-3:] == "_am":
                         am_pm = 0
                         day = day_am_pm[:1]
+                        print "day_am_pm " + str(day_am_pm)
+                        print am_pm
+                        print ""
                     elif day_am_pm[-3:] == "_pm":
                         am_pm = 1
                         day = day_am_pm[:1]
+                        print "day_am_pm " + str(day_am_pm)
+                        print am_pm
+                        print ""
                     else:
-                        am_pm = -1
+                        am_pm = 2
                         day = day_am_pm
+                        print "day_am_pm " + str(day_am_pm)
+                        print am_pm
+                        print ""
                     self.run_soup(file_location, week, day, am_pm)
 
     def run_soup(self, location, week, day, am_pm):
         with open(location) as template:
             html = template.read()
+            first_tag = html.replace("{% block presentation_title %}","<div id='topic'>")
+            second_tag = first_tag.replace("{% endblock %}","</div>")
+            soup2 = BeautifulSoup(second_tag)
+            topic = soup2.find("div", {"id": "topic"}).get_text().lstrip()
+            print topic, len(topic)
             soup = BeautifulSoup(html)
             sections = soup.find_all('section')
             all_headers = []
@@ -61,26 +73,21 @@ class Command(BaseCommand):
                 instance = instance[4:]
                 instance = instance[:-5]
                 all_headers.append(instance)
-            print all_headers
             count = 0
             tracker = 1
-            # to_be_deleted = Slide.objects.all()
-            # to_be_deleted.delete()
             for header in all_headers:
                 if count == 0:
                     try:
-                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                        print header
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker, topic=topic)
                     except IntegrityError:
                         print "Integrity!!!!"
-                    print "created header at count" + str(count)
-                    print header
                     tracker += 1
                 elif header != all_headers[(count-1)]:
                     try:
-                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=-am_pm, slide_number=tracker)
+                        print header
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker, topic=topic)
                     except IntegrityError:
                         print "integrity!!!"
-                    print "created header at count" + str(count)
-                    print header
                     tracker += 1
                 count += 1

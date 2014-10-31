@@ -1,27 +1,23 @@
-{#{% extends 'base_template.html' %}#}
-{#{% load staticfiles %}#}
-{##}
-{#{% block title %}#}
-{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">#}
-{#    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">#}
-{#    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>#}
-{#{% endblock title %}#}
-{##}
-{#{% block content %}#}
-    <div class="container">
-        <div class="middlebox">
-        <form method="post" action=".">
-                {% csrf_token %}
-                {{ form.as_p }}
+{% extends "base_user.html" %}
+{% load crispy_forms_tags %}
 
-                <input type="submit" value="Log in">
-            </form>
+{% block title %}
+    Log In
+{% endblock %}
 
-            <p>Not member? <a href="{% url 'register' %}">Register!</a></p>
-            <p>Forgot your password? <a href="{% url 'password_reset' %}">Click here</a></p>
-        </div>
+{% block content %}
+    <div id="login_window">
+        <form id=login_form" method="post" action=".">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" value="Log in">
+        </form>
+
+        <p>Not member? <a href="{% url 'register' %}">Register!</a></p>
+        <p>Forgot your password? <a href="{% url 'password_reset' %}">Click here</a></p>
     </div>
-{#{% endblock %}#}
+{% endblock %}
+
 
 
 

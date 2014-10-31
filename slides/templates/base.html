@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}">
     <link rel="stylesheet" href="{% static "css/zenburn.css" %}">
-    <link rel="stylesheet" href="{% static "css/slides.css" %}">
+
 
     <link rel="stylesheet/less" type="text/css" media="all" href="{% static "less/style.less" %}" />
     <script>
@@ -40,47 +40,58 @@
             logLevel: 0
         }
     </script>
+    <link rel="stylesheet" href="{% static "css/slides.css" %}">
     <script src="{% static "js/jquery-1.11.1.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/less-1.7.0.min.js" %}"></script>
+{% if user.is_authenticated %}
     <script src="{% static "js/index.js" %}"></script>
+{% endif %}
 </head>
 
 <body class="{% block body_css %}{% endblock body_css %}">
 {#popup window#}
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
                             <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
-                            <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
-                            {% if user.image %}
-                                <img height="35" width="35" class="inlineName pull-right img-circle" src="{{ user.image.url }}">
-                            {% else %}
-                                <img height="35" width="35" class="inlineName pull-right img-circle" src="{% static "img/Assets/default-profile-photo.png" %}">
-                            {% endif %}
+{#                            {% if user.image %}#}
+                                <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
+                                <img height="35" width="35" class="inlineName userPhoto img-circle pull-right" src="{{ user.image.url }}">
+{#                            {% else %}#}
+{#                                <img height="35" width="35" class="inlineName img-circle pull-right" src="{% static "img/Assets/../../static/default-profile-photo.png" %}">#}
+{#                            {% endif %}#}
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-6">
-                                <button class="modalActionButtons help" id="helpButton"><span><img class="modalActions"
+                            <div class="col-sm-6 col-xs-6">
+                                <button class="modalActionButtons help" id="helpButton"><span><img id="help-button-img" class="modalActions"
                                                                                               src="{% static 'img/Assets/Exclamation-filled.png' %}"
+                                                                                              alt=""/><img id="help-button-img-done" class="modalActions"
+                                                                                              src="{% static 'img/Assets/Exclamation-hollow.png' %}"
                                                                                               alt=""/></span>Help
                                 </button>
                             </div>
-                            <div class="col-sm-6">
-                                <button class="modalActionButtons done" id="doneButton"><span><img class="modalActions"
+                            <div class="col-sm-6 col-xs-6">
+                                <button class="modalActionButtons done" id="doneButton"><span><img id="done-button-img" class="modalActions"
                                                                                               src="{% static 'img/Assets/Checkmark-filled.png' %}"
+                                                                                              alt=""/><img id="done-button-img-done" class="modalActions"
+                                                                                              src="{% static 'img/Assets/Checkmark-HOLLOW.png' %}"
                                                                                               alt=""/></span>Done
                                 </button>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12" id="questionDiv">
-                                <img id="questionImage" class="modalActions" src="{% static 'img/Assets/Questionmark-filled.png' %}"
-                                                                                                  alt=""/>Question
+                            <div class="col-md-12 col-xs-12" id="questionDiv">
+                                <div class="col-md-1 question-label-div">
+                                    <img id="questionImage" class="modalActions" src="{% static 'img/Assets/Questionmark-filled.png' %}"
+                                                                                                  alt=""/>
+                                </div>
+                                <div class="col-md-4 modal-label">Question</div>
                                 <form class="question_content">
                                     <textarea name="Text1" cols="31" rows="2" class="question_text"></textarea>
                                     <button type="button" class="btn pull-right question_submit">SUBMIT</button>
@@ -91,16 +102,6 @@
                 </div>
             </div>
         </div>
-
-    <script>
-        var page_title;
-        var page_url;
-        $(document).on('click', '.get_url', function() {
-            page_title = $(this).parent().clone().children().remove().end().text()
-            $('.modal-title').html(page_title);
-            page_url = window.location.href;
-        });
-    </script>
 
 
     <div class="reveal">
@@ -122,6 +123,7 @@
                 </section>
 
             {% endblock %}
+
             {% block slides %}
             {% endblock %}
 

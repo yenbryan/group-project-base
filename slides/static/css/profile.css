@@ -1,0 +1,50 @@
+#profile_photo {
+    margin-top: 45px;
+}
+
+#photo_text {
+    font-size: 22px;
+    color: #67a5b4
+}
+
+#profile_window {
+    margin-left: 16%;
+}
+
+.input_fields td:first-child {
+    height: 70px;
+    width: 300px;
+    font-size: 24px;
+    text-align: right;
+    padding-right: 15px;
+    color: #67a5b4;
+}
+
+.input_fields td {
+    font-size: 28px;
+}
+
+.account_input {
+    padding-left: 10px;
+    height: 50px;
+    width: 300px;
+    outline: none;
+}
+
+#login_window {
+    margin-top: 30px;
+    margin-left: 30%;
+    font-size: 36px;
+}
+
+#login_window * {
+    margin-top: 30px;
+}
+
+#login_form > input {
+    background-color: white;
+}
+
+#id_password {
+    background-color: white;
+}

@@ -1,8 +1,8 @@
 ---
 
-db_name: ""
-db_user: ""
-db_password: ""
-nginx_server_name: ""
+db_name: "slides"
+db_user: "slides"
+db_password: "slides"
+nginx_server_name: ec2-54-68-180-89.us-west-2.compute.amazonaws.com
 django_settings_file: "lms.settings"
 proxy_ip: 127.0.0.1:8001

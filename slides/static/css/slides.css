@@ -1,7 +1,26 @@
+.form-group {
+    margin-bottom: 0;
+}
+
+#registration_form {
+    margin-top: 30px;
+}
+
+#rocketULogo_regi {
+    width: 80%;
+    margin-top: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #myModal {
     margin-top: 6%;
-    border-radius: 20px;
 }
+
+.modal-content {
+    border-radius: 15px;
+}
+
 
 #actionButton {
     margin-top: .5%;
@@ -13,12 +32,24 @@
     background-color: #22779c;
     padding: 8px 45px;
     font-weight: 300;
+    float: right;
 }
 
 .modalTitle {
     padding-top: 1%;
     font-weight: bold;
     margin-left: 3%;
+}
+
+.modal-body {
+    margin-bottom: 2%;
+}
+
+.userPhoto {
+    /*padding-right: -5%;*/
+    margin-right: -3%;
+    margin-top: -1%;
+    box-shadow: 0 2px 5px #888888;
 }
 
 .modalName {
@@ -34,45 +65,62 @@
     padding-top: 0;
 }
 
-
 .modalActionButtons {
     margin-top: 10%;
     width: 100%;
     height: 80px;
     border: none;
-    border-radius: 10px;
-    font-size: 35px;
+    border-radius: 15px;
+    font-size: 38px;
     color: white;
 }
 
 #helpButton {
     width: 95%;
     margin-left: 5%;
+    padding-top: 8px;
 }
 
 .help {
     background-color: #cc282f;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .help_active {
     background-color: white;
-    border: 2px solid red;
+    border: 3px solid red;
     color: red;
 }
 
 #doneButton {
     width: 95%;
     margin-right: 5%;
+    padding-top: 8px;
 }
 
 .done {
     background-color: #37d765;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .done_active {
     background-color: white;
-    border: 2px solid #37d765;
+    border: 3px solid #37d765;
     color: #37d765;
+}
+
+.modal-label {
+    font-family: ProximaNova-Bold, sans-serif;
+    padding-left: 30px;
+    padding-top: 3px;
+    font-size: 38px;
+    margin-top: -2%;
+    margin-bottom: -2%;
+}
+
+.question-label-div {
+    margin-left: -2%;
+    margin-top: -2%;
 }
 
 #questionButton {
@@ -89,34 +137,50 @@
     margin-top: 4%;
     margin-left: 5%;
     padding-top: 3%;
-    border-radius: 10px;
+    border-radius: 15px;
     width: 90%;
     color: white;
-    font-size: 35px;
+    font-size: 38px;
+    padding-bottom: 1.5%;
 }
 
 .question_text {
+    padding: 3%;
     margin-top: 2%;
     margin-left: 1%;
-    border-radius: 10px;
-    font-size: 20px;
-    color: black;
+    border-radius: 15px;
+    font-size: 19px;
+    font-weight: 100;
+    color: #323039;
+    border-width: 0;
 }
 
 textarea {
+    margin-top: -2%;
     width: 98%;
-    height: 100px;
+    height: 110px;
+    resize: none;
+}
+
+textarea:focus, .question_submit:focus, #actionButton:focus, .help_active:focus, .done_active:focus, .done_active:focus {
+    outline: 0;
+}
+
+textarea:active, .question_submit:active, #actionButton:active, .help_active:active, .done_active:active, .done_active:active {
+    outline: 0;
 }
 
 .question_submit {
-    margin-top: -9%;
+    margin-top: -10%;
     position: absolute;
     margin-left: 75%;
     background-color: transparent;
+    padding-bottom: 0;
+    padding-right: 0;
     color: black;
     cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 19px;
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 .inlineName {
@@ -126,11 +190,16 @@ textarea {
 
 #userName {
     margin-right: 5%;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 #myModalLabel {
     font-size: 20px;
+    width: 50%;
+}
+
+.modal-title {
+    font-family: ProximaNova-Bold, sans-serif;
 }
 
 #questionImage {
@@ -143,3 +212,17 @@ textarea {
     padding-right: 5%;
     height: 45px;
 }
+
+h2 {
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+.buttonSelector {
+    /*postion: absolute;*/
+    display: inline-flex;
+    margin-top: -300px;
+
+}
+button:focus {outline:0;}

@@ -1,0 +1,54 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}
+    Edit Account
+{% endblock %}
+
+{% block content %}
+    <div id="profile_photo">
+{#        {% if user.image %}#}
+            <a href=""><img height="100" width="100" class="img-circle profile_photo_change" src='{{ user.image.url }}'></a>
+{#        {% else %}#}
+{#            <a href=""><img height="100" width="100" class="img-circle profile_photo_change" src="{% static "img/Assets/../../static/default-profile-photo.png" %}"></a>#}
+{#        {% endif %}#}
+    </div>
+    <p align="center" class="profile_photo_change" id="photo_text"><a href="">Upload a new profile photo</a></p>
+
+{#  image form#}
+    <form method="post" action="." enctype="multipart/form-data" style="display: none;">
+        {% csrf_token %}
+        {{ imageform }}
+        <input type="submit" value="Submit">
+    </form>
+    <br>
+    <div id="profile_window">
+        <table>
+            <tbody>
+                <tr class="input_fields">
+                    <td align="right"> Real Name </td>
+                    <td> <input type="text" class="account_input" id="change_name_text" value="{{ user.real_name }}"/></td>
+                    <td class='name_note' id='change_name_save' style='display: none; color:darkgreen;'><b>Saved</b></td>
+                    <td class='name_note' id='change_name_fail' style='display: none; color:red;'><b>Invalid</b></td>
+                </tr>
+
+                <tr class="input_fields">
+                    <td align="right"> Email </td>
+                    <td> <input type="text" class="account_input" id="change_email_text" value="{{ user.email }}"/></td>
+                    <td class="email_note" id='change_email_save' style='display: none; color:darkgreen;'><b>Saved</b></td>
+                    <td class="email_note" id='change_email_fail' style='display: none; color:red;'><b>Invalid</b></td>
+                </tr>
+                <tr class="input_fields">
+                    <td> Password </td>
+                    <td> <input type="password" class="account_input" id="change_password_text" value="88888888"/></td>
+                    <td class="password_note" id='change_password_save' style='display: none; color:darkgreen;'><b>Saved</b></td>
+                    <td class="password_note" id='change_password_fail' style='display: none; color:red;'><b>Invalid</b></td>
+                </tr>
+                <tr class="input_fields">
+                    <td> Confirm Password</td>
+                    <td> <input type="password" class="account_input" id="change_password_repeat" value="88888888"/></td>
+                    <td class="password_note" id='change_password_norepeat' style='display: none; color:red;'><b>Mismatch</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
