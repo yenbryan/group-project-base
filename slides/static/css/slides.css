@@ -212,3 +212,17 @@ textarea:active, .question_submit:active, #actionButton:active, .help_active:act
     padding-right: 5%;
     height: 45px;
 }
+
+h2 {
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+.buttonSelector {
+    /*postion: absolute;*/
+    display: inline-flex;
+    margin-top: -300px;
+
+}
+button:focus {outline:0;}
