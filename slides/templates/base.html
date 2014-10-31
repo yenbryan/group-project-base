@@ -52,17 +52,18 @@
 <body class="{% block body_css %}{% endblock body_css %}">
 {#popup window#}
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
                             <b class="modal-title inlineName pull-left" id="myModalLabel">Modal title</b>
-                            {% if user.image %}
+{#                            {% if user.image %}#}
                                 <b class="inlineName pull-right" id="userName">{{ user.real_name }}</b>
                                 <img height="35" width="35" class="inlineName userPhoto img-circle pull-right" src="{{ user.image.url }}">
-                            {% else %}
-                                <img height="35" width="35" class="inlineName img-circle pull-right" src="{% static "img/Assets/../../static/default-profile-photo.png" %}">
-                            {% endif %}
+{#                            {% else %}#}
+{#                                <img height="35" width="35" class="inlineName img-circle pull-right" src="{% static "img/Assets/../../static/default-profile-photo.png" %}">#}
+{#                            {% endif %}#}
                         </div>
 
                         <div class="row">

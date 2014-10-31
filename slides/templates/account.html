@@ -6,13 +6,13 @@
 
 {% block content %}
     <div id="profile_photo">
-        {% if user.image %}
+{#        {% if user.image %}#}
             <a href=""><img height="100" width="100" class="img-circle profile_photo_change" src='{{ user.image.url }}'></a>
-        {% else %}
-            <a href=""><img height="100" width="100" class="img-circle profile_photo_change" src="{% static "img/Assets/../../static/default-profile-photo.png" %}"></a>
-        {% endif %}
+{#        {% else %}#}
+{#            <a href=""><img height="100" width="100" class="img-circle profile_photo_change" src="{% static "img/Assets/../../static/default-profile-photo.png" %}"></a>#}
+{#        {% endif %}#}
     </div>
-    <p align="center" id="photo_text">Upload a new profile photo</p>
+    <p align="center" class="profile_photo_change" id="photo_text"><a href="">Upload a new profile photo</a></p>
 
 {#  image form#}
     <form method="post" action="." enctype="multipart/form-data" style="display: none;">

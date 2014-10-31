@@ -20,13 +20,13 @@
 <div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
-            {% for student in done.all %}
+            {% for student in done %}
                 <div class="col-xs-2 user-photo-div">
                     <img class="img-circle user-photo" src="{{ student.profile.image.url }}">
                 </div>
                 <div class="col-xs-10">
                     <h3 class="user-name">{{ student.profile }}</h3>
-                    <h3 class="time">{{ student.time|date:"g:ia, F d"  }}</h3>
+                    <h3 class="time">{{ student.time|date:"g:iA, F d"  }}</h3>
                 </div>
             {% endfor %}
         </div>
@@ -43,13 +43,12 @@
 <div class="container scroll">
     <div class="row">
         <div align="center" class="col-xs-12">
-            {% for 4lazy in not_done.all %}
+            {% for 4lazy in not_done %}
                 <div class="col-xs-2 user-photo-div">
                     <img class="img-circle user-photo" src="{{ 4lazy.image.url }}">
                 </div>
                 <div class="col-xs-10">
-                    <h3 class="user-name">{{ 4lazy }}</h3>
-                    <h3 class="time">{{ 4lazy.time|date:"g:ia, F d"  }}</h3>
+                    <h3 class="user-name user-name-not">{{ 4lazy }}</h3>
                 </div>
             {% endfor %}
         </div>
