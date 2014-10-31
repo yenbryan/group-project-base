@@ -32,7 +32,7 @@ $(document).ready(function() {
     });
 
     $(".buttonSelector").on('click', function() {
-        var parent = $(this).parent()
+        var parent = $(this).parent();
         h2SlideNumber = (parent.attr('id'))
 
     });

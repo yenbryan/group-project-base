@@ -21,14 +21,35 @@ $(document).ready(function() {
         });
     }
 
+
+    function teacher_toggle(num) {
+        var current_slide = window.location.href;
+        var slide_url = current_slide.split('week')[1];
+        console.log(slide_url);
+        console.log();
+        var question_text = $('.question_text').val();
+
+        var datas = {
+            week: week,
+            day: day2,
+            am_pm: am_pm,
+            slide_number: h2SlideNumber,
+            text: question_text
+        };
+        datas = JSON.stringify(datas);
+        console.log(datas);
+
+        $.ajax({
+            url: '/help_done/' + num,
+            type: 'POST',
+            dataType: 'json',
+            data: datas
+        });
+    }
+
+
     $('.help-button').on('click', function() {
-
-        $(this).toggleClass("help_active");
-        toggle();
-        setTimeout(toggle(), 3000);
-
-        page_data(1);
-
+        teacher_toggle(1);
 
     });
 });

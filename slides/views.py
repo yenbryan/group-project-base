@@ -148,6 +148,7 @@ def new_action(request, action):
     return HttpResponse(content_type='application/json')
 
 
+@login_required
 def teacher(request, week, day, am_pm):
     deck = Slide.objects.filter(week=int(week), day=str(day), am_pm=am_pm)
     return_list = []
@@ -166,6 +167,7 @@ def teacher(request, week, day, am_pm):
     return render(request, "teacher.html", data)
 
 
+@login_required
 def teacher_help(request, slide_url):
     not_helped = Action.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -179,6 +181,7 @@ def teacher_help(request, slide_url):
     return render(request, 'teacher/help.html', data)
 
 
+@login_required
 def teacher_done(request, slide_url):
     done = Action.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -192,6 +195,7 @@ def teacher_done(request, slide_url):
     return render(request, 'teacher/done.html', data)
 
 
+@login_required
 def teacher_question(request, slide_url):
     need_answers = Question.objects.filter(
         slide=Slide.objects.get(url=slide_url),
@@ -204,6 +208,6 @@ def teacher_question(request, slide_url):
 
 
 @csrf_exempt
-def change_action(request, action):
+def help_done(request, action):
     if request.method == 'POST':
         data = json.loads(request.body)

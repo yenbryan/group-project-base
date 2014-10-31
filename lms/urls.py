@@ -2,13 +2,14 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from lms import settings
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
-    url("^$", TemplateView.as_view(template_name="index.html"), name="slides_home"),
+    url("^$", login_required(TemplateView.as_view(template_name="index.html")), name="slides_home"),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^account/$', 'slides.views.account', name='account'),
@@ -30,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^teacher/help/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_help', name="teacher_help"),
     url(r'^teacher/question/(?P<slide_url>week[0-9]+/[0-9_A-Za-z]+/#/[0-9]+)/$', 'slides.views.teacher_question', name="teacher_question"),
     # url(r'^teacher/question/$', 'slides.views.teacher_question', name="teacher_question"),
-    url(r'^teacher_action/(?P<action>\d+)', 'slides.views.change_action', name='change_action'),
+    url(r'^help_done/(?P<action>\d+)', 'slides.views.help_done', name='help_done'),
 
     # ajax call
     url(r'^edit/name/$', 'slides.views.edit_name', name='edit_name'),
