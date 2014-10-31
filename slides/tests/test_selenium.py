@@ -1,3 +1,5 @@
+from slides.management.commands.slide_command import Command
+
 __author__ = 'GoldenGate'
 
 from time import sleep
@@ -14,6 +16,7 @@ class SeleniumTests(LiveServerTestCase):
         cls.selenium = WebDriver()
         Profile.objects.create_superuser('superuser', 'superuser@test.com', 'mypassword')
         super(SeleniumTests, cls).setUpClass()
+        Command()
 
     @classmethod
     def tearDownClass(cls):
@@ -33,13 +36,14 @@ class SeleniumTests(LiveServerTestCase):
         # sleep for half a second to let the page load
         sleep(.5)
 
+
         # We check to see if 'Site administration' is now on the page, this means we logged in successfully
         # body = self.selenium.find_element_by_tag_name('body')
         # self.assertIn('Site administration', body.text)
 
     def admin_login(self):
         # Create a superuser
-        # Profile.objects.create_superuser('superuser', 'superuser@test.com', 'mypassword')
+        Profile.objects.create_superuser('superuser', 'superuser@test.com', 'mypassword')
 
         # let's open the admin login page
         self.selenium.get("{}{}".format(self.live_server_url, reverse('admin:index')))
@@ -54,11 +58,14 @@ class SeleniumTests(LiveServerTestCase):
 
     # Only works if you comment out the above code because you are trying to login twice
     # or you can tell selenium to log itself out
-    def test_login(self):
-        self.selenium.get("{}{}".format(self.live_server_url, reverse('login')))
-        self.selenium.find_element_by_id('id_username').send_keys("superuser")
-        self.selenium.find_element_by_id('id_password').send_keys("mypassword")
-        self.selenium.find_element_by_css_selector("input[value='Log in']").click()
-        sleep(5)
-
-#TODO python manage.py collectstatic didnt work
+    def test_register(self):
+        self.selenium.get("{}{}".format(self.live_server_url, reverse('slides_home')))
+        self.selenium.find_element_by_id('registerButton').click()
+        self.selenium.find_element_by_id('id_username').send_keys("selenium")
+        self.selenium.find_element_by_id('id_password1').send_keys("my_password")
+        self.selenium.find_element_by_id('id_password2').send_keys("my_password")
+        self.selenium.find_element_by_id('id_real_name').send_keys("Selenium Tester")
+        self.selenium.find_element_by_id('email').send_keys("selenium@gmail.com")
+        # self.selenium.find_element_by_id('submit-id-register').click()
+        self.selenium.find_element_by_css_selector("input[value='Register']").click()
+        sleep(12)
