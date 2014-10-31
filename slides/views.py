@@ -148,6 +148,7 @@ def new_action(request, action):
 
 
 def teacher(request, week, day, am_pm):
+    name = Slide.objects.get(week=int(week), day=str(day), am_pm=am_pm, slide_number=1)
     deck = Slide.objects.filter(week=int(week), day=str(day), am_pm=am_pm)
     return_list = []
     for slide in deck:
@@ -162,6 +163,7 @@ def teacher(request, week, day, am_pm):
         "deck": deck,
         'return_list': return_list,
         "user": request.user,
+        "name": name,
     }
     return render(request, "teacher/teacher.html", data)
 

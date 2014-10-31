@@ -6,7 +6,9 @@
 </head>
 <body>
 {% if user.is_student == False %}
-<h1>fasffs{{ deck.name }}</h1>
+    <h1>Week {{ name.week }} - {{ name.day }}{% if name.am_pm == 0 %}am{% elif name.am_pm == 1 %}pm</h2>{% endif %}</h1>
+    <h2>{{ name.topic }}</h2>
+
 {% for item in return_list %}
     <p>{{ item.slide.name }}</p>
     {{ item.slide.slide_number }}
