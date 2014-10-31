@@ -158,7 +158,7 @@ def teacher(request, week, day, am_pm):
             'slide': slide,
             'done': Action.objects.filter(slide=slide, done=True).count(),
             'need_help': Action.objects.filter(slide=slide, need_help=True).count(),
-            'questions': Question.objects.filter(slide=slide).count(),
+            'questions': Question.objects.filter(slide=slide, answered=False).count(),
         })
 
     data = {
