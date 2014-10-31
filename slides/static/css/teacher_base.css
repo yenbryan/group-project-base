@@ -1,0 +1,118 @@
+.container {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+.week-info {
+    margin-top: 25px;
+    color: #c2c2c2;
+    font-size: 20px;
+}
+
+.slide-name {
+    margin-top: -10px;
+    font-size: 20px;
+    font-family: ProximaNova-Bold, sans-serif;
+}
+
+.main-hr {
+    margin-top: -8px;
+    height: 2px;
+    background-color: #464646;
+}
+
+.slide-title {
+    font-family: ProximaNova-Bold, sans-serif;
+    font-size: 30px;
+    margin-top: 10px;
+    letter-spacing: .1px;
+    padding-bottom: 30px;
+
+}
+.open-full {
+    margin-left: -10%;
+    width: 120%;
+    height: 1px;
+    background-color: #dfdfdf;
+}
+
+.open {
+    height: 1px;
+    background-color: #dfdfdf;
+    margin-top: -35px;
+    padding-bottom: -22px;
+}
+
+.top-info {
+   margin-top: -14px;
+}
+
+.open-title {
+    margin-top: -5px;
+    margin-bottom: 48px;
+}
+
+.accordion {
+    margin-left: -2%;
+    margin-right: -2%;
+    margin-top: 30px;
+}
+
+.divider-hr-main {
+    height: 1px;
+    background-color: #dfdfdf;
+    margin-left: -10%;
+    width: 120%
+}
+
+.divider-hr {
+    height: 1px;
+    background-color: #dfdfdf;
+}
+
+.scroll {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.status-info {
+    padding-bottom: 3px;
+    font-size: 36px;
+    font-weight: 100;
+    font-family: ProximaNova-Light, sans-serif;
+}
+
+.arrow-icon {
+    padding-left: -20px;
+}
+
+.arrow-icon-closed {
+    margin-top: -15px;
+    padding-left: 5px;
+}
+
+
+.status-text {
+    font-style: italic;
+}
+
+.help {
+    color: #de544e;
+}
+
+.done {
+    color: #1dd665;
+}
+
+.question {
+    color: #c1a10a;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.icon {
+    margin-top: -3px;
+    height: 50px;
+    display: inline-block;
+}
