@@ -160,9 +160,10 @@ def teacher(request, week, day, am_pm):
 
     data = {
         "deck": deck,
-        'return_list': return_list
+        'return_list': return_list,
+        "user": request.user,
     }
-    return render(request, "teacher.html", data)
+    return render(request, "teacher/teacher.html", data)
 
 
 def teacher_help(request, slide_url):
