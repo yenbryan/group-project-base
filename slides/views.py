@@ -61,7 +61,8 @@ def edit_password(request):
     status = None
     if request.method == 'POST':
         data = json.loads(request.body)
-        if not data[0] == data[1]:                    #check passwords are correctly repeated
+        #check passwords are correctly repeated
+        if not data[0] == data[1]:
             status = "mismatch"
         elif data[0]:
             user = request.user
@@ -113,7 +114,8 @@ def new_action(request, action):
         data = json.loads(request.body)
         student = Profile.objects.get(username=request.user.username)
         week = int(data['week'])
-        am_pm = int(data['am_pm'])
+        # am_pm = int(data['am_pm'])
+        # am_pm gets sent in with the day
         slide_number = int(data['slide_number'])
         new_slides = Slide.objects.filter(week=week, day=data["day"])
         print new_slides
@@ -124,6 +126,7 @@ def new_action(request, action):
         print current_slide
         # HELP
         if int(action) == 1:
+            # Checks to see if action is done and changes status to help
             try:
                 done_action = Action.objects.get(done=True, profile=student, slide=current_slide)
                 done_action.done = False
@@ -131,9 +134,9 @@ def new_action(request, action):
                 done_action.save()
             except ObjectDoesNotExist:
                 Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
-            # Action.objects.get_or_create(need_help=True, profile=student, slide=current_slide)
         # DONE
         elif int(action) == 2:
+            # Checks to see if action is need help and changes to done
             try:
                 help_action = Action.objects.get(need_help=True, profile=student, slide=current_slide)
                 help_action.done = True
@@ -143,6 +146,7 @@ def new_action(request, action):
                 Action.objects.get_or_create(done=True, profile=student, slide=current_slide)
         # QUESTION
         elif int(action) == 3:
+            # Creates new question
             Question.objects.get_or_create(profile=student, slide=current_slide, body=data['text'])
 
     return HttpResponse(content_type='application/json')

@@ -5,12 +5,14 @@ $(document).ready(function() {
     var page_title;
     var page_url;
 
+//    Gets page name for modal title
     $(document).on('click', '.get_url', function() {
         page_title = $(this).parent().parent().clone().children().remove().end().text();
         $('.modal-title').html(page_title);
         page_url = window.location.href;
     });
-//Removed btn-primary from class btn btn-primary. primary makes the hover weird
+
+//    Creates the actions button
     $('h2').append('<div class="buttonSelector pull-right"><button class="btn btn-lg get_url"  id="actionButton" data-toggle="modal" data-target="#myModal">Actions</button></div>');
 
     $('#actionButton').click(function() {
@@ -37,10 +39,13 @@ $(document).ready(function() {
 
     });
 
+//    Sends current page data to create action view
+//    num: 1 = new help, 2 = new done, 3 = new question
     function page_data(num) {
         var current_slide = page_url;
         var slide_url = current_slide.split('week')[1];
         var week = slide_url[0];
+//        day2 includes day and am_pm
         var day2 = slide_url.split('/')[1];
         console.log("day2:    "+day2);
 
@@ -83,6 +88,7 @@ $(document).ready(function() {
         });
     }
 
+//    Create new help action
     $('.help').on('click', function() {
         $(this).addClass("help_active");
         $('#help-button-img').hide();
@@ -97,6 +103,7 @@ $(document).ready(function() {
         page_data(1);
     });
 
+//    Create new done action
     $('.done').on('click', function() {
         $(this).addClass("done_active");
         $('#done-button-img').hide();
@@ -111,6 +118,7 @@ $(document).ready(function() {
 
     });
 
+//    Create new question
     $('.question_submit').on('click', function() {
         var question_text = $('.question_text').val();
 
