@@ -32,6 +32,7 @@ class Slide(models.Model):
     slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
+    topic = models.CharField(max_length=150)
 
     class Meta:
         unique_together = ("week", "day", "am_pm", "slide_number", "name")

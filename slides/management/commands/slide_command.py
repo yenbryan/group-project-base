@@ -60,6 +60,11 @@ class Command(BaseCommand):
     def run_soup(self, location, week, day, am_pm):
         with open(location) as template:
             html = template.read()
+            first_tag = html.replace("{% block presentation_title %}","<div id='topic'>")
+            second_tag = first_tag.replace("{% endblock %}","</div>")
+            soup2 = BeautifulSoup(second_tag)
+            topic = soup2.find("div", {"id": "topic"}).get_text().lstrip()
+            print topic, len(topic)
             soup = BeautifulSoup(html)
             sections = soup.find_all('section')
             all_headers = []
@@ -74,14 +79,14 @@ class Command(BaseCommand):
                 if count == 0:
                     try:
                         print header
-                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker, topic=topic)
                     except IntegrityError:
                         print "Integrity!!!!"
                     tracker += 1
                 elif header != all_headers[(count-1)]:
                     try:
                         print header
-                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker)
+                        Slide.objects.create(name=str(header), week=week, day=day, am_pm=am_pm, slide_number=tracker, topic=topic)
                     except IntegrityError:
                         print "integrity!!!"
                     tracker += 1
