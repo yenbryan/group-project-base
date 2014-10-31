@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('done', models.BooleanField(default=False)),
                 ('need_help', models.BooleanField(default=False)),
-                ('time', models.TimeField(auto_now_add=True)),
+                ('time', models.DateTimeField(auto_now_add=True)),
                 ('profile', models.ForeignKey(related_name='actions', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -59,7 +59,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('body', models.TextField()),
-                ('time', models.TimeField(auto_now_add=True)),
+                ('time', models.DateTimeField(auto_now_add=True)),
+                ('answered', models.BooleanField(default=False)),
                 ('profile', models.ForeignKey(related_name='questions', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -73,7 +74,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=150, null=True)),
                 ('week', models.IntegerField()),
                 ('day', models.CharField(max_length=150)),
-                ('am_pm', models.SmallIntegerField()),
+                ('am_pm', models.IntegerField()),
                 ('slide_number', models.IntegerField(help_text=b'index starts at 0')),
                 ('sub_slide_number', models.IntegerField(null=True, blank=True)),
                 ('url', models.CharField(max_length=150)),

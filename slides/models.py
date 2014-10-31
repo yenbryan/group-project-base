@@ -28,7 +28,7 @@ class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
     day = models.CharField(max_length=150)
-    am_pm = models.SmallIntegerField()
+    am_pm = models.IntegerField()
     slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
     url = models.CharField(max_length=150)
@@ -56,7 +56,7 @@ class Slide(models.Model):
         super(Slide, self).save(*args, **kwargs) # Call the "real" save() method.
 
     def __unicode__(self):
-        return self.url
+        return "{} - {}".format(self.url, self.name)
 
 
 class Action(models.Model):
