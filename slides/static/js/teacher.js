@@ -1,3 +1,5 @@
+// Need to use proper syntax for javascript
+// camelCase!
 $(document).ready(function() {
 
     function page_data(num) {
