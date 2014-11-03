@@ -12,6 +12,7 @@ class Profile(AbstractUser):
     is_student = models.BooleanField(default=True)
 
     def __unicode__(self):
+        # Just make this a real if/else statement
         return u"{}".format(self.real_name) \
             if self.real_name \
             else u"{}".format(self.username) # prints out real_name or Username
@@ -28,6 +29,7 @@ class Slide(models.Model):
     name = models.CharField(max_length=150, null=True)
     week = models.IntegerField()
     day = models.CharField(max_length=150)
+    # Should create make constants for AM, PM, or neither AM/PM then make this a choices field
     am_pm = models.IntegerField()
     slide_number = models.IntegerField(help_text="index starts at 0")
     sub_slide_number = models.IntegerField(null=True, blank=True)
@@ -61,6 +63,7 @@ class Slide(models.Model):
 
 
 class Action(models.Model):
+    # Either the action is done or need_help so possibly one boolean could be used for either or?
     done = models.BooleanField(default=False)
     need_help = models.BooleanField(default=False)
     profile = models.ForeignKey(Profile, related_name="actions")
