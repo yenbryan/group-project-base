@@ -3,7 +3,7 @@ import os
 from slides.models import Slide
 from bs4 import BeautifulSoup
 
-
+# I think this just needs to be removed and cleaned up
 from django.db.utils import IntegrityError
 def run_soup(location, week, day, am_pm):
     with open(location) as template:
