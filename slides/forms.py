@@ -16,6 +16,7 @@ class ProfileForm(UserCreationForm):
     helper.form_class = "form-horizontal"
     helper.add_input(Submit('Register', 'Register', css_class='btn-default'))
 
+    # Do you have to specify these here? Shouldn't real_name and email be required then on the model?
     real_name = forms.CharField(required=True)
     email = forms.EmailField(required=True)
 
