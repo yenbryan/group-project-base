@@ -24,7 +24,11 @@ def account(request):
         'imageform': imageform,
     })
 
+# You have have got the javascript working without needing @csrf_exempt on all of these views
+# It opens up a security hole
 
+# Most of these "API" views also don't return an "error" if they aren't successful
+# Most have a try/except block where you can pass "error" or an if/else 
 @csrf_exempt
 def edit_name(request):
     status = None
@@ -62,6 +66,7 @@ def edit_password(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         #check passwords are correctly repeated
+        # hmmm, should you be accessing data['password'] not data[0]?
         if not data[0] == data[1]:
             status = "mismatch"
         elif data[0]:
@@ -120,10 +125,13 @@ def new_action(request, action):
         new_slides = Slide.objects.filter(week=week, day=data["day"])
         print new_slides
         day = data['day']
+        # use .format to make this, also, could this use the same function as the Slide model to construct this?
         our_url = "week"+str(week)+"/"+day+"/#/"+str(slide_number)
         print our_url
         current_slide = Slide.objects.get(url=our_url)
         print current_slide
+        
+        # This will be more DRY if suggestions are applied that's in models.py
         # HELP
         if int(action) == 1:
             # Checks to see if action is done and changes status to help
