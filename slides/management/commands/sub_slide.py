@@ -9,13 +9,15 @@ __author__ = 'GoldenGate'
 
 from django.core.management import BaseCommand
 
-
+# I'm guessing this command is the actual one to be used if it works with sub slides 
+# and the other command should be removed
 class Command(BaseCommand):
     def handle(self, *args, **options):
         # return directories where slide decks live
         walker = os.walk('./slides/templates/')
         # navigating to individual slide decks
         for folder in walker:
+            # needs better naming and more documentation of what's happening
             index1 = folder[0]
             index = index1[-5:]
             index = index[:-1]
@@ -79,6 +81,12 @@ class Command(BaseCommand):
 
     def savedata(self, name, week, day, am_pm, slide_num, sub_num=None):
         name = BeautifulSoup(name).text
+        # This isn't very DRY, could be abstracted - here's how:
+        slide_data = {'name':name,'week':week,'day':day,'am_pm'=am_pm,'slide_number'=slide_number}
+        if sub_name:
+            slide_data['sub_slide_number'] = sub_num
+        Slide.objects.get_or_create(name=name, week=week, day=day, am_pm=am_pm, slide_number=slide_num, sub_slide_number=sub_num)
+        
         if sub_num:
             try:
                 Slide.objects.create(name=name, week=week, day=day, am_pm=am_pm, slide_number=slide_num, sub_slide_number=sub_num)
