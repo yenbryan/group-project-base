@@ -9,3 +9,6 @@ local_settings.py
 last.commit
 gunicorn.pid
 modal.html
+
+# Should ignore coverage output
+htmlcov
